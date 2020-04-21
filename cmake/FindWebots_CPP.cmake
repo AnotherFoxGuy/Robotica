@@ -4,9 +4,8 @@ include(FindPackageHandleStandardArgs)
 #  cpp bindings
 ####################################################################################################
 
-find_path(Webots_CPP_INCLUDE_DIRS Lidar.hpp
+find_path(Webots_CPP_INCLUDE_DIRS webots/Lidar.hpp
         HINTS $ENV{WEBOTS_HOME}/include/controller/cpp/
-        PATH_SUFFIXES webots
         )
 
 find_library(Webots_CPP_LIBRARIES

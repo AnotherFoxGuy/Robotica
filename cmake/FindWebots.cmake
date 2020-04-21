@@ -4,9 +4,8 @@ include(FindPackageHandleStandardArgs)
 #  Default (c)
 ####################################################################################################
 
-find_path(Webots_C_INCLUDE_DIRS Lidar.h
+find_path(Webots_C_INCLUDE_DIRS webots/Lidar.h
         HINTS $ENV{WEBOTS_HOME}/include/controller/c/
-        PATH_SUFFIXES webots
         )
 
 find_library(Webots_C_LIBRARIES
