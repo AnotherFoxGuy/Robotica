@@ -4,7 +4,7 @@ project(RBTC)
 #  SOURCE FILES
 ####################################################################################################
 
-set(SOURCE_FILES main.cpp)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS LIST_DIRECTORIES false "*.hpp" "*.cpp" "*.h" "*.c")
 
 include(SourceFileUtils)
 
