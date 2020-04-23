@@ -1,93 +1,26 @@
-#include <webots/DistanceSensor.hpp>
-#include <webots/Motor.hpp>
-#include <webots/Robot.hpp>
+#include <robot.hpp>
 
-#include "WebViewManager.h"
+#include <opencv2/opencv.hpp>
 
-// time in [ms] of a simulation step
-#define TIME_STEP 64
+#include <string>
 
-#define MAX_SPEED 6.28
 
-// All the webots classes are defined in the "webots" namespace
-using namespace webots;
-using namespace std;
+constexpr int timestep = 64;
+const std::string camera_window_name = "Robot Camera Output";
 
-// entry point of the controller
-int main(int argc, char** argv)
-{
-    WebViewManager wsm{};
-    wsm.start();
+int main(int argc, char** argv) {
+    robotica::robot robot { timestep };
+    const auto viewport = robot.get_camera_viewport_size();
 
-    // create the Robot instance.
-    auto* robot = new Robot();
+    cv::namedWindow(camera_window_name, cv::WINDOW_AUTOSIZE);
+    cv::resizeWindow(camera_window_name, { viewport.y, viewport.x });
 
-    // initialize devices
-    DistanceSensor* ps[8];
-    char psNames[8][4] = {
-        "ps0", "ps1", "ps2", "ps3",
-        "ps4", "ps5", "ps6", "ps7"};
+    while (robot.update()) {
+        const auto camera_output = robot.get_camera_output();
 
-    for (int i = 0; i < 8; i++)
-    {
-        ps[i] = robot->getDistanceSensor(psNames[i]);
-        ps[i]->enable(TIME_STEP);
+        cv::imshow(camera_window_name, camera_output);
+        cv::waitKey(1);
     }
 
-    Motor* leftMotor = robot->getMotor("left wheel motor");
-    Motor* rightMotor = robot->getMotor("right wheel motor");
-    leftMotor->setPosition(INFINITY);
-    rightMotor->setPosition(INFINITY);
-    leftMotor->setVelocity(0.0);
-    rightMotor->setVelocity(0.0);
-
-    // feedback loop: step simulation until an exit event is received
-    while (robot->step(TIME_STEP) != -1)
-    {
-        // read sensors outputs
-        double psValues[8];
-        for (int i = 0; i < 8; i++)
-            psValues[i] = ps[i]->getValue();
-
-        // detect obstacles
-        bool right_obstacle =
-            psValues[0] > 80.0 ||
-            psValues[1] > 80.0 ||
-            psValues[2] > 80.0;
-        bool left_obstacle =
-            psValues[5] > 80.0 ||
-            psValues[6] > 80.0 ||
-            psValues[7] > 80.0;
-
-        // initialize motor speeds at 50% of MAX_SPEED.
-        double leftSpeed = 0.5 * MAX_SPEED;
-        double rightSpeed = 0.5 * MAX_SPEED;
-        // modify speeds according to obstacles
-        if (left_obstacle)
-        {
-            // turn right
-            leftSpeed += 0.5 * MAX_SPEED;
-            rightSpeed -= 0.5 * MAX_SPEED;
-        }
-        else if (right_obstacle)
-        {
-            // turn left
-            leftSpeed -= 0.5 * MAX_SPEED;
-            rightSpeed += 0.5 * MAX_SPEED;
-        }
-        // write actuators inputs
-        leftMotor->setVelocity(leftSpeed);
-        rightMotor->setVelocity(rightSpeed);
-        string payload;
-
-        for (int i = 0; i < 8; i++)
-            payload += Poco::format("%f, ", ps[i]->getValue());
-
-        wsm.sendData(payload);
-    }
-
-    wsm.stop();
-
-    delete robot;
-    return 0; //EXIT_SUCCESS
+    return 0;
 }

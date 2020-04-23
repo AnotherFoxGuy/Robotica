@@ -8,6 +8,8 @@ project(RBTC)
 
 set(SOURCE_FILES
         main.cpp
+        robot.hpp
+        utility/typedefs.hpp
         WebViewManager.{h,cpp}
         )
 
@@ -25,4 +27,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         CONAN_PKG::webots-controller
         CONAN_PKG::opencv
         CONAN_PKG::poco
+        CONAN_PKG::glm
         )
