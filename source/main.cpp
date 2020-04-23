@@ -2,6 +2,8 @@
 #include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
 
+#include "WebViewManager.h"
+
 // time in [ms] of a simulation step
 #define TIME_STEP 64
 
@@ -9,12 +11,18 @@
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
+using namespace std;
+
+
 
 // entry point of the controller
 int main(int argc, char** argv)
 {
+    WebViewManager wsm{};
+    wsm.start();
+
     // create the Robot instance.
-    Robot* robot = new Robot();
+    auto* robot = new Robot();
 
     // initialize devices
     DistanceSensor* ps[8];
@@ -72,7 +80,15 @@ int main(int argc, char** argv)
         // write actuators inputs
         leftMotor->setVelocity(leftSpeed);
         rightMotor->setVelocity(rightSpeed);
+        string payload;
+
+        for (int i = 0; i < 8; i++)
+            payload +=  Poco::format("%f, ", ps[i]->getValue());
+
+        wsm.sendData(payload);
     }
+
+    wsm.stop();
 
     delete robot;
     return 0; //EXIT_SUCCESS
