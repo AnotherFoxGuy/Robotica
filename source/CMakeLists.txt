@@ -1,12 +1,12 @@
+include(SourceFileUtils)
+
 project(RBTC)
 
 ####################################################################################################
 #  SOURCE FILES
 ####################################################################################################
 
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS LIST_DIRECTORIES false "*.hpp" "*.cpp" "*.h" "*.c")
-
-include(SourceFileUtils)
+set(SOURCE_FILES main.cpp)
 
 # Expand file extensions (i.e. path/to/file.{h,cpp} becomes path/to/file.h;path/to/file.cpp)
 expand_file_extensions(SOURCE_FILES ${SOURCE_FILES})
@@ -19,4 +19,9 @@ if (UNIX)
     set(LINK_LIBS dl rt)
 endif ()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LINK_LIBS} Threads::Threads CONAN_PKG::webots-controller)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        ${LINK_LIBS}
+        Threads::Threads
+        CONAN_PKG::webots-controller
+        CONAN_PKG::opencv
+        )
