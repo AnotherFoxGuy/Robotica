@@ -1,7 +1,7 @@
 # Robotica
 
-You will need to add the WEBOTS_HOME variable to your path for CMake to find
-it.
+You will need to add the WEBOTS_HOME variable to your environment variables for 
+CMake to find it.
 If you have not specified an installation directory, the default path is
 `C:\Users\<Username>\AppData\Local\Programs\Webots`
 
