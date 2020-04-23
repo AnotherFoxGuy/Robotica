@@ -1,0 +1,2 @@
+[requires]
+webots-controller/R2020a-rev1@anotherfoxguy/stable
