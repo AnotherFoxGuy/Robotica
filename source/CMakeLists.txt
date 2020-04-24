@@ -8,7 +8,7 @@ project(RBTC)
 
 set(SOURCE_FILES
         main.cpp
-        WebSocketManager.{h,cpp}
+        WebViewManager.{h,cpp}
         )
 
 # Expand file extensions (i.e. path/to/file.{h,cpp} becomes path/to/file.h;path/to/file.cpp)
