@@ -5,11 +5,11 @@
 
 class WebViewManager
 {
-  public:
+public:
     void start();
     void stop();
     void sendData(const std::string& payload);
-  private:
+private:
     Poco::Net::HTTPServer *server;
 
 };

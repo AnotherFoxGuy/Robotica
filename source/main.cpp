@@ -28,7 +28,8 @@ int main(int argc, char** argv)
     DistanceSensor* ps[8];
     char psNames[8][4] = {
         "ps0", "ps1", "ps2", "ps3",
-        "ps4", "ps5", "ps6", "ps7"};
+        "ps4", "ps5", "ps6", "ps7"
+    };
 
     for (int i = 0; i < 8; i++)
     {

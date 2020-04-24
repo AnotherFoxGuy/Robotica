@@ -34,7 +34,7 @@ class PageRequestHandler : public HTTPRequestHandler
 /// Return a HTML document with some JavaScript creating
 /// a WebSocket connection.
 {
-  public:
+public:
     void handleRequest(HTTPServerRequest& request, HTTPServerResponse& response) override
     {
         response.setChunkedTransferEncoding(true);
@@ -83,7 +83,7 @@ class WebSocketRequestHandler : public HTTPRequestHandler
 /// Handle a WebSocket connection.
 {
 
-  public:
+public:
     void handleRequest(HTTPServerRequest& request, HTTPServerResponse& response) override
     {
         try
@@ -110,7 +110,7 @@ class WebSocketRequestHandler : public HTTPRequestHandler
             {
             case WebSocket::WS_ERR_HANDSHAKE_UNSUPPORTED_VERSION:
                 response.set("Sec-WebSocket-Version", WebSocket::WEBSOCKET_VERSION);
-                // fallthrough
+            // fallthrough
             case WebSocket::WS_ERR_NO_HANDSHAKE:
             case WebSocket::WS_ERR_HANDSHAKE_NO_VERSION:
             case WebSocket::WS_ERR_HANDSHAKE_NO_KEY:
@@ -125,7 +125,7 @@ class WebSocketRequestHandler : public HTTPRequestHandler
 
 class RequestHandlerFactory : public HTTPRequestHandlerFactory
 {
-  public:
+public:
     HTTPRequestHandler* createRequestHandler(const HTTPServerRequest& request) override
     {
         if (request.find("Upgrade") != request.end() && Poco::icompare(request["Upgrade"], "websocket") == 0)
