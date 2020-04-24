@@ -21,7 +21,6 @@ matrix:
       name: Windows Build
       install:
         - choco install conan -y -s="https://api.bintray.com/nuget/anotherfoxguy/choco-pkg"
-        - refreshenv
       script:
         - cmd.exe //c "RefreshEnv.cmd & cmake ."
         - cmake --build .
