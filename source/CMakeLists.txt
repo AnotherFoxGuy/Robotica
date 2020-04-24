@@ -8,7 +8,9 @@ project(RBTC)
 
 set(SOURCE_FILES
         main.cpp
-        robot.hpp
+        world/robot.hpp
+        world/world.hpp
+        utility/math.hpp
         utility/typedefs.hpp
         WebViewManager.{h,cpp}
         )
