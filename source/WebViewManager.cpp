@@ -25,7 +25,6 @@ using Poco::Net::ServerSocket;
 using Poco::Net::WebSocket;
 using Poco::Net::WebSocketException;
 
-
 using namespace std;
 
 std::vector<Poco::Net::WebSocket> Kaas;
@@ -34,7 +33,7 @@ class PageRequestHandler : public HTTPRequestHandler
 /// Return a HTML document with some JavaScript creating
 /// a WebSocket connection.
 {
-public:
+  public:
     void handleRequest(HTTPServerRequest& request, HTTPServerResponse& response) override
     {
         response.setChunkedTransferEncoding(true);
@@ -83,7 +82,7 @@ class WebSocketRequestHandler : public HTTPRequestHandler
 /// Handle a WebSocket connection.
 {
 
-public:
+  public:
     void handleRequest(HTTPServerRequest& request, HTTPServerResponse& response) override
     {
         try
@@ -125,7 +124,7 @@ public:
 
 class RequestHandlerFactory : public HTTPRequestHandlerFactory
 {
-public:
+  public:
     HTTPRequestHandler* createRequestHandler(const HTTPServerRequest& request) override
     {
         if (request.find("Upgrade") != request.end() && Poco::icompare(request["Upgrade"], "websocket") == 0)
@@ -150,7 +149,7 @@ void WebViewManager::stop()
 }
 void WebViewManager::sendData(const string& payload)
 {
-    for (WebSocket & ws : Kaas)
+    for (WebSocket& ws : Kaas)
     {
         try
         {
@@ -158,7 +157,6 @@ void WebViewManager::sendData(const string& payload)
         }
         catch (...)
         {
-
         }
     }
 }
