@@ -74,7 +74,7 @@ namespace robotica {
             // The documentation for Webots about the internal format of the camera data makes the following claims:
             // - The image is stored in RGB
             // - The image is stored in BGRA
-            // - The image data is in array-of-structs format and not structs-of-arrays format.
+            // - The image data is in array-of-structs format and not struct-of-arrays format.
             // Some of these claims contradict each other and none of them appear to be correct.
             // Fortunately, we can bypass this mess by just iterating over each pixel and using the built in functions
             // to extract image data for each channel.
