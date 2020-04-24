@@ -13,8 +13,6 @@
 using namespace webots;
 using namespace std;
 
-
-
 // entry point of the controller
 int main(int argc, char** argv)
 {
@@ -83,7 +81,7 @@ int main(int argc, char** argv)
         string payload;
 
         for (int i = 0; i < 8; i++)
-            payload +=  Poco::format("%f, ", ps[i]->getValue());
+            payload += Poco::format("%f, ", ps[i]->getValue());
 
         wsm.sendData(payload);
     }

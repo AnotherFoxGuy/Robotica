@@ -9,8 +9,7 @@ class WebViewManager
     void start();
     void stop();
     void sendData(const std::string& payload);
+
   private:
-    Poco::Net::HTTPServer *server;
-
+    Poco::Net::HTTPServer* server;
 };
-
