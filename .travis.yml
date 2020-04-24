@@ -11,12 +11,13 @@ matrix:
       name: Linux Build
       install:
         - wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_24_1.deb -nv
-        - sudo dpkg -i ./$CONAN_PKG
+        - sudo dpkg -i ./conan-ubuntu-64_1_24_1.deb
         - conan user
     - os: windows
       name: Windows Build
       install:
         - choco install conan -y -s="https://api.bintray.com/nuget/anotherfoxguy/choco-pkg"
+        - refreshenv
 
 script:
   - cmake .
