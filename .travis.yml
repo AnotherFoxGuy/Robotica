@@ -10,19 +10,21 @@ matrix:
     - os: linux
       name: Linux Build
       install:
+        - sudo apt-get install ninja-build -y
         - wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_24_1.deb -nv
         - sudo dpkg -i ./conan-ubuntu-64_1_24_1.deb
         - conan user
       script:
-        - cmake .
+        - cmake -GNinja -DCMAKE_BUILD_TYPE=Release .
         - cmake --build .
 
     - os: windows
       name: Windows Build
       install:
+        - choco install ninja -y
         - choco install conan -y -s="https://api.bintray.com/nuget/anotherfoxguy/choco-pkg"
       script:
-        - cmd.exe //c "RefreshEnv.cmd & cmake ."
+        - cmd.exe //c "RefreshEnv.cmd & cmake -GNinja -DCMAKE_BUILD_TYPE=Release ."
         - cmake --build .
 
 before_cache:
