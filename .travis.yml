@@ -24,3 +24,6 @@ matrix:
       script:
         - cmd.exe //c "RefreshEnv.cmd & cmake ."
         - cmake --build .
+
+before_cache:
+  - cmake -P ./cmake/pmm.cmake /Conan /Clean
