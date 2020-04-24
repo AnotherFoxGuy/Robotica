@@ -13,25 +13,30 @@
 
 
 namespace robotica {
+    enum class side { LEFT = 0, RIGHT = 1 };
+    constexpr inline auto sides = { robotica::side::LEFT, robotica::side::RIGHT };
+
     class robot {
     public:
         constexpr static float max_speed = 6.25f;
 
-        const static inline std::string camera_name    = "camera";
-        const static inline std::string motor_names[2] = { "left wheel motor", "right wheel motor" };
+        const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
+        const static inline std::string motor_names[2]  = { "left wheel motor", "right wheel motor" };
 
 
         robot(int timestep) :
             rbt(new webots::Robot()),
-            camera(rbt->getCamera(camera_name)),
+            left_camera(rbt->getCamera(camera_names[0])),
+            right_camera(rbt->getCamera(camera_names[1])),
             left_motor(rbt->getMotor(motor_names[0])),
             right_motor(rbt->getMotor(motor_names[1])),
             timestep(timestep),
-            eye_distance(0.0f),
+            eye_distance(0.03f),
             eye_height(0.028f)
         {
             
-            camera->enable(timestep);
+            left_camera->enable(timestep);
+            right_camera->enable(timestep);
 
             left_motor->setPosition(INFINITY);
             right_motor->setPosition(INFINITY);
@@ -57,7 +62,9 @@ namespace robotica {
 
 
         // Get the size of the camera viewport as { width, height }.
-        glm::ivec2 get_camera_viewport_size(void) const {
+        glm::ivec2 get_camera_viewport_size(side side) const {
+            auto& camera = (side == side::LEFT) ? left_camera : right_camera;
+
             return {
                 camera->getWidth(),
                 camera->getHeight()
@@ -66,8 +73,9 @@ namespace robotica {
 
 
         // Get the raw output image of the camera. (BGR format)
-        cv::Mat get_camera_output(void) const {
-            const auto viewport = get_camera_viewport_size();
+        cv::Mat get_camera_output(side side) const {
+            auto& camera = (side == side::LEFT) ? left_camera : right_camera;
+            const auto viewport = get_camera_viewport_size(side);
 
             cv::Mat result(viewport.y, viewport.x, CV_8UC3);
 
@@ -95,7 +103,7 @@ namespace robotica {
         }
     private:
         unique<webots::Robot> rbt;
-        unique<webots::Camera> camera;
+        unique<webots::Camera> left_camera, right_camera;
         unique<webots::Motor> left_motor, right_motor;
 
         int timestep;
