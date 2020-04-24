@@ -25,7 +25,6 @@ using Poco::Net::ServerSocket;
 using Poco::Net::WebSocket;
 using Poco::Net::WebSocketException;
 
-
 using namespace std;
 
 std::vector<Poco::Net::WebSocket> Kaas;
@@ -110,7 +109,7 @@ class WebSocketRequestHandler : public HTTPRequestHandler
             {
             case WebSocket::WS_ERR_HANDSHAKE_UNSUPPORTED_VERSION:
                 response.set("Sec-WebSocket-Version", WebSocket::WEBSOCKET_VERSION);
-                // fallthrough
+            // fallthrough
             case WebSocket::WS_ERR_NO_HANDSHAKE:
             case WebSocket::WS_ERR_HANDSHAKE_NO_VERSION:
             case WebSocket::WS_ERR_HANDSHAKE_NO_KEY:
@@ -150,7 +149,7 @@ void WebViewManager::stop()
 }
 void WebViewManager::sendData(const string& payload)
 {
-    for (WebSocket & ws : Kaas)
+    for (WebSocket& ws : Kaas)
     {
         try
         {
@@ -158,7 +157,6 @@ void WebViewManager::sendData(const string& payload)
         }
         catch (...)
         {
-
         }
     }
 }
