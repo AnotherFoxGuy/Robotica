@@ -1,0 +1,17 @@
+dist: bionic
+language: cpp
+
+cache:
+  directories:
+    - $HOME/.conan/
+
+matrix:
+  include:
+    - os: linux
+      name: Linux Build
+    - os: windows
+      name: Windows Build
+
+script:
+  - cmake .
+  - cmake --build .
