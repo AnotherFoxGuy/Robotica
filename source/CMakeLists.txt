@@ -18,12 +18,9 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC .)
 
-if (UNIX)
-    set(LINK_LIBS dl rt)
-endif ()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        ${LINK_LIBS}
+        ${CMAKE_DL_LIBS}
         Threads::Threads
         CONAN_PKG::webots-controller
         CONAN_PKG::opencv

@@ -1,0 +1,17 @@
+language: cpp
+os: windows
+cache:
+  directories:
+    - $HOME/.conan/
+    - C:/.conan
+install:
+  - choco install conan -y -s="https://api.bintray.com/nuget/anotherfoxguy/choco-pkg"
+  - choco install ninja -y
+script:
+  - export CXX="cl.exe"
+  - export CXX_FOR_BUILD="cl.exe"
+  - export CC="cl.exe"
+  - export CC_FOR_BUILD="cl.exe"
+  - ./.ci/run.bat
+before_cache:
+  -  cmd.exe //c "RefreshEnv.cmd & cmake -P cmake/pmm.cmake /Conan /Clean"

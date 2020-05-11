@@ -1,0 +1,37 @@
+language: cpp
+
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      name: Linux Build
+      cache:
+        directories:
+          - $HOME/.conan/
+      install:
+        - wget https://dl.bintray.com/conan/installers/conan-ubuntu-64_1_25_0.deb -nv
+        - sudo dpkg -i ./conan-ubuntu-64_1_25_0.deb
+        - conan user
+      script:
+        - cmake -DCMAKE_BUILD_TYPE=Release .
+        - make -j
+      before_cache:
+        - cmake -P cmake/pmm.cmake /Conan /Clean
+
+    - os: windows
+      name: Windows Build
+      cache:
+        directories:
+          - $HOME/.conan/
+          - C:/.conan
+      install:
+        - choco install conan -y -s="https://api.bintray.com/nuget/anotherfoxguy/choco-pkg"
+        - choco install ninja -y
+      script:
+        - export CXX="cl.exe"
+        - export CXX_FOR_BUILD="cl.exe"
+        - export CC="cl.exe"
+        - export CC_FOR_BUILD="cl.exe"
+        - ./.ci/run.bat
+      before_cache:
+        - ./pmm-cli.bat /Conan /Clean
