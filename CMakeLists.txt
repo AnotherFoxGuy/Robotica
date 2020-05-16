@@ -12,7 +12,13 @@ set(CMAKE_USE_RELATIVE_PATHS OFF)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 include(pmm)
-pmm(CONAN REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
+
+if (MSVC)
+     # MSVC needs extra settings because glew only compiles with VC2017
+     pmm(CONAN PROFILE "${CMAKE_SOURCE_DIR}/msvc.conanprofile" REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
+else()
+     pmm(CONAN REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
 

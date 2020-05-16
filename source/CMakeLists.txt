@@ -7,13 +7,23 @@ project(RBTC)
 ####################################################################################################
 
 set(SOURCE_FILES
-        main.cpp
-        world/robot.hpp
-        world/world.hpp
-        utility/math.hpp
-        utility/typedefs.hpp
-        WebViewManager.{h,cpp}
-        )
+     main.cpp
+     WebViewManager.{h,cpp}
+     world/robot.hpp
+     world/world.hpp
+     window/gui_image.hpp
+     window/main_window.hpp
+     window/main_window.cpp
+     window/imgui_bindings.hpp
+     window/imgui_bindings.cpp
+     window/setting.hpp
+     window/window.hpp
+     vision/converters.hpp
+     vision/parallax.hpp
+     utility/math.hpp
+     utility/traits.hpp
+     utility/typedefs.hpp
+)
 
 # Expand file extensions (i.e. path/to/file.{h,cpp} becomes path/to/file.h;path/to/file.cpp)
 expand_file_extensions(SOURCE_FILES ${SOURCE_FILES})
@@ -24,10 +34,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC .)
 
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        ${CMAKE_DL_LIBS}
-        Threads::Threads
-        CONAN_PKG::webots-controller
-        CONAN_PKG::opencv
-        CONAN_PKG::poco
-        CONAN_PKG::glm
-        )
+     ${CMAKE_DL_LIBS}
+     Threads::Threads
+     CONAN_PKG::webots-controller
+     CONAN_PKG::opencv
+     CONAN_PKG::poco
+     CONAN_PKG::glm
+     CONAN_PKG::imgui
+     CONAN_PKG::sdl2
+     CONAN_PKG::glew
+)
+
+
+add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
+add_compile_definitions(_CRT_SECURE_NO_WARNINGS)

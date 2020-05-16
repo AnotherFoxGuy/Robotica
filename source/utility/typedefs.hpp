@@ -3,9 +3,13 @@
 #include <cstdint>
 #include <cassert>
 #include <memory>
+#include <filesystem>
 
 
 namespace robotica {
+    namespace fs = std::filesystem;
+
+
      using u8 = uint8_t;
      using i8 = int8_t;
      using u16 = uint16_t;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility/typedefs.hpp>
+#include <vision/converters.hpp>
 
 #include <webots/Robot.hpp>
 #include <webots/Camera.hpp>
@@ -18,6 +19,14 @@ namespace robotica {
 
     class robot {
     public:
+        constexpr static int default_timestep = 1000 / 30;
+
+        static robot& instance(void) {
+            static robot i = robot { default_timestep };
+            return i;
+        }
+
+
         constexpr static float max_speed = 6.25f;
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
@@ -53,8 +62,8 @@ namespace robotica {
             
             if (result = rbt->step(timestep); result != -1) {
                 // Go in circles.
-                (*left_motor).setVelocity(max_speed);
-                (*right_motor).setVelocity(0.75 * max_speed);
+                /*(*left_motor).setVelocity(max_speed);
+                (*right_motor).setVelocity(0.75 * max_speed);*/
             }
 
             return (result != -1);
@@ -77,29 +86,7 @@ namespace robotica {
             auto& camera = (side == side::LEFT) ? left_camera : right_camera;
             const auto viewport = get_camera_viewport_size(side);
 
-            cv::Mat result(viewport.y, viewport.x, CV_8UC3);
-
-            // The documentation for Webots about the internal format of the camera data makes the following claims:
-            // - The image is stored in RGB
-            // - The image is stored in BGRA
-            // - The image data is in array-of-structs format and not struct-of-arrays format.
-            // Some of these claims contradict each other and none of them appear to be correct.
-            // Fortunately, we can bypass this mess by just iterating over each pixel and using the built in functions
-            // to extract image data for each channel.
-            unsigned index = 0;
-            for (int x = 0; x < viewport.x; ++x) {
-                for (int y = 0; y < viewport.y; ++y) {
-                    result.data[index + 0] = camera->imageGetBlue (camera->getImage(), viewport.x, x, y);
-                    result.data[index + 1] = camera->imageGetGreen(camera->getImage(), viewport.x, x, y);
-                    result.data[index + 2] = camera->imageGetRed  (camera->getImage(), viewport.x, x, y);
-
-                    index += 3;
-                }
-            }
-
-            cv::rotate(result, result, cv::ROTATE_90_CLOCKWISE);
-
-            return result;
+            return camera_format_to_bgr(camera, viewport);
         }
     private:
         unique<webots::Robot> rbt;
