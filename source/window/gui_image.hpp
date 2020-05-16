@@ -13,7 +13,7 @@
 namespace robotica {
     class gui_image {
     public:
-        gui_image(void) : gui_image(cv::Mat(255, 255, CV_8UC3)) {}
+        gui_image(void) : gui_image(cv::Mat(1, 1, CV_8UC3)) {}
 
 
         gui_image(cv::Mat cv_image) {
@@ -38,15 +38,14 @@ namespace robotica {
 
         void update(void) {
             glBindTexture(GL_TEXTURE_2D, texture_id);
-            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, cv_image.cols, cv_image.rows, 0, GL_BGR, GL_UNSIGNED_BYTE, cv_image.data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, cv_image.cols, cv_image.rows, 0, GL_RGBA, GL_UNSIGNED_BYTE, cv_image.ptr());
         }
 
 
         void set_image(cv::Mat img) {
             assert(img.type() == CV_8UC3);
 
-            cv_image = img;
+            cv::cvtColor(img, cv_image, cv::COLOR_BGR2RGBA);
             update();
         }
 

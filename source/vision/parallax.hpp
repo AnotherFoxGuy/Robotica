@@ -18,7 +18,7 @@ namespace robotica {
         auto stereo = cv::StereoBM::create(window.num_disparities * 16, window.block_size * 2 + 1);
         stereo->setDisp12MaxDiff(window.disparity_max_diff);
         stereo->setSpeckleRange(window.speckle_range);
-        stereo->setSpeckleWindowSize(window.speckle_win_size);
+        stereo->setSpeckleWindowSize(window.speckle_win_size * 2 + 1);
         stereo->setUniquenessRatio(window.uniqueness_ratio);
         stereo->setTextureThreshold(window.texture_threshold);
         stereo->setMinDisparity(window.min_disparity);
