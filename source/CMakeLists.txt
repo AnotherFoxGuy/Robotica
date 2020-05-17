@@ -20,7 +20,6 @@ set(SOURCE_FILES
      window/window.hpp
      vision/converters.hpp
      vision/parallax.hpp
-     utility/math.hpp
      utility/traits.hpp
      utility/typedefs.hpp
 )
