@@ -15,8 +15,12 @@ namespace robotica {
 
 
     void main_window::add_elements(void) {
+        if (!has_resized) ImGui::SetWindowSize({ 805, 520 });
+        has_resized = true;
+
+        ImGui::SetWindowPos({ 0, 0 });
         auto size = ImGui::GetWindowContentRegionMax();
-        SDL_SetWindowSize(handle, size.x + 20, size.y + 20);
+        SDL_SetWindowSize(handle, size.x + 8, size.y + 8);
 
         left.set_image(robot::instance().get_camera_output(side::LEFT));
         right.set_image(robot::instance().get_camera_output(side::RIGHT));

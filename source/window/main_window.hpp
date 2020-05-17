@@ -36,5 +36,7 @@ namespace robotica {
         gui_image left, right, depth;
     protected:
         void add_elements(void) override;
+    private:
+        bool has_resized = false;
     };
 }
