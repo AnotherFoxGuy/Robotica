@@ -15,7 +15,18 @@ namespace robotica {
 
 
     void main_window::add_elements(void) {
-        if (!has_resized) ImGui::SetWindowSize({ 805, 520 });
+        constexpr int topbar_height  = 19;
+        constexpr int slider_height  = 23;
+        constexpr int image_height   = 255;
+        constexpr int padding_top    = 42;
+        constexpr int padding_bottom = 8;
+
+        int num_elems = 0;
+        expand(settings, [&](const auto& v) { num_elems += v.size(); });
+
+        const int target_height = padding_top + (slider_height * num_elems) + image_height + padding_bottom;
+
+        if (!has_resized) ImGui::SetWindowSize({ 805, (float) target_height });
         has_resized = true;
 
         ImGui::SetWindowPos({ 0, 0 });

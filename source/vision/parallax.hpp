@@ -26,9 +26,14 @@ namespace robotica {
         stereo->setPreFilterSize(window.pre_filter_size);
 
         cv::Mat disparity;
-        stereo->compute(left_grayscale, right_grayscale, disparity);
 
-        cv::normalize(disparity, disparity, 0, 255, cv::NORM_MINMAX, CV_8U);
+        try {
+            stereo->compute(left_grayscale, right_grayscale, disparity);
+            cv::normalize(disparity, disparity, 0, 255, cv::NORM_MINMAX, CV_8U);
+        } catch (...) {
+            disparity = cv::Scalar(0);
+        }
+
         return disparity;
     }
 }

@@ -15,7 +15,6 @@ namespace robotica {
     }
 
 
-
     template <typename C, typename T> struct member_variable_info {
         using classname = C;
         using type = T;

@@ -32,6 +32,7 @@ namespace robotica {
         RBT_SETTING(min_disparity,      -39, -128, 128);
         RBT_SETTING(pre_filter_cap,     61,  1,    63);
         RBT_SETTING(pre_filter_size,    5,   0,    32);
+        RBT_SETTING(sad_window_size,    9,   0,    64);
 
         gui_image left, right, depth;
     protected:
