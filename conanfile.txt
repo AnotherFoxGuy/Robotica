@@ -17,6 +17,3 @@ opencv:nonfree=True
 opencv:eigen=True
 opencv:glog=True
 opencv:gflags=True
-
-[generators]
-cmake
