@@ -16,9 +16,9 @@ namespace robotica {
     const inline fs::path gradient_file_path = ROOT_DIR "/assets/gradient.png";
 
 
-    inline cv::Mat bgr_to_grayscale(cv::Mat m) {
+    inline cv::Mat inline_cvt(cv::Mat source, cv::ColorConversionCodes code) {
         cv::Mat result;
-        cv::cvtColor(m, result, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(source, result, code);
         return result;
     }
 

@@ -8,5 +8,5 @@ selectionDisabled: 0
 viewpointLocked: 0
 orthographicViewHeight: 1
 textFiles: -1
-renderingDevicePerspectives: e-puck:left_camera;1;1.16863;0;0
 renderingDevicePerspectives: e-puck:right_camera;1;1.16863;0;0
+renderingDevicePerspectives: e-puck:left_camera;1;1.16863;0;0

@@ -43,14 +43,20 @@ namespace robotica {
 
 
         void set_image(cv::Mat img) {
-            assert(img.type() == CV_8UC3);
+            assert(img.type() == CV_8U || img.type() == CV_8UC3);
 
-            cv::cvtColor(img, cv_image, cv::COLOR_BGR2RGBA);
+            if (img.type() == CV_8U) cv::cvtColor(img, cv_image, cv::COLOR_GRAY2RGBA);
+            else cv::cvtColor(img, cv_image, cv::COLOR_BGR2RGBA);
+
             update();
         }
 
 
-        cv::Mat get_image(void) { return cv_image; }
+        cv::Mat get_image(void) {
+            cv::Mat result;
+            cv::cvtColor(cv_image, result, cv::COLOR_RGBA2BGR);
+            return result;
+        }
 
 
         void show() {
