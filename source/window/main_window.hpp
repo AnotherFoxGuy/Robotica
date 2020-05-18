@@ -10,7 +10,7 @@
 
 #include <type_traits>
 
-#define RBT_SETTING(name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max }
+#define RBT_SETTING(group, name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max, (int) group }
 
 
 namespace robotica {
@@ -20,22 +20,28 @@ namespace robotica {
         main_window(void);
 
 
+        enum setting_groups { PARALLAX, ROBOT };
+
         // Parallax Processing Settings
-        // TODO: Move settings to seperate class.
-        RBT_SETTING(num_disparities,    1,      0,    16);     // x 16
-        RBT_SETTING(block_size,         2,      0,    32);     // x 2 + 1
-        RBT_SETTING(disparity_max_diff, 1,      0,    32);
-        RBT_SETTING(speckle_range,      8,      0,    32);
-        RBT_SETTING(speckle_win_size,   2,      2,    127);     // x2 + 1
-        RBT_SETTING(uniqueness_ratio,   0,      0,    32);
-        RBT_SETTING(texture_threshold,  507,    0,    2048);
-        RBT_SETTING(min_disparity,      -39,    -128, 128);
-        RBT_SETTING(pre_filter_cap,     61,     1,    63);
-        RBT_SETTING(pre_filter_size,    5,      0,    32);
-        RBT_SETTING(lambda,             6000.0, 0,    10000);
-        RBT_SETTING(sigma,              2.0,    0,    10);
-        RBT_SETTING(raw_vis_scale,      21.0,   0,    64);
-        RBT_SETTING(filtered_vis_scale, 15.0,   0,    64);
+        RBT_SETTING(PARALLAX, num_disparities,    1,      0,    16);     // x 16
+        RBT_SETTING(PARALLAX, block_size,         2,      0,    32);     // x 2 + 1
+        RBT_SETTING(PARALLAX, disparity_max_diff, 1,      0,    32);
+        RBT_SETTING(PARALLAX, speckle_range,      8,      0,    32);
+        RBT_SETTING(PARALLAX, speckle_win_size,   2,      2,    127);     // x2 + 1
+        RBT_SETTING(PARALLAX, uniqueness_ratio,   0,      0,    32);
+        RBT_SETTING(PARALLAX, texture_threshold,  507,    0,    2048);
+        RBT_SETTING(PARALLAX, min_disparity,      -39,    -128, 128);
+        RBT_SETTING(PARALLAX, pre_filter_cap,     61,     1,    63);
+        RBT_SETTING(PARALLAX, pre_filter_size,    5,      0,    32);
+        RBT_SETTING(PARALLAX, lambda,             6000.0, 0,    10000);
+        RBT_SETTING(PARALLAX, sigma,              2.0,    0,    10);
+        RBT_SETTING(PARALLAX, raw_vis_scale,      21.0,   0,    64);
+        RBT_SETTING(PARALLAX, filtered_vis_scale, 15.0,   0,    64);
+
+        // Robot controls
+        RBT_SETTING(ROBOT,    left_motor,         0.0,    0,    1);
+        RBT_SETTING(ROBOT,    right_motor,        0.0,    0,    1);
+
 
         gui_image left, right;
         gui_image left_disp, right_disp, filtered, raw_vis, filtered_vis;

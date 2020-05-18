@@ -2,6 +2,7 @@
 
 #include <utility/typedefs.hpp>
 #include <vision/converters.hpp>
+#include <window/main_window.hpp>
 
 #include <webots/Robot.hpp>
 #include <webots/Camera.hpp>
@@ -57,12 +58,14 @@ namespace robotica {
         // Simulate the robot for the period dt.
         // Returns false if the simulation has ended, or true otherwise.
         bool update(void) {
+            auto& window = main_window::instance();
+
             int result;
             
             if (result = rbt->step(timestep); result != -1) {
                 // Go in circles.
-                /*(*left_motor).setVelocity(max_speed);
-                (*right_motor).setVelocity(0.75 * max_speed);*/
+                (*left_motor).setVelocity(window.left_motor * max_speed);
+                (*right_motor).setVelocity(window.right_motor * max_speed);
             }
 
             return (result != -1);

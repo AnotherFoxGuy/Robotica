@@ -3,6 +3,8 @@
 #include <vision/converters.hpp>
 #include <world/robot.hpp>
 
+#include <algorithm>
+
 
 namespace robotica {
     main_window& main_window::instance(void) {
@@ -23,7 +25,7 @@ namespace robotica {
         constexpr int padding_side   = 8;
 
         int num_elems = 0;
-        expand(settings, [&](const auto& v) { num_elems += v.size(); });
+        expand(settings, [&](const auto& v) { num_elems += std::count_if(v.begin(), v.end(), [](const auto& e) { return e.get().setting_group == (int) PARALLAX; }); });
 
         const int target_height = padding_top + (slider_height * num_elems) + (2 * image_size) + padding_bottom;
         const int target_width = (4 * image_size) + (2 * padding_side);
@@ -47,17 +49,37 @@ namespace robotica {
         filtered_vis.set_image(depth.filtered_vis);
 
 
-        expand(settings, [](auto& vector) {
-            using type = typename std::remove_reference_t<decltype(vector)>::value_type::type::type;
+        auto put_group = [&](setting_groups group, bool vertical) {
+            ImGui::BeginGroup();
 
-            for (auto& elem : vector) {
-                auto& setting = elem.get();
+            bool first = true;
+            expand(settings, [&](auto& vector) {
+                using type = typename std::remove_reference_t<decltype(vector)>::value_type::type::type;
 
-                // TODO: Add more input types. (notably string and bool.)
-                if constexpr (std::is_integral_v<type>)       ImGui::SliderInt(setting.name.c_str(), &setting.value, setting.min, setting.max);
-                if constexpr (std::is_floating_point_v<type>) ImGui::SliderFloat(setting.name.c_str(), &setting.value, setting.min, setting.max);
-            }
-        });
+                for (auto& elem : vector) {
+                    auto& setting = elem.get();
+                    if (setting.setting_group != (int) group) continue;
+
+                    if (!first && vertical) ImGui::SameLine(); else first = false;
+
+                    // TODO: Add more input types. (notably string and bool.)
+                    if (vertical) {
+                        if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
+                        if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
+                    } else {
+                        if constexpr (std::is_integral_v<type>)       ImGui::SliderInt(setting.name.c_str(), &setting.value, setting.min, setting.max);
+                        if constexpr (std::is_floating_point_v<type>) ImGui::SliderFloat(setting.name.c_str(), &setting.value, setting.min, setting.max);
+                    }
+                }
+            });
+
+            ImGui::EndGroup();
+        };
+
+        
+        put_group(PARALLAX, false);
+        ImGui::SameLine();
+        put_group(ROBOT, true);
 
 
         left.show();

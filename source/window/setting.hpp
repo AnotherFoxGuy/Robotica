@@ -26,13 +26,15 @@ namespace robotica {
         std::string name;
         T default, min, max;
         stored_type value;
+        int setting_group;
 
-        setting(C& container, std::string&& name, T&& default, T&& min, T&& max)
+        setting(C& container, std::string&& name, T&& default, T&& min, T&& max, int setting_group)
             : name(std::move(name)),
               default(std::forward<T>(default)),
               min(std::forward<T>(min)),
               max(std::forward<T>(max)),
-              value((stored_type) default)
+              value((stored_type) default),
+              setting_group(setting_group)
         {
             container.register_setting(*this);
         }
