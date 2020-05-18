@@ -5,9 +5,13 @@
 #include <utility/utility.hpp>
 
 #include <algorithm>
+#include <string>
 
 
 namespace robotica {
+    using namespace std::string_literals;
+
+
     main_window& main_window::instance(void) {
         static main_window i;
         return i;
@@ -81,15 +85,19 @@ namespace robotica {
 
                 if (!first) ImGui::SameLine(); else first = false;
 
-                const int h = slider_height * num_elems - button_height - padding_bottom;
+                const int h = slider_height * num_elems - (2 * button_height + 2 * padding_bottom);
                 if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
                 if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
             }
         });
 
-        // Snapshot button
-        if (ImGui::Button("Snapshot", { 200, 30 })) {
-            image_to_file(snapshot_folder.string(), datetime_string(), left.get_image());
+        // Snapshot buttons
+        if (ImGui::Button("Snap Positive", { 200, 30 })) {
+            image_to_file(snapshot_folder.string(), "POSITIVE_"s + datetime_string(), left.get_image());
+        }
+
+        if (ImGui::Button("Snap Negative", { 200, 30 })) {
+            image_to_file(snapshot_folder.string(), "NEGATIVE_"s + datetime_string(), left.get_image());
         }
 
         ImGui::EndGroup();
