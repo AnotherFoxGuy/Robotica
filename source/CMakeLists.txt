@@ -1,4 +1,5 @@
 include(SourceFileUtils)
+include(cotire)
 
 project(RBTC)
 
@@ -46,4 +47,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 
 add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
-add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX SDL_MAIN_HANDLED)
+
+cotire(${PROJECT_NAME})

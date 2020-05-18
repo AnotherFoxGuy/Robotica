@@ -2,7 +2,6 @@
 
 #include <window/imgui_bindings.hpp>
 
-#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <imgui.h>
