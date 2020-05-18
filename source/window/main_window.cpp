@@ -2,6 +2,7 @@
 #include <vision/parallax.hpp>
 #include <vision/converters.hpp>
 #include <world/robot.hpp>
+#include <utility/utility.hpp>
 
 #include <algorithm>
 
@@ -25,7 +26,7 @@ namespace robotica {
         constexpr int padding_side   = 8;
 
         int num_elems = 0;
-        expand(settings, [&](const auto& v) { num_elems += std::count_if(v.begin(), v.end(), [](const auto& e) { return e.get().setting_group == (int) PARALLAX; }); });
+        expand(settings[(int) PARALLAX], [&](const auto& v) { num_elems += std::count_if(v.begin(), v.end(), [](const auto& e) { return e.get().setting_group == (int) PARALLAX; }); });
 
         const int target_height = padding_top + (slider_height * num_elems) + (2 * image_size) + padding_bottom;
         const int target_width = (4 * image_size) + (2 * padding_side);
@@ -49,39 +50,50 @@ namespace robotica {
         filtered_vis.set_image(depth.filtered_vis);
 
 
-        auto put_group = [&](setting_groups group, bool vertical) {
-            ImGui::BeginGroup();
+        // Parallax Settings
+        ImGui::BeginGroup();
+
+        expand(settings[(int) PARALLAX], [&](auto& vector) {
+            using type = typename std::remove_reference_t<decltype(vector)>::value_type::type::type;
+
+            for (auto& elem : vector) {
+                auto& setting = elem.get();
+
+                // TODO: Add more input types. (notably string and bool.)
+                if constexpr (std::is_integral_v<type>)       ImGui::SliderInt(setting.name.c_str(), &setting.value, setting.min, setting.max);
+                if constexpr (std::is_floating_point_v<type>) ImGui::SliderFloat(setting.name.c_str(), &setting.value, setting.min, setting.max);
+            }
+        });
+
+        ImGui::EndGroup();
+
+        // Robot Controls
+        ImGui::SameLine();
+        ImGui::BeginGroup();
+
+        expand(settings[(int) ROBOT], [&](auto& vector) {
+            using type = typename std::remove_reference_t<decltype(vector)>::value_type::type::type;
 
             bool first = true;
-            expand(settings, [&](auto& vector) {
-                using type = typename std::remove_reference_t<decltype(vector)>::value_type::type::type;
+            for (auto& elem : vector) {
+                auto& setting = elem.get();
 
-                for (auto& elem : vector) {
-                    auto& setting = elem.get();
-                    if (setting.setting_group != (int) group) continue;
+                if (!first) ImGui::SameLine(); else first = false;
 
-                    if (!first && vertical) ImGui::SameLine(); else first = false;
+                if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
+                if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
+            }
+        });
 
-                    // TODO: Add more input types. (notably string and bool.)
-                    if (vertical) {
-                        if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
-                        if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
-                    } else {
-                        if constexpr (std::is_integral_v<type>)       ImGui::SliderInt(setting.name.c_str(), &setting.value, setting.min, setting.max);
-                        if constexpr (std::is_floating_point_v<type>) ImGui::SliderFloat(setting.name.c_str(), &setting.value, setting.min, setting.max);
-                    }
-                }
-            });
+        // Snapshot button
+        if (ImGui::Button("Snapshot", { 200, 30 })) {
+            image_to_file(snapshot_folder.string(), datetime_string(), left.get_image());
+        }
 
-            ImGui::EndGroup();
-        };
-
-        
-        put_group(PARALLAX, false);
-        ImGui::SameLine();
-        put_group(ROBOT, true);
+        ImGui::EndGroup();
 
 
+        // Image viewers
         left.show();
         ImGui::SameLine();
         right.show();

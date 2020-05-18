@@ -36,7 +36,7 @@ namespace robotica {
               value((stored_type) default),
               setting_group(setting_group)
         {
-            container.register_setting(*this);
+            container.register_setting(*this, setting_group);
         }
 
 
@@ -49,16 +49,19 @@ namespace robotica {
     public:
         using container_t = Derived;
 
-        template <typename T> void register_setting(setting<T, Derived>& s) {
+        template <typename T> void register_setting(setting<T, Derived>& s, int setting_group) {
+            if (settings.size() < setting_group + 1) settings.resize(setting_group + 1);
+
             using type = std::vector<std::reference_wrapper<setting<T, Derived>>>;
-            std::get<type>(settings).push_back(s);
+            std::get<type>(settings[setting_group]).push_back(s);
         }
     protected:
-        using contained_t = typename setting_types
+        using contained_t = std::vector<typename setting_types
             ::template apply_compress<typename bind_template_back<setting, Derived>::type>
             ::template apply_compress<std::reference_wrapper>
             ::template apply_compress<std::vector>
-            ::template apply_expand<std::tuple>;
+            ::template apply_expand<std::tuple>
+        >;
 
         contained_t settings;
     };

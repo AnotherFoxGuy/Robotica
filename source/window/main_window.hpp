@@ -4,16 +4,21 @@
 #include <window/gui_image.hpp>
 #include <window/setting.hpp>
 #include <utility/traits.hpp>
+#include <utility/typedefs.hpp>
 
 #include <opencv2/core.hpp>
 #include <SDL2/SDL_events.h>
 
 #include <type_traits>
+#include <filesystem>
 
 #define RBT_SETTING(group, name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max, (int) group }
 
 
 namespace robotica {
+    const inline fs::path snapshot_folder = ROOT_DIR "/snapshots/";
+
+
     class main_window : public window, public setting_storage<main_window> {
     public:
         static main_window& instance(void);
