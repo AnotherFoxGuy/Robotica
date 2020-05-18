@@ -67,6 +67,7 @@ namespace robotica {
         }
 
         cv::rotate(result, result, cv::ROTATE_90_CLOCKWISE);
+        cv::flip(result, result, 1);
 
         return result;
     }

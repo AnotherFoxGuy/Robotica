@@ -43,7 +43,6 @@ namespace robotica {
             eye_distance(0.03f),
             eye_height(0.028f)
         {
-            
             left_camera->enable(timestep);
             right_camera->enable(timestep);
 
