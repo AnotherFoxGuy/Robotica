@@ -24,6 +24,7 @@ namespace robotica {
         constexpr int padding_top    = 42;
         constexpr int padding_bottom = 8;
         constexpr int padding_side   = 8;
+        constexpr int button_height  = 30;
 
         int num_elems = 0;
         expand(settings[(int) PARALLAX], [&](const auto& v) { num_elems += std::count_if(v.begin(), v.end(), [](const auto& e) { return e.get().setting_group == (int) PARALLAX; }); });
@@ -80,8 +81,9 @@ namespace robotica {
 
                 if (!first) ImGui::SameLine(); else first = false;
 
-                if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
-                if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, slider_height * num_elems), &setting.value, setting.min, setting.max);
+                const int h = slider_height * num_elems - button_height - padding_bottom;
+                if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
+                if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
             }
         });
 
