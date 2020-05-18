@@ -13,7 +13,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 include(pmm)
 
-if (MSVC AND ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+if (MSVC AND "_${CMAKE_BUILD_TYPE}" STREQUAL "_Debug")
      # MSVC needs extra settings because glew only compiles with VC2017
      # Also Poco has to be explicitly told this is a debug build for some reason.
      pmm(CONAN PROFILE "${CMAKE_SOURCE_DIR}/msvc_debug.conanprofile" REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
