@@ -1,5 +1,6 @@
 #pragma once
 
+#include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
 #include <ctime>
@@ -31,5 +32,27 @@ namespace robotica {
         while (fs::exists(dest)) dest = dest_root.string() + "_" + std::to_string(i++);
 
         cv::imwrite(dest.string() + ".png", image);
+    }
+
+
+    inline cv::Mat crop_image(cv::Mat source, cv::Rect area) {
+        // TODO: Refactor this into something less wasteful. Default OpenCV crop method doesn't work.
+        cv::Mat dest(area.width, area.height, source.type());
+
+        int index_og = 0, index_new = 0;
+        for (int x = 0; x < source.cols; ++x) {
+            for (int y = 0; y < source.rows; ++y) {
+                if (x >= area.x && x < area.x + area.width) {
+                    if (y >= area.y && y < area.y + area.height) {
+                        for (int i = 0; i < source.channels(); ++i) dest.data[index_new + i] = source.data[index_og + i];
+                        ++index_new;
+                    }
+                }
+
+                ++index_og;
+            }
+        }
+
+        return dest;
     }
 }

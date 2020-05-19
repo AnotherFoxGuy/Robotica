@@ -35,6 +35,9 @@ namespace robotica {
         gui_image(const gui_image&) = delete;
         gui_image& operator=(const gui_image&) = delete;
 
+        gui_image(gui_image&&) = default;
+        gui_image& operator=(gui_image&&) = default;
+
 
         void update(void) {
             glBindTexture(GL_TEXTURE_2D, texture_id);

@@ -50,6 +50,7 @@ namespace robotica {
 
         gui_image left, right;
         gui_image left_disp, right_disp, filtered, raw_vis, filtered_vis;
+        gui_image object;
     protected:
         void add_elements(void) override;
     private:

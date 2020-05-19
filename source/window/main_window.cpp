@@ -3,6 +3,9 @@
 #include <vision/converters.hpp>
 #include <world/robot.hpp>
 #include <utility/utility.hpp>
+#include <vision/classifier.hpp>
+
+#include <opencv2/highgui.hpp>
 
 #include <algorithm>
 #include <string>
@@ -46,13 +49,13 @@ namespace robotica {
         left.set_image(robot::instance().get_camera_output(side::LEFT));
         right.set_image(robot::instance().get_camera_output(side::RIGHT));
 
-        auto depth = parallax_depth_map(left.get_image(), right.get_image());
 
-        left_disp.set_image(depth.left_disp);
-        right_disp.set_image(depth.right_disp);
-        filtered.set_image(depth.filtered);
-        raw_vis.set_image(depth.raw_vis);
+        auto depth = parallax_depth_map(left.get_image(), right.get_image());
         filtered_vis.set_image(depth.filtered_vis);
+
+
+        auto rec = classify(left.get_image(), "moonrock");
+        if (rec.size()) object.set_image(left.get_image()(rec[0].bounding_rect));
 
 
         // Parallax Settings
@@ -108,14 +111,10 @@ namespace robotica {
         ImGui::SameLine();
         right.show();
         ImGui::SameLine();
-        left_disp.show();
-        ImGui::SameLine();
-        right_disp.show();
-
-        filtered.show();
-        ImGui::SameLine();
-        raw_vis.show();
-        ImGui::SameLine();
         filtered_vis.show();
+
+
+        // Classifier
+        object.show();
     }
 }
