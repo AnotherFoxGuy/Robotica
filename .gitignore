@@ -34,3 +34,4 @@ tools/l10n/ror\.pot
 out/
 CMakeSettings.json
 *.wbproj
+traindata/

@@ -115,6 +115,6 @@ namespace robotica {
 
 
         // Classifier
-        object.show();
+        if (rec.size()) object.show();
     }
 }
