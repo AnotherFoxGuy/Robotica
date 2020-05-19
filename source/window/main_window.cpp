@@ -49,10 +49,10 @@ namespace robotica {
         auto depth = parallax_depth_map(left.get_image(), right.get_image());
 
         left_disp.set_image(depth.left_disp);
-        //right_disp.set_image(depth.right_disp);
-        //filtered.set_image(depth.filtered);
-        //raw_vis.set_image(depth.raw_vis);
-        //filtered_vis.set_image(depth.filtered_vis);
+        right_disp.set_image(depth.right_disp);
+        filtered.set_image(depth.filtered);
+        raw_vis.set_image(depth.raw_vis);
+        filtered_vis.set_image(depth.filtered_vis);
 
 
         // Parallax Settings
@@ -109,13 +109,13 @@ namespace robotica {
         right.show();
         ImGui::SameLine();
         left_disp.show();
-        //ImGui::SameLine();
-        //right_disp.show();
+        ImGui::SameLine();
+        right_disp.show();
 
-        //filtered.show();
-        //ImGui::SameLine();
-        //raw_vis.show();
-        //ImGui::SameLine();
-        //filtered_vis.show();
+        filtered.show();
+        ImGui::SameLine();
+        raw_vis.show();
+        ImGui::SameLine();
+        filtered_vis.show();
     }
 }
