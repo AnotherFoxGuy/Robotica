@@ -1,6 +1,7 @@
 #pragma once
 
 #include <window/main_window.hpp>
+#include <vision/converters.hpp>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -23,15 +24,17 @@ namespace robotica {
         cv::cvtColor(right, right_grayscale, cv::COLOR_BGR2GRAY);
 
         try {
-            auto left_matcher  = cv::StereoBM::create(window.num_disparities * 16, window.block_size * 2 + 1);
+            auto left_matcher = cv::StereoBM::create();
+            left_matcher->setNumDisparities(window.num_disparities * 16);
+            left_matcher->setBlockSize(window.block_size * 2 + 1);
             left_matcher->setDisp12MaxDiff(window.disparity_max_diff);
             left_matcher->setSpeckleRange(window.speckle_range);
             left_matcher->setSpeckleWindowSize(window.speckle_win_size * 2 + 1);
             left_matcher->setUniquenessRatio(window.uniqueness_ratio);
-            left_matcher->setTextureThreshold(window.texture_threshold);
-            //left_matcher->setMinDisparity(window.min_disparity);
+            //left_matcher->setTextureThreshold(window.texture_threshold);
+            left_matcher->setMinDisparity(window.min_disparity);
             left_matcher->setPreFilterCap(window.pre_filter_cap);
-            left_matcher->setPreFilterSize(window.pre_filter_size);
+            //left_matcher->setPreFilterSize(window.pre_filter_size * 2 + 1);
 
             auto right_matcher = cv::ximgproc::createRightMatcher(left_matcher);
             auto wls_filter = cv::ximgproc::createDisparityWLSFilter(left_matcher);
@@ -57,7 +60,7 @@ namespace robotica {
 
 
             // Convert from CV_16S to CV_8U
-            for (auto* mat : std::array { &left_disparity, &right_disparity, &filtered, &raw_vis, &filtered_vis }) {
+            for (auto* mat : std::array { &left_disparity, &right_disparity, &filtered, &raw_vis, &filtered_vis}) {
                 mat->convertTo(*mat, CV_8U);
             }
 
