@@ -28,16 +28,16 @@ namespace robotica {
         enum setting_groups { PARALLAX, ROBOT };
 
         // Parallax Processing Settings
-        RBT_SETTING(PARALLAX, num_disparities,    1,      0,    16);     // x 16
-        RBT_SETTING(PARALLAX, block_size,         2,      0,    32);     // x 2 + 1
-        RBT_SETTING(PARALLAX, disparity_max_diff, 1,      0,    32);
-        RBT_SETTING(PARALLAX, speckle_range,      8,      0,    32);
-        RBT_SETTING(PARALLAX, speckle_win_size,   2,      2,    127);     // x2 + 1
+        RBT_SETTING(PARALLAX, num_disparities,    3,      0,    16);        // x16
+        RBT_SETTING(PARALLAX, block_size,         10,     0,    31);        // x2 + 1
+        RBT_SETTING(PARALLAX, disparity_max_diff, 0,      0,    31);
+        RBT_SETTING(PARALLAX, speckle_range,      16,     0,    31);
+        RBT_SETTING(PARALLAX, speckle_win_size,   2,      2,    127);       // x2 + 1
         RBT_SETTING(PARALLAX, uniqueness_ratio,   0,      0,    32);
-        RBT_SETTING(PARALLAX, texture_threshold,  507,    0,    2048);
-        RBT_SETTING(PARALLAX, min_disparity,      -39,    -128, 128);
-        RBT_SETTING(PARALLAX, pre_filter_cap,     61,     1,    63);
-        RBT_SETTING(PARALLAX, pre_filter_size,    5,      0,    32);
+        RBT_SETTING(PARALLAX, texture_threshold,  0,      0,    2048);
+        RBT_SETTING(PARALLAX, min_disparity,      0,     -128,  128);
+        RBT_SETTING(PARALLAX, pre_filter_cap,     1,      1,    63);
+        RBT_SETTING(PARALLAX, pre_filter_size,    2,      2,    127);        // x2 + 1
         RBT_SETTING(PARALLAX, lambda,             6000.0, 0,    10000);
         RBT_SETTING(PARALLAX, sigma,              2.0,    0,    10);
         RBT_SETTING(PARALLAX, raw_vis_scale,      21.0,   0,    64);
