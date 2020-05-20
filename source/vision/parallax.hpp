@@ -17,6 +17,7 @@ namespace robotica {
 
 
     inline disparity_info parallax_depth_map(cv::Mat left, cv::Mat right) {
+        EASY_BLOCK("parallax", profiler::colors::Red);
         auto& window = main_window::instance();
 
         cv::Mat left_grayscale, right_grayscale;

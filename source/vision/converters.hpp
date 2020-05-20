@@ -11,6 +11,9 @@
 #include <filesystem>
 #include <algorithm>
 
+#include <easy/profiler.h>
+#define PROFILE_PARALLEL 1
+
 
 namespace robotica {
     const inline fs::path gradient_file_path = ROOT_DIR "/assets/gradient.png";
@@ -44,8 +47,8 @@ namespace robotica {
         return result;
     }
 
-
     inline cv::Mat camera_format_to_bgr(const unique<webots::Camera>& source, glm::ivec2 viewport) {
+        EASY_BLOCK("camera_format_to_bgr", profiler::colors::Red);
         cv::Mat result(viewport.y, viewport.x, CV_8UC3);
 
         // The documentation for Webots about the internal format of the camera data makes the following claims:

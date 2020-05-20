@@ -8,6 +8,7 @@ glm/0.9.9.8
 imgui/1.76
 sdl2/2.0.9@@bincrafters/stable
 glew/2.1.0@@bincrafters/stable
+easy_profiler/2.1.0@@AnotherFoxGuy/stable
 <% if(UNIX) %>
 glib/2.64.0@@bincrafters/stable
 openssl/1.1.1g

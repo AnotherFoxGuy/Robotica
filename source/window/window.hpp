@@ -63,6 +63,7 @@ namespace robotica {
 
 
         virtual void update(void) {
+            EASY_BLOCK("window update", profiler::colors::Red);
             poll_events();
             if (closed) return;
 

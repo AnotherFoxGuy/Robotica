@@ -103,6 +103,11 @@ namespace robotica {
             image_to_file(snapshot_folder.string(), "NEGATIVE_"s + datetime_string(), left.get_image());
         }
 
+        if (ImGui::Button("profiler dumpBlocksToFile", {200, 30}))
+        {
+            profiler::dumpBlocksToFile("test_profile.prof");
+        }
+
         ImGui::EndGroup();
 
 
