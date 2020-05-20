@@ -46,32 +46,4 @@ namespace robotica {
 
         return result;
     }
-
-    inline cv::Mat camera_format_to_bgr(const unique<webots::Camera>& source, glm::ivec2 viewport) {
-        EASY_BLOCK("camera_format_to_bgr", profiler::colors::Red);
-        cv::Mat result(viewport.y, viewport.x, CV_8UC3);
-
-        // The documentation for Webots about the internal format of the camera data makes the following claims:
-        // - The image is stored in RGB
-        // - The image is stored in BGRA
-        // - The image data is in array-of-structs format and not struct-of-arrays format.
-        // Some of these claims contradict each other and none of them appear to be correct.
-        // Fortunately, we can bypass this mess by just iterating over each pixel and using the built in functions
-        // to extract image data for each channel.
-        unsigned index = 0;
-        for (int x = 0; x < viewport.x; ++x) {
-            for (int y = 0; y < viewport.y; ++y) {
-                result.data[index + 0] = source->imageGetBlue (source->getImage(), viewport.x, x, y);
-                result.data[index + 1] = source->imageGetGreen(source->getImage(), viewport.x, x, y);
-                result.data[index + 2] = source->imageGetRed  (source->getImage(), viewport.x, x, y);
-
-                index += 3;
-            }
-        }
-
-        cv::rotate(result, result, cv::ROTATE_90_CLOCKWISE);
-        cv::flip(result, result, 1);
-
-        return result;
-    }
 }

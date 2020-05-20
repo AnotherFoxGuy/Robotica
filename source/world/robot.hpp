@@ -71,24 +71,15 @@ namespace robotica {
             return (result != -1);
         }
 
-
-        // Get the size of the camera viewport as { width, height }.
-        glm::ivec2 get_camera_viewport_size(side side) const {
-            auto& camera = (side == side::LEFT) ? left_camera : right_camera;
-
-            return {
-                camera->getWidth(),
-                camera->getHeight()
-            };
-        }
-
-
-        // Get the raw output image of the camera. (BGR format)
+        // camera clears the buffer
+        // if you want to save the data you need to make a copy of "image", otherwise it will be overwritten
         cv::Mat get_camera_output(side side) const {
             auto& camera = (side == side::LEFT) ? left_camera : right_camera;
-            const auto viewport = get_camera_viewport_size(side);
 
-            return camera_format_to_bgr(camera, viewport);
+            cv::Mat image = cv::Mat(cv::Size(camera->getWidth(), camera->getHeight()), CV_8UC4);
+            image.data = (uchar *)camera->getImage();
+
+            return image;
         }
     private:
         unique<webots::Robot> rbt;
