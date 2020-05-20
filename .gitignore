@@ -36,3 +36,4 @@ CMakeSettings.json
 doc/
 *.wbproj
 traindata/
+conanfile.txt
