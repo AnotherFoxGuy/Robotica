@@ -32,8 +32,14 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC .)
 
+if(NOT "_$ENV{CI}" STREQUAL "_")
+        message("Shit Fix")
+        set(SHIT_FIX "-Wl,--no-as-needed")
+endif()
+
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+        ${SHIT_FIX}
      ${CMAKE_DL_LIBS}
      Threads::Threads
      CONAN_PKG::webots-controller

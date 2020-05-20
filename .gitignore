@@ -33,5 +33,6 @@ tools/l10n/languages/
 tools/l10n/ror\.pot
 out/
 CMakeSettings.json
+doc/
 *.wbproj
 traindata/
