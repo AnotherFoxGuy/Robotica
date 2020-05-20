@@ -25,7 +25,7 @@ matrix:
         - sudo dpkg -i ./conan-ubuntu-64_1_25_1.deb
         - conan user
       script:
-        - cmake -DCMAKE_BUILD_TYPE=Release .
+        - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-9.0 -DCMAKE_CXX_COMPILER=g++-9.0 .
         - make -j
       before_cache:
         - cmake -P cmake/pmm.cmake /Conan /Clean
