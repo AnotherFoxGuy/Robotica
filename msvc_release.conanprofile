@@ -1,0 +1,6 @@
+include(default)
+
+[settings]
+glew:compiler=Visual Studio
+glew:compiler.version=15
+glew:compiler.toolset=v141

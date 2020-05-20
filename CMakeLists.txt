@@ -24,13 +24,20 @@ fwrite("conanfile.txt" "${gen_conan}")
 
 include(pmm)
 
-if (MSVC AND "_${CMAKE_BUILD_TYPE}" STREQUAL "_Debug")
-     # MSVC needs extra settings because glew only compiles with VC2017
-     # Also Poco has to be explicitly told this is a debug build for some reason.
-     pmm(CONAN PROFILE "${CMAKE_SOURCE_DIR}/msvc_debug.conanprofile" REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
+
+# MSVC needs extra settings because glew only compiles with VC2017
+# Also Poco has to be explicitly told this is a debug build for some reason.
+if (MSVC)
+     if ("_${CMAKE_BUILD_TYPE}" STREQUAL "_Debug")
+          set(CONAN_PROFILE "PROFILE ${CMAKE_SOURCE_DIR}/msvc_debug.conanprofile")
+     else()
+          set(CONAN_PROFILE "PROFILE ${CMAKE_SOURCE_DIR}/msvc_release.conanprofile")
+     endif()
 else()
-     pmm(CONAN REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
+     # Clang / GCC profiles go here.
 endif()
+
+pmm(CONAN ${CONAN_PROFILE} REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
 
 set(CMAKE_CXX_STANDARD 20)
 
