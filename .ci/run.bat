@@ -1,1 +1,1 @@
-refreshenv && call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\Common7\Tools\VsDevCmd.bat" -host_arch=amd64 -arch=amd64 && cmake -GNinja -DCMAKE_BUILD_TYPE=Release . && ninja
+refreshenv && call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\Common7\Tools\VsDevCmd.bat" -host_arch=amd64 -arch=amd64 && cmake -GNinja -DCMAKE_BUILD_TYPE=Release . && ninja && conan remove * -fsb
