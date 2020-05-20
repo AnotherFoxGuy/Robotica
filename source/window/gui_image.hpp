@@ -45,7 +45,7 @@ namespace robotica {
         }
 
 
-        void set_image(cv::Mat img) {
+        void set_image(const cv::Mat& img) {
             assert(img.type() == CV_8U || img.type() == CV_8UC3);
 
             if (img.type() == CV_8U) cv::cvtColor(img, cv_image, cv::COLOR_GRAY2RGBA);
