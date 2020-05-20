@@ -56,8 +56,10 @@ namespace robotica {
             std::get<type>(settings[setting_group]).push_back(s);
         }
     protected:
+        template <typename... Ts> using bound_setting_t = typename bind_template_back<setting, Derived>::template type<Ts...>;
+
         using contained_t = std::vector<typename setting_types
-            ::template apply_compress<typename bind_template_back<setting, Derived>::type>
+            ::template apply_compress<bound_setting_t>
             ::template apply_compress<std::reference_wrapper>
             ::template apply_compress<std::vector>
             ::template apply_expand<std::tuple>
