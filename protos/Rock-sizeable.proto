@@ -59,7 +59,7 @@ PROTO Rock-sizeable [
     model "rock-sizeable"
     locked IS locked
     boundingObject USE IFS
-	
+
 	 %{ if (fields.density.value > 0) then }%
     physics Physics {
       density IS density
