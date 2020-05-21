@@ -5,6 +5,20 @@ matrix:
     - os: linux
       dist: bionic
       name: Linux Build
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+            - mesa-common-dev
+            - libegl1-mesa-dev
+            - libasound2-dev
+            - libpulse-dev
+            - libxcursor-dev
+            - libxinerama-dev
+            - libxi-dev
+            - libxrandr-dev
       cache:
         directories:
           - $HOME/.conan/
@@ -13,7 +27,7 @@ matrix:
         - sudo dpkg -i ./conan-ubuntu-64_1_25_1.deb
         - conan user
       script:
-        - cmake -DCMAKE_BUILD_TYPE=Release .
+        - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8 .
         - make -j
       before_cache:
         - cmake -P cmake/pmm.cmake /Conan /Clean
@@ -33,5 +47,3 @@ matrix:
         - export CC="cl.exe"
         - export CC_FOR_BUILD="cl.exe"
         - ./.ci/run.bat
-      before_cache:
-        - ./pmm-cli.bat /Conan /Clean

@@ -1,0 +1,10 @@
+include(default)
+
+[settings]
+glew:compiler=Visual Studio
+glew:compiler.version=15
+glew:compiler.toolset=v141
+build_type=Debug
+
+[env]
+CMAKE_BUILD_TYPE=Debug
