@@ -10,13 +10,15 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-9
-            - libgbm-dev
-            - libjack-dev
-            - libaudio-dev
-            - libcap-dev
-      env:
-        - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
+            - g++-8
+            - mesa-common-dev
+            - libegl1-mesa-dev
+            - libasound2-dev
+            - libpulse-dev
+            - libxcursor-dev
+            - libxinerama-dev
+            - libxi-dev
+            - libxrandr-dev
       cache:
         directories:
           - $HOME/.conan/
@@ -25,7 +27,7 @@ matrix:
         - sudo dpkg -i ./conan-ubuntu-64_1_25_1.deb
         - conan user
       script:
-        - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-9 -DCMAKE_CXX_COMPILER=g++-9 .
+        - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8 .
         - make -j
       before_cache:
         - cmake -P cmake/pmm.cmake /Conan /Clean
