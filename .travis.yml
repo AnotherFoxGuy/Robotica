@@ -19,6 +19,8 @@ matrix:
             - libxinerama-dev
             - libxi-dev
             - libxrandr-dev
+            - libjack-dev
+            - libaudio-dev
       cache:
         directories:
           - $HOME/.conan/
