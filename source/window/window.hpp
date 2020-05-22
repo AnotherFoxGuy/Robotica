@@ -1,6 +1,6 @@
 #pragma once
 
-#include <window/imgui_bindings.h>
+#include <window/imgui_bindings.hpp>
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
