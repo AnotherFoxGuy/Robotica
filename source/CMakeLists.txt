@@ -9,13 +9,13 @@ project(RBTC)
 
 set(SOURCE_FILES
         main.cpp
-        WebViewManager.{h,cpp}
+        WebViewManager.{hpp,cpp}
         world/robot.hpp
         world/world.hpp
         window/gui_image.hpp
         window/main_window.hpp
         window/main_window.cpp
-        window/imgui_bindings.{h,cpp}
+        window/imgui_bindings.{hpp,cpp}
         window/setting.hpp
         window/window.hpp
         vision/converters.hpp

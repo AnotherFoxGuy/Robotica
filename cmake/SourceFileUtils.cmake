@@ -43,7 +43,7 @@ function(expand_file_extensions RESULT)
 
     foreach (entry IN LISTS ARGN)
         # Check for file extension pattern
-        string(REGEX MATCH "\\.{((h|cpp),)+(h|cpp)}$" EXT_PATTERN ${entry})
+        string(REGEX MATCH "\\.{((hpp|cpp),)+(hpp|cpp)}$" EXT_PATTERN ${entry})
         if (NOT EXT_PATTERN)
             list(APPEND EXPANDED_SOURCES ${entry})
         else ()
