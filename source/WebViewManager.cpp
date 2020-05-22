@@ -1,4 +1,4 @@
-#include "WebViewManager.h"
+#include "WebViewManager.hpp"
 #include <iostream>
 
 #include "Poco/Format.h"
