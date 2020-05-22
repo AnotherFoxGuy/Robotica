@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 project("Robotica")
+include(cmakepp)
 
 find_package(Threads REQUIRED)
 
-include(cmakepp)
-
 function(get_variable_from_conan _var_name)
-     include("${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
+     include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
      get_property(__propt VARIABLE PROPERTY ${_var_name})
      set(${_var_name} ${__propt} PARENT_SCOPE)
 endfunction()

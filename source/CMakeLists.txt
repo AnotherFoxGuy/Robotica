@@ -29,6 +29,7 @@ expand_file_extensions(SOURCE_FILES ${SOURCE_FILES})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
+get_variable_from_conan(CONAN_RES_DIRS_IMGUI)
 target_include_directories(${PROJECT_NAME} PUBLIC . ${CONAN_RES_DIRS_IMGUI}/bindings/)
 
 if (NOT "_$ENV{CI}" STREQUAL "_")

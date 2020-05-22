@@ -11677,20 +11677,6 @@ function(include_glob)
   return()
 endfunction()
 
-# File: cmake/core/include_guard.cmake
-
-
-#include guard returns if the file was already included 
-# usage :  at top of file write include_guard(${CMAKE_CURRENT_LIST_FILE})
-macro(include_guard __include_guard_file)
-  #string(MAKE_C_IDENTIFIER "${__include_guard_file}" __include_guard_file)
-  get_property(is_included GLOBAL PROPERTY "ig_${__include_guard_file}")
-  if(is_included)
-    _return()
-  endif()
-  set_property(GLOBAL PROPERTY "ig_${__include_guard_file}" true)
-endmacro()
-
 # File: cmake/core/include_once.cmake
 
 function(include_once file)
@@ -21211,16 +21197,15 @@ endfunction()
 
 # File: cmake/function/function_string_get.cmake
 
-# returns the implementation of the function (a string containing the source code)
-# this only works for functions files and function strings. CMake does not offer
-# a possibility to get the implementation of a defined function or macro.
+## returns the implementation of the function (a string containing the source code)
+## this only works for functions files and function strings. CMake does not offer
+## a possibility to get the implementation of a defined function or macro.
 function(function_string_get func)
     is_function_string(is_string "${func}")
     if (is_string)
         return_ref(func)
         return()
     endif ()
-
 
     is_function_ref(is_ref "${func}")
     if (is_ref)
@@ -21272,9 +21257,7 @@ function(function_string_get func)
     if (parsed_lambda)
         return_ref(parsed_lambda)
         return()
-        #endif()
-
-
+    endif ()
 endfunction()
 
 # File: cmake/function/function_string_import.cmake
@@ -23972,25 +23955,23 @@ endfunction()
 
 # File: cmake/map/helpers/map_pick_regex.cmake
 
-
-# returns a map containing all properties whose keys were matched by any of the specified regexes
+## returns a map containing all properties whose keys were matched by any of the specified regexes
 function(map_pick_regex map)
-  set(regexes ${ARGN})
-  map_keys("${map}")
-  ans(keys)
-  set(pick_keys)
-  foreach(regex ${regexex})
-    foreach(key ${keys})
-      if("${key}" MATCHES "${regex}")
-        list(APPEND pick_keys "${key}")
-      endforeach()
-    endforeach()
-  endforeach()
-  list(REMOVE_DUPLICATES pick_keys)
-  map_pick("${map}" ${pick_keys})
-  return_ans()
+    set(regexes ${ARGN})
+    map_keys("${map}")
+    ans(keys)
+    set(pick_keys)
+    foreach (regex ${regexex})
+        foreach (key ${keys})
+            if ("${key}" MATCHES "${regex}")
+                list(APPEND pick_keys "${key}")
+            endif ()
+        endforeach ()
+    endforeach ()
+    list(REMOVE_DUPLICATES pick_keys)
+    map_pick("${map}" ${pick_keys})
+    return_ans()
 endfunction()
-
 
 # File: cmake/map/helpers/map_pop_back.cmake
 
