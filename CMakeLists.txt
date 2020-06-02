@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 project("Robotica")
-include(cmakepp)
-
-find_package(Threads REQUIRED)
 
 function(get_variable_from_conan _var_name)
      include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
@@ -17,9 +14,6 @@ SET(ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_USE_RELATIVE_PATHS OFF)
 
-template_run_file("conanfile.txt.in")
-ans(gen_conan)
-fwrite("conanfile.txt" "${gen_conan}")
 
 include(pmm)
 
