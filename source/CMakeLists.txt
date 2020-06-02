@@ -37,10 +37,14 @@ if (NOT "_$ENV{CI}" STREQUAL "_")
     set(SHIT_FIX "-Wl,--no-as-needed")
 endif ()
 
+if (UNIX)
+    set(EX_LIBS "sndio")
+endif ()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${SHIT_FIX}
         ${CMAKE_DL_LIBS}
+        ${EX_LIBS}
         Threads::Threads
         CONAN_PKG::webots-controller
         CONAN_PKG::opencv
