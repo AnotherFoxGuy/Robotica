@@ -23,7 +23,6 @@ fwrite("conanfile.txt" "${gen_conan}")
 
 include(pmm)
 
-
 # MSVC needs extra settings because glew only compiles with VC2017
 # Also Poco has to be explicitly told this is a debug build for some reason.
 if (MSVC)
@@ -39,8 +38,6 @@ endif()
 pmm(CONAN ${CONAN_PROFILE} REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
 
 set(CMAKE_CXX_STANDARD 20)
-
-
 
 get_variable_from_conan(CONAN_RES_DIRS_IMGUI)
 

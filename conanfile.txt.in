@@ -9,12 +9,13 @@ webots-controller/R2020a-rev1@@anotherfoxguy/stable
 opencv/4.1.1@@conan/stable
 glm/0.9.9.8
 imgui/1.76
-sdl2/2.0.9@@bincrafters/stable
+sdl2/2.0.12@@bincrafters/stable
 glew/2.1.0@@bincrafters/stable
 easy_profiler/2.1.0@@AnotherFoxGuy/stable
 <% if(UNIX) %>
 glib/2.64.0@@bincrafters/stable
 openssl/1.1.1g
+mesa/20.0.1@@bincrafters/stable 
 <% endif() %>
 
 [options]
@@ -25,7 +26,23 @@ opencv:nonfree=True
 opencv:eigen=True
 opencv:glog=True
 opencv:gflags=True
+<% if(UNIX) %>
+mesa:libunwind=False
+sdl2:fPIC=False
+sdl2:alsa=False
+sdl2:jack=False
+sdl2:pulse=False
+sdl2:nas=False
+sdl2:x11=False
+sdl2:xcursor=False
+sdl2:xinerama=False
+sdl2:xinput=False
+sdl2:xrandr=False
+sdl2:xscrnsaver=False
+sdl2:xshape=False
+sdl2:xvm=False
+sdl2:iconv=False
+<% endif() %>
 
 [imports]
 bin, *.dll -> source @@ keep_path=False
-lib, *.so* -> source @@ keep_path=False
