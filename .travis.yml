@@ -10,7 +10,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-8
+            - g++-10
             - mesa-common-dev
             - libegl1-mesa-dev
             - libasound2-dev
@@ -29,7 +29,7 @@ matrix:
         - sudo dpkg -i ./conan-ubuntu-64_1_25_1.deb
         - conan user
       script:
-        - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-8 -DCMAKE_CXX_COMPILER=g++-8 .
+        - cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 .
         - make -j
       before_cache:
         - cmake -P cmake/pmm.cmake /Conan /Clean
@@ -42,7 +42,7 @@ matrix:
           - C:/.conan
       install:
         - choco install conan -y -s="https://api.bintray.com/nuget/anotherfoxguy/choco-pkg"
-        - choco install ninja -y
+        - choco install ninja visualstudio2019buildtools visualstudio2019-workload-vctools -y
       script:
         - export CXX="cl.exe"
         - export CXX_FOR_BUILD="cl.exe"

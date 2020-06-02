@@ -33,7 +33,6 @@ sdl2:alsa=False
 sdl2:jack=False
 sdl2:pulse=False
 sdl2:nas=False
-sdl2:x11=False
 sdl2:xcursor=False
 sdl2:xinerama=False
 sdl2:xinput=False
