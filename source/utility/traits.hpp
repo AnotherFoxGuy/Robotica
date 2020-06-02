@@ -15,15 +15,6 @@ namespace robotica {
     }
 
 
-    template <typename C, typename T> struct member_variable_info {
-        using classname = C;
-        using type = T;
-
-        member_variable_info(MemVar<C, T>) {}
-    };
-
-    template <typename T> using make_member_variable_info = decltype(member_variable_info(std::declval<T>()));
-
 
 
     template <typename... Ts> struct pack {
@@ -40,4 +31,28 @@ namespace robotica {
     template <template <typename...> typename X, typename T> struct bind_template_back {
         template <typename... Ts> using type = X<Ts..., T>;
     };
+
+
+
+
+    template <typename C, typename T> struct member_variable_info {
+        using classname = C;
+        using type = T;
+
+        member_variable_info(MemVar<C, T> const) {}
+    };
+
+
+    template <typename C, typename T, typename... A> struct member_function_info {
+        using classname = C;
+        using return_type = T;
+        using arguments = pack<A...>;
+
+        member_function_info(MemFn<C, T, A...>) {}
+        member_function_info(CMemFn<C, T, A...>) {}
+    };
+
+
+    template <typename T> using make_member_variable_info = decltype(member_variable_info(std::declval<T>()));
+    template <typename T> using make_member_function_info = decltype(member_function_info(std::declval<T>()));
 }

@@ -4,6 +4,7 @@
 #include <world/robot.hpp>
 #include <utility/utility.hpp>
 #include <vision/classifier.hpp>
+#include <vision/world_model.hpp>
 
 #include <opencv2/highgui.hpp>
 
@@ -33,29 +34,25 @@ namespace robotica {
         constexpr int padding_side   = 8;
         constexpr int button_height  = 30;
 
+        // Count parallax settings.
         int num_elems = 0;
         expand(settings[(int) PARALLAX], [&](const auto& v) { num_elems += std::count_if(v.begin(), v.end(), [](const auto& e) { return e.get().setting_group == (int) PARALLAX; }); });
 
+        // Calculate settings area size.
         const int target_height = padding_top + (slider_height * num_elems) + (2 * image_size) + padding_bottom;
         const int target_width = (4 * image_size) + (2 * padding_side);
 
         if (!has_resized) ImGui::SetWindowSize({ (float) target_width, (float) target_height });
         has_resized = true;
 
+        // Resize window to GUI size.
         ImGui::SetWindowPos({ 0, 0 });
         auto size = ImGui::GetWindowContentRegionMax();
         SDL_SetWindowSize(handle, size.x + 8, size.y + 8);
 
-        left.set_image(robot::instance().get_camera_output(side::LEFT));
-        right.set_image(robot::instance().get_camera_output(side::RIGHT));
-
-
-        auto depth = parallax_depth_map(left.get_image(), right.get_image());
-        filtered_vis.set_image(depth.filtered_vis);
-
-
-        auto rec = classify(left.get_image(), "moonrock");
-        if (rec.size()) object.set_image(left.get_image()(rec[0].bounding_rect));
+        left.set_image(world_model::instance().get_left_camera());
+        right.set_image(world_model::instance().get_right_camera());
+        depth.set_image(world_model::instance().get_depth_map());
 
 
         // Parallax Settings
@@ -74,6 +71,7 @@ namespace robotica {
         });
 
         ImGui::EndGroup();
+
 
         // Robot Controls
         ImGui::SameLine();
@@ -94,6 +92,7 @@ namespace robotica {
             }
         });
 
+
         // Snapshot buttons
         if (ImGui::Button("Snap Positive", { 200, 30 })) {
             image_to_file(snapshot_folder.string(), "POSITIVE_"s + datetime_string(), left.get_image());
@@ -111,15 +110,11 @@ namespace robotica {
         ImGui::EndGroup();
 
 
-        // Image viewers
+        // Image views
         left.show();
         ImGui::SameLine();
         right.show();
         ImGui::SameLine();
-        filtered_vis.show();
-
-
-        // Classifier
-        if (rec.size()) object.show();
+        depth.show();
     }
 }

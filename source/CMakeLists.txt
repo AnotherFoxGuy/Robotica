@@ -8,21 +8,26 @@ project(RBTC)
 ####################################################################################################
 
 set(SOURCE_FILES
-        main.cpp
-        WebViewManager.{hpp,cpp}
-        world/robot.hpp
-        world/world.hpp
-        window/gui_image.hpp
-        window/main_window.hpp
-        window/main_window.cpp
-        window/imgui_bindings.{hpp,cpp}
-        window/setting.hpp
-        window/window.hpp
-        vision/converters.hpp
-        vision/parallax.hpp
-        utility/traits.hpp
-        utility/typedefs.hpp
-        )
+     main.cpp
+     WebViewManager.{hpp,cpp}
+     world/controller.{hpp,cpp}
+     world/robot.{hpp,cpp}
+     window/gui_image.hpp
+     window/imgui_bindings.{hpp,cpp}
+     window/main_window.{hpp,cpp}
+     window/setting.hpp
+     window/window.hpp
+     vision/classifier.hpp
+     vision/converters.hpp
+     vision/parallax.hpp
+     vision/world_model.{hpp,cpp}
+     utility/cache.hpp
+     utility/math.hpp
+     utility/mesh.hpp
+     utility/traits.hpp
+     utility/typedefs.hpp
+     utility/utility.hpp
+)
 
 # Expand file extensions (i.e. path/to/file.{h,cpp} becomes path/to/file.h;path/to/file.cpp)
 expand_file_extensions(SOURCE_FILES ${SOURCE_FILES})
