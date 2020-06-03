@@ -23,64 +23,69 @@ namespace web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging(builder =>
-            {
-                builder.AddConsole()
-                    .AddDebug()
-                    .AddFilter<ConsoleLoggerProvider>(category: null, level: LogLevel.Debug)
-                    .AddFilter<DebugLoggerProvider>(category: null, level: LogLevel.Debug);
-            });
+                {
+                    builder.AddConsole()
+                        .AddDebug()
+                        .AddFilter<ConsoleLoggerProvider>(category: null, level: LogLevel.Debug)
+                        .AddFilter<DebugLoggerProvider>(category: null, level: LogLevel.Debug);
+                })
+                .AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            var websockethandler = new WebSocketHandler();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            #region UseWebSockets
+            app.UseRouting();
             app.UseWebSockets();
-            #endregion
 
-            #region AcceptWebSocket
-            app.Use(async (context, next) =>
+            app.Map("/ws", builder =>
             {
-                if (context.Request.Path == "/ws")
+                builder.Use(async (context, next) =>
                 {
                     if (context.WebSockets.IsWebSocketRequest)
                     {
-                        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await Echo(context, webSocket);
+                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        await websockethandler.handleClient(context, webSocket);
+                        return;
                     }
-                    else
+
+                    await next();
+                });
+            });
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            /*app.Use(async (context, next) =>
+            {
+                if (context.WebSockets.IsWebSocketRequest)
+                {
+                    WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+
+                    switch (context.Request.Path)
                     {
-                        context.Response.StatusCode = 400;
+                        case "/Robot/Register":
+                            await websockethandler.RegisterRobot(context, webSocket);
+                            break;
+                        case "/Controller/Register":
+                            await websockethandler.RegisterController(context, webSocket);
+                            break;
+                        default:
+                            await websockethandler.Echo(context, webSocket);
+                            break;
                     }
                 }
                 else
                 {
-                    await next();
+                    context.Response.StatusCode = 400;
                 }
-
-            });
-            #endregion
-            app.UseFileServer();
+            });*/
         }
-
-        #region Echo
-        private async Task Echo(HttpContext context, WebSocket webSocket)
-        {
-            var buffer = new byte[1024 * 4];
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            while (!result.CloseStatus.HasValue)
-            {
-                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
-
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
-            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-        }
-        #endregion
     }
 }
