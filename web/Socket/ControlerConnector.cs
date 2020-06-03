@@ -22,9 +22,9 @@ namespace web.Socket
             try
             {
                 var d = msg.Split('|');
-                var dat = d[0];
-                var cmd = d.Length != 1 ? d[1]: "NOT SET";
-                switch (dat)
+                var cmd = d[0];
+                var dat = d.Length != 1 ? d[1] : "NOT SET";
+                switch (cmd)
                 {
                     case "register":
                         ConnectionManager.Register(this);
@@ -34,9 +34,9 @@ namespace web.Socket
                         SendData(JsonSerializer.Serialize(robs));
                         break;
                     case "set":
-                        var rob = ConnectionManager.Robots.Find(r => r.Name == cmd);
+                        var rob = ConnectionManager.Robots.Find(r => r.Name == dat);
                         if (rob == null)
-                            SendData($"{cmd} not found");
+                            SendData($"{dat} not found");
                         else
                             Robot = rob;
                         break;
@@ -44,11 +44,11 @@ namespace web.Socket
                         if (Robot == null)
                             SendData("ERROR Robot not set!");
                         else
-                            Robot.SendData(cmd);
+                            Robot.SendData(dat);
                         break;
                     default:
                         SendData($"Unknown Command: {cmd}");
-                        Console.Write($"RobotConnector |{cmd}|\n");
+                        Console.WriteLine($"[ControlerConnector] Unknown Command: {cmd}");
                         break;
                 }
             }
