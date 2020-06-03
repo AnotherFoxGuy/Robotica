@@ -48,9 +48,7 @@ namespace robotica {
         RBT_SETTING(ROBOT,    right_motor,        0.0,    0,    1);
 
 
-        gui_image left, right;
-        gui_image left_disp, right_disp, filtered, raw_vis, filtered_vis;
-        gui_image object;
+        gui_image left, right, depth, map;
     protected:
         void add_elements(void) override;
     private:

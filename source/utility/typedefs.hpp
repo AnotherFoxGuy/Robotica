@@ -26,6 +26,9 @@ namespace robotica {
      template <typename Class, typename Returns, typename... Args>
      using MemFn = Returns(Class::*)(Args...);
 
+     template <typename Class, typename Returns, typename... Args>
+     using CMemFn = Returns(Class::*)(Args...) const;
+
      template <typename Class, typename T>
      using MemVar = T(Class::*);
 
