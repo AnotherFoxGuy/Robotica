@@ -44,6 +44,12 @@ namespace robotica {
 
     
     constexpr inline glm::vec2 calculate_world_position(const glm::vec2& pos, float rot, float fov, float display_pos, float depth) {
-        return {};
+        fov = degrees_to_radians(fov);
+
+        float display_angle = (-0.5f * fov + (display_pos * fov));
+        glm::vec2 origin_pos = glm::vec2{ std::cos(display_angle), std::sin(display_angle) } * depth;
+
+        origin_pos = rotate_point(origin_pos, { 0, 0 }, rot) + pos;
+        return origin_pos;
     }
 }

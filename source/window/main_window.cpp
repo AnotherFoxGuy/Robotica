@@ -1,8 +1,9 @@
 #include <window/main_window.hpp>
-#include <vision/parallax.hpp>
-#include <vision/converters.hpp>
+#include <window/world_image.hpp>
 #include <world/robot.hpp>
 #include <utility/utility.hpp>
+#include <vision/parallax.hpp>
+#include <vision/converters.hpp>
 #include <vision/classifier.hpp>
 #include <vision/world_model.hpp>
 
@@ -34,13 +35,15 @@ namespace robotica {
         constexpr int padding_side   = 8;
         constexpr int button_height  = 30;
 
+
         // Count parallax settings.
         int num_elems = 0;
         expand(settings[(int) PARALLAX], [&](const auto& v) { num_elems += std::count_if(v.begin(), v.end(), [](const auto& e) { return e.get().setting_group == (int) PARALLAX; }); });
 
+
         // Calculate settings area size.
         const int target_height = padding_top + (slider_height * num_elems) + (2 * image_size) + padding_bottom;
-        const int target_width = (4 * image_size) + (2 * padding_side);
+        const int target_width = (4 * image_size) + (5 * padding_side);
 
         if (!has_resized) ImGui::SetWindowSize({ (float) target_width, (float) target_height });
         has_resized = true;
@@ -53,6 +56,15 @@ namespace robotica {
         left.set_image(world_model::instance().get_left_camera());
         right.set_image(world_model::instance().get_right_camera());
         depth.set_image(world_model::instance().get_depth_map());
+        map.set_image(generate_world_map());
+
+        // Draw rects around detections.
+        // TODO: This needs to be changed to reduce unnecessary conversions.
+        for (auto& detection : world_model::instance().get_raw_object_list()) {
+            auto& img = left.get_image();
+            cv::rectangle(img, detection.bounding_rect, cv::Scalar(0, 0, 255));
+            left.set_image(img);
+        }
 
 
         // Parallax Settings
@@ -116,5 +128,7 @@ namespace robotica {
         right.show();
         ImGui::SameLine();
         depth.show();
+        ImGui::SameLine();
+        map.show();
     }
 }

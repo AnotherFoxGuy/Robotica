@@ -22,6 +22,9 @@
 
 
 namespace robotica {
+    const inline fs::path classifier_folder = ROOT_DIR "/assets/";
+
+
     class world_model {
     public:
         struct world_object {
@@ -37,9 +40,13 @@ namespace robotica {
 
         void update(void);
 
+        void add_classifier(std::string_view mapname, std::string_view filename);
+        void remove_classifier(std::string_view mapname);
 
-        const std::vector<world_object>& get_object_list(void);
-        const mesh& get_world_mesh(void);
+
+        const std::vector<detected_object> get_raw_object_list(void) const;
+        const std::vector<world_object>& get_object_list(void) const;
+        const mesh& get_world_mesh(void) const;
 
 
         const cv::Mat& get_left_camera (void) const { return left;  }
@@ -50,6 +57,7 @@ namespace robotica {
         constexpr static float max_merge_distance = 5.0f;
 
 
+        std::vector<detected_object> update_raw_objects(void) const;
         std::vector<world_object> update_objects(const std::vector<world_object>& prev) const;
         mesh update_mesh(void) const;
         cv::Mat update_depth_map(void);
@@ -76,11 +84,12 @@ namespace robotica {
         template <auto Fn, typename... Args> using bound_cache = cache<typename make_member_function_info<decltype(Fn)>::return_type, bound_t<Fn, Args...>>;
 
 
-        bound_cache<&world_model::update_objects                 > objects    { {}, std::bind_front(&world_model::update_objects,                  this) };
-        bound_cache<&world_model::update_mesh                    > world_mesh { {}, std::bind_front(&world_model::update_mesh,                     this) };
-        bound_cache<&world_model::update_camera_data<side::LEFT> > left       { {}, std::bind_front(&world_model::update_camera_data<side::LEFT>,  this) };
-        bound_cache<&world_model::update_camera_data<side::RIGHT>> right      { {}, std::bind_front(&world_model::update_camera_data<side::RIGHT>, this) };
-        bound_cache<&world_model::update_depth_map               > depth      { {}, std::bind_front(&world_model::update_depth_map,                this) };
+        bound_cache<&world_model::update_raw_objects             > raw_objects { {}, std::bind_front(&world_model::update_raw_objects,              this) };
+        bound_cache<&world_model::update_objects                 > objects     { {}, std::bind_front(&world_model::update_objects,                  this) };
+        bound_cache<&world_model::update_mesh                    > world_mesh  { {}, std::bind_front(&world_model::update_mesh,                     this) };
+        bound_cache<&world_model::update_camera_data<side::LEFT> > left        { {}, std::bind_front(&world_model::update_camera_data<side::LEFT>,  this) };
+        bound_cache<&world_model::update_camera_data<side::RIGHT>> right       { {}, std::bind_front(&world_model::update_camera_data<side::RIGHT>, this) };
+        bound_cache<&world_model::update_depth_map               > depth       { {}, std::bind_front(&world_model::update_depth_map,                this) };
 
         // cv::CascadeClassifier is unfortunately not const-correct.
         mutable std::vector<std::pair<std::string, cv::CascadeClassifier>> classifiers;

@@ -17,6 +17,7 @@ set(SOURCE_FILES
      window/main_window.{hpp,cpp}
      window/setting.hpp
      window/window.hpp
+     window/world_image.hpp
      vision/classifier.hpp
      vision/converters.hpp
      vision/parallax.hpp

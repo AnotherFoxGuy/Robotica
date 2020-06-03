@@ -67,4 +67,15 @@ namespace robotica {
         auto& camera = (side == side::LEFT) ? left_camera : right_camera;
         return { camera->getWidth(), camera->getHeight() };
     }
+
+
+    float robot::get_camera_focal_length(side side) const {
+        auto& camera = (side == side::LEFT) ? left_camera : right_camera;
+        return camera->getFocalDistance();
+    }
+
+
+    float robot::get_camera_baseline(void) const {
+        return 0.03;    // Hardcoded value from PROTO file. Supervisor mode could also obtain this.
+    }
 }

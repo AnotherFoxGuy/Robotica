@@ -45,6 +45,9 @@ namespace robotica {
 
         T*       operator->(void)       { update(); return &value; }
         const T* operator->(void) const { update(); return &value; }
+
+        T&       operator*(void)       { update(); return value; }
+        const T& operator*(void) const { update(); return value; }
     private:
         mutable T value;
         mutable bool valid;

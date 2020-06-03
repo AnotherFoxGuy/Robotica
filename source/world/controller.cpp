@@ -8,7 +8,9 @@ namespace robotica {
     }
 
 
-    controller::controller(int timestep) : timestep(timestep) {}
+    controller::controller(int timestep) : timestep(timestep) {
+        world_model::instance().add_classifier("ROCK", "moonrock.xml");
+    }
 
 
     bool controller::update(void) {

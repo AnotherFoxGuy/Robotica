@@ -7,6 +7,7 @@
 #include <webots/Robot.hpp>
 #include <webots/Camera.hpp>
 #include <webots/Motor.hpp>
+#include <webots/Compass.hpp>
 #include <opencv2/opencv.hpp>
 #include <glm/glm.hpp>
 
@@ -30,7 +31,7 @@ namespace robotica {
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
         const static inline std::string motor_names[2]  = { "left wheel motor", "right wheel motor" };
-
+        const static inline std::string compass_name    = "compass";
 
         robot(int timestep);
 
@@ -39,9 +40,11 @@ namespace robotica {
         bool update(void);
 
         // Camera output is a reference to the WeBots buffer and will be overridden on robot update!
-        cv::Mat    get_camera_output(side side) const;
-        float      get_camera_fov   (side side) const;
-        glm::ivec2 get_camera_size  (side side) const;
+        cv::Mat    get_camera_output      (side side) const;
+        float      get_camera_fov         (side side) const;
+        glm::ivec2 get_camera_size        (side side) const;
+        float      get_camera_focal_length(side side) const;
+        float      get_camera_baseline    (void)      const;
     private:
         unique<webots::Robot> rbt;
         unique<webots::Camera> left_camera, right_camera;

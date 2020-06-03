@@ -15,16 +15,14 @@
 
 
 namespace robotica {
-    const inline fs::path classifier_folder = ROOT_DIR "/assets/";
-
-
     struct detected_object {
         cv::Rect bounding_rect;
         double confidence;
+        std::string type;
     };
 
 
-    inline std::vector<detected_object> classify(cv::Mat source, cv::CascadeClassifier& classifier) {
+    inline std::vector<detected_object> classify(cv::Mat source, cv::CascadeClassifier& classifier, std::string_view name) {
         cv::Mat grayscale;
         cv::cvtColor(source, grayscale, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(grayscale, grayscale);
@@ -37,7 +35,7 @@ namespace robotica {
         assert(rects.size() == confidence.size());
 
         std::vector<detected_object> results;
-        for (int i = 0; i < rects.size(); ++i) results.push_back({ std::move(rects[i]), confidence[i] });
+        for (int i = 0; i < rects.size(); ++i) results.push_back({ std::move(rects[i]), confidence[i], std::string(name) });
 
         return results;
     }
