@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 project("Robotica")
-include(cmakepp)
-
-find_package(Threads REQUIRED)
 
 function(get_variable_from_conan _var_name)
      include("${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
@@ -17,12 +14,8 @@ SET(ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_USE_RELATIVE_PATHS OFF)
 
-template_run_file("conanfile.txt.in")
-ans(gen_conan)
-fwrite("conanfile.txt" "${gen_conan}")
 
 include(pmm)
-
 
 # MSVC needs extra settings because glew only compiles with VC2017
 # Also Poco has to be explicitly told this is a debug build for some reason.
@@ -39,8 +32,6 @@ endif()
 pmm(CONAN ${CONAN_PROFILE} REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
 
 set(CMAKE_CXX_STANDARD 20)
-
-
 
 get_variable_from_conan(CONAN_RES_DIRS_IMGUI)
 
