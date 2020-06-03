@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Microsoft.Extensions.Logging.Debug;
+using web.Socket;
 
 namespace web
 {
@@ -35,8 +36,7 @@ namespace web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            var websockethandler = new WebSocketHandler();
-
+            var connectionManager = new ConnectionManager();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -45,39 +45,26 @@ namespace web
             app.UseRouting();
             app.UseWebSockets();
 
-            app.Map("/ws", builder =>
-            {
-                builder.Use(async (context, next) =>
-                {
-                    if (context.WebSockets.IsWebSocketRequest)
-                    {
-                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await websockethandler.handleClient(context, webSocket);
-                        return;
-                    }
-
-                    await next();
-                });
-            });
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            /*app.Use(async (context, next) =>
+            app.Use(async (context, next) =>
             {
                 if (context.WebSockets.IsWebSocketRequest)
                 {
-                    WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
+                    var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                     switch (context.Request.Path)
                     {
-                        case "/Robot/Register":
-                            await websockethandler.RegisterRobot(context, webSocket);
+                        case "/ws/Robot":
+                            await new RobotConnector(connectionManager).HandleClient(webSocket, context);
                             break;
-                        case "/Controller/Register":
-                            await websockethandler.RegisterController(context, webSocket);
+                        case "/ws/Controller":
+                            await new ControlerConnector(connectionManager).HandleClient(webSocket, context);
+                            break;
+                        case "/ws/Telemetry":
+                            await new TelemeryConnector(connectionManager).HandleClient(webSocket, context);
                             break;
                         default:
-                            await websockethandler.Echo(context, webSocket);
+                            context.Response.StatusCode = 400;
                             break;
                     }
                 }
@@ -85,7 +72,7 @@ namespace web
                 {
                     context.Response.StatusCode = 400;
                 }
-            });*/
+            });
         }
     }
 }
