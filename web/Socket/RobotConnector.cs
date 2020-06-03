@@ -21,17 +21,19 @@ namespace web.Socket
         {
             try
             {
-                var dat = msg.Split('|');
-                switch (dat[0])
+                var d = msg.Split('|');
+                var cmd = d[0];
+                var dat = d.Length != 1 ? d[1] : "NOT SET";
+                switch (cmd)
                 {
                     case "register":
                         ConnectionManager.Register(this);
-                        Name = dat[1];
+                        Name = dat;
                         SendData($"Registered {Name}");
                         break;
                     default:
-                        SendData($"Unknown Command: {msg}");
-                        Console.Write($"RobotConnector: {msg}\n");
+                        SendData($"Unknown Command: {cmd}");
+                        Console.WriteLine($"[RobotConnector] Unknown Command: {cmd}");
                         break;
                 }
             }
