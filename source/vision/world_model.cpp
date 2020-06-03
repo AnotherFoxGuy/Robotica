@@ -1,8 +1,5 @@
 #include <vision/world_model.hpp>
 
-#include <iostream>
-#include <window/main_window.hpp>
-
 
 namespace robotica {
     world_model& world_model::instance(void) {
@@ -63,6 +60,7 @@ namespace robotica {
         std::vector<world_object> detections;
         std::vector<float> measurements;
 
+
         std::transform(
             (*raw_objects).begin(), 
             (*raw_objects).end(), 
@@ -74,22 +72,19 @@ namespace robotica {
                     item.bounding_rect.x + (item.bounding_rect.width / 2),
                     item.bounding_rect.y + (item.bounding_rect.height / 2)
                 };
-                
+
 
                 // Take a bunch of measurements and use the median.
                 measurements.clear();
                 for (int x = item.bounding_rect.x; x < item.bounding_rect.x + item.bounding_rect.width; x += 4) {
                     for (int y = item.bounding_rect.y; y < item.bounding_rect.y + item.bounding_rect.height; y += 4) {
-                        measurements.push_back((float) 255 - depth->at<uchar>(x, y));
+                        uchar d = 255 - depth->at<uchar>(y, x);
+                        measurements.push_back((float) d);
                     }
                 }
 
-                measurements.erase(std::remove(measurements.begin(), measurements.end(), 0), measurements.end());
                 std::sort(measurements.begin(), measurements.end());
-
                 float distance = (measurements.size() > 0) ? measurements[measurements.size() / 2] : 0;
-
-                std::cout << distance << std::endl;
 
 
                 float size = distance * std::sin(

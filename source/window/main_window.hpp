@@ -42,8 +42,6 @@ namespace robotica {
         RBT_SETTING(PARALLAX, sigma,              2.0,    0,    10);
         RBT_SETTING(PARALLAX, raw_vis_scale,      21.0,   0,    64);
         RBT_SETTING(PARALLAX, filtered_vis_scale, 15.0,   0,    64);
-        RBT_SETTING(PARALLAX, contour_thresh_min, 100,    0,    255);
-        RBT_SETTING(PARALLAX, contour_thresh_max, 200,    0,    255);
 
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,    0,    1);
