@@ -10,6 +10,10 @@ namespace robotica {
 
     controller::controller(int timestep) : timestep(timestep) {
         world_model::instance().add_classifier("ROCK", "moonrock.xml");
+        world_model::instance().add_classifier("Heart", "Hearts.xml");
+        world_model::instance().add_classifier("Diamond", "Diamonds.xml");
+        world_model::instance().add_classifier("Spade", "Spades.xml");
+        world_model::instance().add_classifier("Club", "Clubs.xml");
     }
 
 
