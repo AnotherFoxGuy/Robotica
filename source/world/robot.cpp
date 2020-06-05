@@ -51,7 +51,7 @@ namespace robotica {
         cv::Mat image = cv::Mat(cv::Size(camera->getWidth(), camera->getHeight()), CV_8UC4);
         image.data = (uchar*) camera->getImage();
 
-        cv::cvtColor(image, image, cv::COLOR_RGBA2BGR);
+        cv::cvtColor(image, image, cv::COLOR_BGRA2BGR);
 
         return image;
     }

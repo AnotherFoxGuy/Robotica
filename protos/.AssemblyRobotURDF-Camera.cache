@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.4
+protoFileHash: fed9d9fe5b75a1876cafaf4666ce6c85
+containsDevices: 1
+baseType: Robot
+slotType: 
+parameters: translation,rotation,controller,camera_fieldOfView,camera_width,camera_height,camera_antiAliasing,camera_rotation,camera_noise,camera_motionBlur
+tags: 
+license:  Apache License 2.0
+licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0
+documentationUrl: 
+info: This\sis\sa\sproto\sfile\sfor\sWebots\sfor\sthe\sAssemblyRobotURDF\nExtracted\sfrom:\sC:\\Users\\rolan\\Desktop\\test\\assembly_robot_URDF\\urdf\\assembly_robot_URDF.urdf\n
