@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.9879314045173357 0.1485565141796219 0.04384634606445962 0.22569747634250945
-  position -0.08967810841216611 0.500032445655055 1.6771925761772661
+  orientation -0.4479072143163682 -0.8807105110053699 -0.1540393559062471 0.7822860878593205
+  position -1.524222313222424 0.7869518697736265 1.3521955611024843
 }
 TexturedBackground {
 }
@@ -13,17 +13,8 @@ RectangleArena {
   floorSize 2 2
   floorTileSize 0.25 0.25
 }
-WoodenBox {
-  translation -0.130717 0.05 -0.77934
-  rotation 0 1 0 -1.3089953071795861
-  size 0.1 0.1 0.1
-}
-WoodenBox {
-  translation 0.0626682 0.05 -0.301918
-  rotation 0 1 0 -0.523595307179586
-  name "wooden box(1)"
-  size 0.1 0.1 0.1
-}
-E-puck {
+AssemblyRobotURDF {
+  translation 0.02 0.04 4.07848e-08
+  rotation 1 0 0 -1.5707953071795862
   controller "<extern>"
 }
