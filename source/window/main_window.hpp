@@ -12,6 +12,8 @@
 #include <type_traits>
 #include <filesystem>
 
+#include <ixwebsocket/IXWebSocket.h>
+
 #define RBT_SETTING(group, name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max, (int) group }
 
 
@@ -44,8 +46,8 @@ namespace robotica {
         RBT_SETTING(PARALLAX, filtered_vis_scale, 15.0,   0,    64);
 
         // Robot controls
-        RBT_SETTING(ROBOT,    left_motor,         0.0,    0,    1);
-        RBT_SETTING(ROBOT,    right_motor,        0.0,    0,    1);
+        RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
+        RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
 
 
         gui_image left, right, depth, map;
@@ -53,5 +55,7 @@ namespace robotica {
         void add_elements(void) override;
     private:
         bool has_resized = false;
+        // Our websocket object
+        ix::WebSocket webSocket;
     };
 }
