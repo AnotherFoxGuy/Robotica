@@ -28,12 +28,25 @@ namespace robotica {
 
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
+
+        compass->enable(100);
+    }
+
+    double robot::get_bearing_in_degrees() {
+        const double *north = compass->getValues();
+        double rad = atan2(north[0], north[1]);
+        double bearing = (rad - 1.5708) / M_PI * 180.0;
+        if (bearing < 0.0)
+            bearing = bearing + 360.0;
+        return bearing;
     }
 
 
     bool robot::update(void) {
         auto& window = main_window::instance();
 
+
+        std::cout << get_bearing_in_degrees() << std::endl;
         int result;
         
         if (result = rbt->step(timestep); result != -1) {
