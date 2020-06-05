@@ -9,14 +9,18 @@ namespace web.Socket
     /// <summary>
     /// ws://localhost:5000/ws/Controller
     /// </summary>
-    public class ControlerConnector : BaseConnector
+    public class ControllerConnector : BaseConnector
     {
         public RobotConnector Robot;
 
-        public ControlerConnector(ConnectionManager connectionManager) : base(connectionManager)
+        public ControllerConnector(ConnectionManager connectionManager) : base(connectionManager)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
         protected override void HandleMessage(string msg)
         {
             try
@@ -48,7 +52,7 @@ namespace web.Socket
                         break;
                     default:
                         SendData($"Unknown Command: {cmd}");
-                        Console.WriteLine($"[ControlerConnector] Unknown Command: {cmd}");
+                        Console.WriteLine($"[ControllerConnector] Unknown Command: {cmd}");
                         break;
                 }
             }

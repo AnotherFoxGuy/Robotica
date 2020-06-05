@@ -7,14 +7,14 @@ namespace web
     public class ConnectionManager
     {
         public List<RobotConnector> Robots = new List<RobotConnector>();
-        public List<ControlerConnector> Controlers = new List<ControlerConnector>();
+        public List<ControllerConnector> Controlers = new List<ControllerConnector>();
 
         public void Register(RobotConnector conn)
         {
             Robots.Add(conn);
         }
 
-        public void Register(ControlerConnector conn)
+        public void Register(ControllerConnector conn)
         {
             Controlers.Add(conn);
         }
@@ -24,7 +24,7 @@ namespace web
             Robots.Remove(conn);
         }
 
-        public void Deregister(ControlerConnector conn)
+        public void Deregister(ControllerConnector conn)
         {
             Controlers.Remove(conn);
         }
