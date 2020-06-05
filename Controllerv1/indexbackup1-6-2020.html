@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Controller GUI</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="joy.min.js"></script>
+    
+  </head>
+  <body>
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   
+    <body class="bg-light"></body>
+
+    <div class="container p-3 my-3 bg-dark text-white">
+        <h1 class="text-center">Controller Robotica Groep 7</h1> 
+    </div>
+
+    <div class="container p-2 my-2">
+      <h2 class="text-center">Volg de instructies om de juiste mode te selecteren</h2>
+      <h2 class="text-center">Modes keuze</h2>
+      <br>
+      <ul class="nav nav-tabs nav-justified">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#home">Moon Race</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#mode2">Moon Dance</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#mode3">Moon Walk</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#mode4">Moon Survival</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#mode5">Moon Maze</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#mode6">Plant the Flag</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <div id="home" class="container tab-pane active"><br>
+          <div class="container p-2 my-2">
+          <button type="button" class="btn btn-success btn-lg btn-block">Start</button>
+          <button type="button" class="btn btn-danger btn-lg btn-block">Stop</button></div> 
+          <h2>Snelheid instellen</h2>
+          <div class="d-flex justify-content-center my-4">
+            <span class="font-weight-bold blue-text mr-2 valueSpan">10%</span>
+            <form class="range-field w-100">
+              <input class="custom-range" type="range" min="10" max="100">
+            </form>
+            <span class="font-weight-bold blue-text ml-2 valueSpan">100%</span>
+          </div>
+        </div>
+
+        
+
+        <div id="mode2" class="container tab-pane fade"><br>
+          <div class="container p-2 my-2">
+            <h1>Autonoom</h1>
+            <button type="button" class="btn btn-success btn-lg btn-block">Start</button>
+            <button type="button" class="btn btn-danger btn-lg btn-block">Stop</button></div> 
+        </div>
+
+        <div id="mode3" class="container tab-pane fade"><br>
+          <div class="container p-2 my-2">
+            <h1>Autonoom</h1>
+            <button type="button" class="btn btn-success btn-lg btn-block">Start</button>
+            <button type="button" class="btn btn-danger btn-lg btn-block">Stop</button></div> 
+        </div>
+
+        <div id="mode4" class="container tab-pane fade"><br>
+          <div class="container p-2 my-2">
+            <h1>Autonoom</h1>
+            <button type="button" class="btn btn-success btn-lg btn-block">Start</button>
+            <button type="button" class="btn btn-danger btn-lg btn-block">Stop</button></div> 
+        </div>
+
+        <div id="mode5" class="container tab-pane fade"><br>
+          <div class="container p-2 my-2">
+            <h1>Autonoom</h1>
+            <button type="button" class="btn btn-success btn-lg btn-block">Start</button>
+            <button type="button" class="btn btn-danger btn-lg btn-block">Stop</button></div> 
+        </div>
+
+        <div id="mode6" class="container tab-pane fade"><br>
+          <div class="container p-2 my-2">
+            <button type="button" class="btn btn-success btn-lg btn-block">Start</button>
+            <button type="button" class="btn btn-danger btn-lg btn-block">Stop</button></div> 
+            <h2>Snelheid instellen</h2>
+            <div class="d-flex justify-content-center my-4">
+              <span class="font-weight-bold blue-text mr-2 valueSpan">10%</span>
+              <form class="range-field w-100">
+                <input class="custom-range" type="range" min="10" max="100">
+              </form>
+              <span class="font-weight-bold blue-text ml-2 valueSpan">100%</span>
+            </div>
+          </div>
+      </div>
+      <div id="joystickveld" style="height: 100px;"></div>
+      <div id="joyDiv" style="width:400px;height:400px;margin-bottom:20px; border: 1px solid #9C9898; overflow: hidden; float: left;"></div>
+      <div id="joyDiv2" style="width:400px;height:400px;margin-bottom:20px; border: 1px solid #9C9898; overflow: hidden; float: right;"></div>
+<script >
+
+    var joyparam = {"internalFillColor": "#FFFFFF",
+            "internalStrokeColor": "#666666",
+            "externalStrokeColor": "#000000" };
+
+    var joy = new JoyStick('joyDiv', joyparam);
+    var joy2 = new JoyStick('joyDiv2', joyparam);
+    //setInterval(function(){ console.log(joy.GetX()); }, 50);
+    //setInterval(function(){ console.log(joy2.GetX()); }, 50);
+    </script>  
+  </body>
+</html>

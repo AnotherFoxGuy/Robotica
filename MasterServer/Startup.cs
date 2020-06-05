@@ -58,7 +58,7 @@ namespace web
                             await new RobotConnector(connectionManager).HandleClient(webSocket, context);
                             break;
                         case "/ws/Controller":
-                            await new ControlerConnector(connectionManager).HandleClient(webSocket, context);
+                            await new ControllerConnector(connectionManager).HandleClient(webSocket, context);
                             break;
                         case "/ws/Telemetry":
                             await new TelemeryConnector(connectionManager).HandleClient(webSocket, context);

@@ -1,0 +1,36 @@
+@using System.Net.WebSockets
+@using System.Text
+@using System.Threading
+
+<p>@_lastdata</p>
+
+@code {
+    private ClientWebSocket _ws;
+
+    string _lastdata = "hello";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _ws = new ClientWebSocket();
+        await _ws.ConnectAsync(new Uri("ws://vps.anotherfoxguy.com:5000/ws/Robot"), CancellationToken.None);
+        
+        var buf = Encoding.Default.GetBytes("register|testcloen");
+        await _ws.SendAsync(buf, WebSocketMessageType.Text, true, CancellationToken.None);
+
+        var buffer = new byte[1024 * 4];
+        var result = await _ws.ReceiveAsync(buffer, CancellationToken.None);
+        while (!result.CloseStatus.HasValue)
+        {
+            _lastdata = Encoding.Default.GetString(buffer.Take(result.Count).ToArray());
+            StateHasChanged();
+            result = await _ws.ReceiveAsync(buffer, CancellationToken.None);
+        }
+        await _ws.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription,
+            CancellationToken.None);
+    }
+
+    private void IncrementCount()
+    {
+    }
+
+}
