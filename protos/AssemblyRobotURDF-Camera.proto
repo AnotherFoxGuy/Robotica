@@ -12,9 +12,13 @@ PROTO AssemblyRobotURDF-Camera [
   field SFInt32            camera_width                 255                      # Is `Camera.width`.
   field SFInt32            camera_height                255                      # Is `Camera.height`.
   field SFBool             camera_antiAliasing          FALSE                    # Is `Camera.antiAliasing`.
-  field SFRotation         camera_rotation              1 0 0 0                  # Is `Camera.rotation`. Interesting setup: set `1 0 0 -0.47` in order to simulate the linear camera mode.
+  field SFRotation         camera_rotation              1 0 0 1.5708             # Is `Camera.rotation`. Interesting setup: set `1 0 0 -0.47` in order to simulate the linear camera mode.
   field SFFloat            camera_noise                 0.0                      # Is `Camera.noise`.
   field SFFloat            camera_motionBlur            0.0                      # Is `Camera.motionBlur`.
+  field SFBool  		   compass_xAxis       			FALSE  					 # {TRUE, FALSE}
+  field SFBool  		   compass_yAxis       			FALSE  					 # {TRUE, FALSE}
+  field SFBool  		   compass_zAxis       			TRUE   					 # {TRUE, FALSE}
+  field SFFloat 		   compass_resolution  			-1     					 # {-1, [0, inf)}
 ]
 {
   Robot {
@@ -811,6 +815,13 @@ PROTO AssemblyRobotURDF-Camera [
       zoom Zoom {
       }
     }
+	DEF COMPASS Compass {
+	  name "compass"
+	  xAxis = compass_xAxis
+	  yAxis = compass_yAxis
+	  zAxis = compass_zAxis
+	  resolution = compass_resolution
+	}
     ]
     name "base_link"
     boundingObject USE base_link

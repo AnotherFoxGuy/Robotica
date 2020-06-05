@@ -15,6 +15,7 @@ namespace robotica {
         right_camera(rbt->getCamera(camera_names[1])),
         left_motor(rbt->getMotor(motor_names[0])),
         right_motor(rbt->getMotor(motor_names[1])),
+        compass(rbt->getCompass(compass_name)),
         timestep(timestep),
         eye_distance(0.03f),
         eye_height(0.028f)
