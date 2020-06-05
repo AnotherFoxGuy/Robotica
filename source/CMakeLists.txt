@@ -9,7 +9,6 @@ project(RBTC)
 
 set(SOURCE_FILES
      main.cpp
-     WebViewManager.{hpp,cpp}
      world/controller.{hpp,cpp}
      world/robot.{hpp,cpp}
      window/gui_image.hpp
@@ -30,8 +29,11 @@ set(SOURCE_FILES
      utility/utility.hpp
 )
 
-# Expand file extensions (i.e. path/to/file.{h,cpp} becomes path/to/file.h;path/to/file.cpp)
+# Expand file extensions (i.e. path/to/file.{hpp,cpp} becomes path/to/file.hpp;path/to/file.cpp)
 expand_file_extensions(SOURCE_FILES ${SOURCE_FILES})
+
+# Generate source groups for use in IDEs
+generate_source_groups(${SOURCE_FILES})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
@@ -39,9 +41,10 @@ get_variable_from_conan(CONAN_RES_DIRS_IMGUI)
 target_include_directories(${PROJECT_NAME} PUBLIC . ${CONAN_RES_DIRS_IMGUI}/bindings/)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+        "CRYPT32"
         CONAN_PKG::webots-controller
         CONAN_PKG::opencv
-        CONAN_PKG::poco
+        CONAN_PKG::ixwebsocket
         CONAN_PKG::glm
         CONAN_PKG::imgui
         CONAN_PKG::sdl2
