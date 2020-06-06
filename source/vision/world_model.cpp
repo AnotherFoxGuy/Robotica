@@ -1,4 +1,6 @@
 #include <vision/world_model.hpp>
+#include <window/main_window.hpp>
+#include <utility/utility.hpp>
 
 
 namespace robotica {
@@ -49,6 +51,8 @@ namespace robotica {
 
         for (auto& [name, classifier] : classifiers) {
             auto subresult = classify(left, classifier, name);
+            remove_if(subresult, [](const auto& e) { return e.confidence < main_window::instance().min_confidence; });
+
             std::move(subresult.begin(), subresult.end(), std::back_inserter(result));
         }
 
@@ -85,7 +89,6 @@ namespace robotica {
 
                 std::sort(measurements.begin(), measurements.end());
                 float distance = (measurements.size() > 0) ? measurements[measurements.size() / 2] : 0;
-
 
                 float size = distance * std::sin(
                     ((float) item.bounding_rect.width / rbt.get_camera_size(side::LEFT).x) * rbt.get_camera_fov(side::LEFT)

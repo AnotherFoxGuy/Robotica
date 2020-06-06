@@ -8,6 +8,7 @@
 #include <vision/world_model.hpp>
 
 #include <opencv2/highgui.hpp>
+#include <magic_enum.hpp>
 
 #include <algorithm>
 #include <string>
@@ -30,6 +31,7 @@ namespace robotica {
         constexpr int topbar_height  = 19;
         constexpr int slider_height  = 23;
         constexpr int image_size     = 255;
+        constexpr int collapse_width = 3 * image_size;
         constexpr int padding_top    = 42;
         constexpr int padding_bottom = 8;
         constexpr int padding_side   = 8;
@@ -63,30 +65,40 @@ namespace robotica {
         for (auto& detection : world_model::instance().get_raw_object_list()) {
             auto& img = left.get_image();
             cv::rectangle(img, detection.bounding_rect, cv::Scalar(0, 0, 255));
+            cv::putText(img, detection.type, detection.bounding_rect.tl() + cv::Point{ 2, 15 }, cv::FONT_HERSHEY_PLAIN, 1.0, cv::Scalar(0, 0, 255));
             left.set_image(img);
         }
 
 
-        // Parallax Settings
+        // Collapsable groups
+        ImGui::Columns(2);
+        ImGui::SetColumnWidth(0, collapse_width);
+
         ImGui::BeginGroup();
 
-        expand(settings[(int) PARALLAX], [&](auto& vector) {
-            using type = typename std::remove_reference_t<decltype(vector)>::value_type::type::type;
+        for (const auto& category : collapsable_groups) {
+            const std::string name = std::string(magic_enum::enum_name(category));
 
-            for (auto& elem : vector) {
-                auto& setting = elem.get();
+            if (ImGui::CollapsingHeader(name.c_str())) {
+                expand(settings[(int) category], [&](auto& vector) {
+                    using type = typename std::remove_reference_t<decltype(vector)>::value_type::type::type;
 
-                // TODO: Add more input types. (notably string and bool.)
-                if constexpr (std::is_integral_v<type>)       ImGui::SliderInt(setting.name.c_str(), &setting.value, setting.min, setting.max);
-                if constexpr (std::is_floating_point_v<type>) ImGui::SliderFloat(setting.name.c_str(), &setting.value, setting.min, setting.max);
+                    for (auto& elem : vector) {
+                        auto& setting = elem.get();
+
+                        // TODO: Add more input types. (notably string and bool.)
+                        if constexpr (std::is_integral_v<type>)       ImGui::SliderInt(setting.name.c_str(), &setting.value, setting.min, setting.max);
+                        if constexpr (std::is_floating_point_v<type>) ImGui::SliderFloat(setting.name.c_str(), &setting.value, setting.min, setting.max);
+                    }
+                });
             }
-        });
+        }
 
         ImGui::EndGroup();
+        ImGui::NextColumn();
 
 
         // Robot Controls
-        ImGui::SameLine();
         ImGui::BeginGroup();
 
         expand(settings[(int) ROBOT], [&](auto& vector) {
@@ -104,7 +116,6 @@ namespace robotica {
             }
         });
 
-
         // Snapshot buttons
         if (ImGui::Button("Snap Positive", { 200, 30 })) {
             image_to_file(snapshot_folder.string(), "POSITIVE_"s + datetime_string(), left.get_image());
@@ -120,6 +131,7 @@ namespace robotica {
         }
 
         ImGui::EndGroup();
+        ImGui::Columns();
 
 
         // Image views

@@ -53,10 +53,6 @@ namespace robotica {
         const cv::Mat& get_right_camera(void) const { return right; }
         const cv::Mat& get_depth_map   (void) const { return depth; }
     private:
-        constexpr static float min_confidence = 0.0f;
-        constexpr static float max_merge_distance = 5.0f;
-
-
         std::vector<detected_object> update_raw_objects(void) const;
         std::vector<world_object> update_objects(const std::vector<world_object>& prev) const;
         mesh update_mesh(void) const;
