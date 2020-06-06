@@ -21,15 +21,16 @@ include(pmm)
 # Also Poco has to be explicitly told this is a debug build for some reason.
 if (MSVC)
      if ("_${CMAKE_BUILD_TYPE}" STREQUAL "_Debug")
-          set(CONAN_PROFILE "PROFILE ${CMAKE_SOURCE_DIR}/msvc_debug.conanprofile")
+          set(CONAN_PROFILE "${CMAKE_SOURCE_DIR}/msvc_debug.conanprofile")
      else()
-          set(CONAN_PROFILE "PROFILE ${CMAKE_SOURCE_DIR}/msvc_release.conanprofile")
+          set(CONAN_PROFILE "${CMAKE_SOURCE_DIR}/msvc_release.conanprofile")
      endif()
 else()
      # Clang / GCC profiles go here.
+     set(CONAN_PROFILE "default")
 endif()
 
-pmm(CONAN ${CONAN_PROFILE} REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
+pmm(CONAN PROFILE ${CONAN_PROFILE} REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
 
 set(CMAKE_CXX_STANDARD 20)
 

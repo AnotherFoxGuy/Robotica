@@ -36,3 +36,5 @@ CMakeSettings.json
 doc/
 *.wbproj
 traindata/
+web/
+*.cache

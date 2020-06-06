@@ -46,7 +46,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         CONAN_PKG::imgui
         CONAN_PKG::sdl2
         CONAN_PKG::glew
-        )
+        CONAN_PKG::magic_enum
+     )
 
 
 add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")

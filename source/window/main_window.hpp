@@ -24,8 +24,10 @@ namespace robotica {
         static main_window& instance(void);
         main_window(void);
 
-
-        enum setting_groups { PARALLAX, ROBOT };
+        // To add a new setting category, just create a new entry in this enum, then add it to collapsable_groups.
+        // Then you can use RBT_SETTING to add settings to the category.
+        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT };
+        constexpr static auto collapsable_groups = { PARALLAX, CLASSIFIER };
 
         // Parallax Processing Settings
         RBT_SETTING(PARALLAX, num_disparities,    3,      0,    16);        // x16
@@ -42,6 +44,14 @@ namespace robotica {
         RBT_SETTING(PARALLAX, sigma,              2.0,    0,    10);
         RBT_SETTING(PARALLAX, raw_vis_scale,      21.0,   0,    64);
         RBT_SETTING(PARALLAX, filtered_vis_scale, 15.0,   0,    64);
+
+        // Classifier settings
+        RBT_SETTING(CLASSIFIER, min_obj_size,       5,      1,    255);
+        RBT_SETTING(CLASSIFIER, max_obj_size,       255,    1,    255);
+        RBT_SETTING(CLASSIFIER, min_neighbours,     64,     1,    255);
+        RBT_SETTING(CLASSIFIER, scale,              1.07,   1.01, 1.2);
+        RBT_SETTING(CLASSIFIER, min_confidence,     1,      0,    255);
+
 
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,    0,    1);
