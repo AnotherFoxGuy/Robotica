@@ -4,7 +4,6 @@
 #include <utility/utility.hpp>
 #include <vision/parallax.hpp>
 #include <vision/converters.hpp>
-#include <vision/classifier.hpp>
 #include <vision/world_model.hpp>
 
 #include <opencv2/highgui.hpp>

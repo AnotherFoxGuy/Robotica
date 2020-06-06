@@ -4,7 +4,8 @@
 #include <utility/mesh.hpp>
 #include <utility/cache.hpp>
 #include <utility/traits.hpp>
-#include <vision/classifier.hpp>
+#include <utility/typedefs.hpp>
+#include <vision/iclassifier.hpp>
 #include <vision/parallax.hpp>
 #include <world/robot.hpp>
 
@@ -22,9 +23,6 @@
 
 
 namespace robotica {
-    const inline fs::path classifier_folder = ROOT_DIR "/assets/";
-
-
     class world_model {
     public:
         struct world_object {
@@ -40,11 +38,11 @@ namespace robotica {
 
         void update(void);
 
-        void add_classifier(std::string_view mapname, std::string_view filename);
-        void remove_classifier(std::string_view mapname);
+        void add_classifier(unique<iclassifier>&& classifier);
+        void remove_classifier(std::string_view name);
 
 
-        const std::vector<detected_object> get_raw_object_list(void) const;
+        const std::vector<classified_object>& get_raw_object_list(void) const;
         const std::vector<world_object>& get_object_list(void) const;
         const mesh& get_world_mesh(void) const;
 
@@ -53,7 +51,7 @@ namespace robotica {
         const cv::Mat& get_right_camera(void) const { return right; }
         const cv::Mat& get_depth_map   (void) const { return depth; }
     private:
-        std::vector<detected_object> update_raw_objects(void) const;
+        std::vector<classified_object> update_raw_objects(void) const;
         std::vector<world_object> update_objects(const std::vector<world_object>& prev) const;
         mesh update_mesh(void) const;
         cv::Mat update_depth_map(void);
@@ -88,6 +86,6 @@ namespace robotica {
         bound_cache<&world_model::update_depth_map               > depth       { {}, std::bind_front(&world_model::update_depth_map,                this) };
 
         // cv::CascadeClassifier is unfortunately not const-correct.
-        mutable std::vector<std::pair<std::string, cv::CascadeClassifier>> classifiers;
+        mutable std::vector<std::pair<std::string, unique<iclassifier>>> classifiers;
     };
 }
