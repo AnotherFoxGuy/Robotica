@@ -90,6 +90,6 @@ namespace robotica {
 
 
     float robot::get_camera_baseline(void) const {
-        return 0.03;    // Hardcoded value from PROTO file. Supervisor mode could also obtain this.
+        return 0.065;    // Hardcoded value from PROTO file. Supervisor mode could also obtain this.
     }
 }

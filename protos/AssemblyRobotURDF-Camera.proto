@@ -729,7 +729,7 @@ PROTO AssemblyRobotURDF-Camera [
       }
 	  DEF CAMERA_LEFT Camera {
       name "left_camera"
-      translation -0.015 0.028 -0.03
+      translation -0.05 0.16 0.031
       rotation IS camera_rotation
       children [
         Transform {
@@ -773,7 +773,7 @@ PROTO AssemblyRobotURDF-Camera [
     }
     DEF CAMERA_RIGHT Camera {
       name "right_camera"
-      translation 0.015 0.028 -0.03
+      translation 0.015 0.16 0.031
       rotation IS camera_rotation
       children [
         Transform {
