@@ -83,4 +83,49 @@ namespace robotica {
 
         cv::imshow(name, m);
     }
+
+
+    // Finds the size of a blob by using floodfill.
+    // cv::contourArea uses the Green formula, which can give incorrect results.
+    // TODO: Optimize this, use QuickFill or similar.
+    inline int floodfill_area_estimate(const cv::Mat& m, const cv::Point& where) {
+        cv::Mat visited_map(m.rows, m.cols, CV_8UC1);
+        visited_map = cv::Scalar(0);
+
+        auto visited = [&](const cv::Point& pt) -> decltype(auto) { return visited_map.at<uchar>(pt); };
+        auto clr_at  = [&](const cv::Point& pt) { return m.at<uchar>(pt); };
+
+        std::vector<cv::Point> to_visit = { where };
+        uchar color = m.at<uchar>(where);
+
+        int count = 0;
+        while (to_visit.size() > 0) {
+            cv::Point pt = to_visit.back();
+            to_visit.pop_back();
+
+            visited(pt) = 1;
+
+            if (clr_at(pt) == color) {
+                ++count;
+
+                const std::array deltas = {
+                    cv::Point{ -1,  0 },
+                    cv::Point{  1,  0 },
+                    cv::Point{  0, -1 },
+                    cv::Point{  0,  1 }
+                };
+
+                for (const auto& d : deltas) {
+                    auto npt = pt + d;
+
+                    if (npt.x < 0 || npt.x >= m.rows) continue;
+                    if (npt.y < 0 || npt.y >= m.cols) continue;
+
+                    if (visited(npt) == 0) to_visit.push_back(npt);
+                }
+            }
+        }
+
+        return count;
+    }
 } // namespace robotica
