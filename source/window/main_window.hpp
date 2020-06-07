@@ -46,11 +46,20 @@ namespace robotica {
         RBT_SETTING(PARALLAX, filtered_vis_scale, 15.0,   0,    64);
 
         // Classifier settings
-        RBT_SETTING(CLASSIFIER, min_obj_size,       5,      1,    255);
-        RBT_SETTING(CLASSIFIER, max_obj_size,       255,    1,    255);
-        RBT_SETTING(CLASSIFIER, min_neighbours,     64,     1,    255);
-        RBT_SETTING(CLASSIFIER, scale,              1.07,   1.01, 1.2);
-        RBT_SETTING(CLASSIFIER, min_confidence,     1,      0,    255);
+        RBT_SETTING(CLASSIFIER, min_obj_size,            5,       1,    255);
+        RBT_SETTING(CLASSIFIER, max_obj_size,            255,     1,    255);
+        RBT_SETTING(CLASSIFIER, min_neighbours,          64,      1,    255);
+        RBT_SETTING(CLASSIFIER, scale,                   1.07,    1.01, 1.2);
+        RBT_SETTING(CLASSIFIER, min_confidence,          1,       0,    255);
+        RBT_SETTING(CLASSIFIER, pool_min_area,           10,      0,    10000);
+        RBT_SETTING(CLASSIFIER, pool_max_area,           10000,   0,    10000);
+        RBT_SETTING(CLASSIFIER, pool_min_perimeter,      100,     0,    2000);
+        RBT_SETTING(CLASSIFIER, pool_max_perimeter,      2000,    0,    2000);
+        RBT_SETTING(CLASSIFIER, pool_min_circularity,    0.0,     0,    1);
+        RBT_SETTING(CLASSIFIER, pool_max_circularity,    1.0,     0,    1);
+        RBT_SETTING(CLASSIFIER, pool_min_colourfullness, 0.2,     0,    1);
+        RBT_SETTING(CLASSIFIER, pool_max_colourfullness, 1.0,     0,    1);
+        RBT_SETTING(CLASSIFIER, pool_grayscale_cutoff,   120,     0,    255);
 
 
         // Robot controls

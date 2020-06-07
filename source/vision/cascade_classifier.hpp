@@ -50,7 +50,7 @@ namespace robotica {
                 true
             );
 
-            assert(rects.size() == confidence.size());
+            assert(rects.size() == weights.size());
 
             std::vector<classified_object> results;
             for (int i = 0; i < rects.size(); ++i) results.push_back({ std::move(rects[i]), rejects[i], std::string(get_name()) });

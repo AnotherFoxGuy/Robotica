@@ -18,7 +18,9 @@ set(SOURCE_FILES
      window/setting.hpp
      window/window.hpp
      window/world_image.hpp
-     vision/classifier.hpp
+     vision/iclassifier.hpp
+     vision/cascade_classifier.hpp
+     vision/pool_classifier.hpp
      vision/converters.hpp
      vision/parallax.hpp
      vision/world_model.{hpp,cpp}

@@ -71,4 +71,16 @@ namespace robotica {
             ctr.end()
         );
     }
+
+
+    template <const char* name> inline void show(const cv::Mat& m) {
+        static bool created = false;
+
+        if (!created) {
+            cv::namedWindow(name);
+            created = true;
+        }
+
+        cv::imshow(name, m);
+    }
 } // namespace robotica

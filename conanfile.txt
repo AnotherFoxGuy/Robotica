@@ -22,3 +22,6 @@ opencv:nonfree=True
 opencv:eigen=True
 opencv:glog=True
 opencv:gflags=True
+
+[imports]
+bin, *.dll -> source @ keep_path=False

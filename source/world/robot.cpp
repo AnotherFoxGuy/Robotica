@@ -45,12 +45,8 @@ namespace robotica {
     bool robot::update(void) {
         auto& window = main_window::instance();
 
-
-        std::cout << get_bearing_in_degrees() << std::endl;
-        int result;
-        
+        int result;        
         if (result = rbt->step(timestep); result != -1) {
-            // Go in circles.
             (*left_motor).setVelocity(window.left_motor * max_speed);
             (*right_motor).setVelocity(window.right_motor * max_speed);
         }
