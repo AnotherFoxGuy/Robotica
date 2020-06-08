@@ -13,12 +13,12 @@ namespace web.Socket
         internal readonly ConnectionManager ConnectionManager;
         private WebSocket _webSocket;
         private HttpContext _context;
+        public WebSocket WebSocket => _webSocket;
 
         public BaseConnector(ConnectionManager connectionManager)
         {
             ConnectionManager = connectionManager;
         }
-        
 
         protected virtual void HandleMessage(string msg)
         {
