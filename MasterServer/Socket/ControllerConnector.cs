@@ -34,6 +34,7 @@ namespace web.Socket
                         ConnectionManager.Register(this);
                         break;
                     case "ls":
+                        ConnectionManager.CheckClients();
                         var robs = ConnectionManager.Robots;
                         SendData(JsonSerializer.Serialize(robs));
                         break;
