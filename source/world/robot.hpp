@@ -30,14 +30,16 @@ namespace robotica {
         constexpr static float max_speed = 6.25f;
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
-        const static inline std::string motor_names[2]  = { "left wheel motor", "right wheel motor" };
-        const static inline std::string compass_name    = "compass";
+        //const static inline std::string motor_names[2] = { "left wheel motor", "right wheel motor" };
+        const static inline std::string motor_names[2] = { "aandrijf_wiel_links", "aandrijf_wiel_rechts" };
+        const static inline std::string compass_name = "compass";
 
         robot(int timestep);
 
 
         // Updates the simulation. Returns false if the simulation has ended.
         bool update(void);
+        double get_bearing_in_degrees();
 
         // Camera output is a reference to the WeBots buffer and will be overridden on robot update!
         cv::Mat    get_camera_output      (side side) const;
@@ -49,6 +51,7 @@ namespace robotica {
         unique<webots::Robot> rbt;
         unique<webots::Camera> left_camera, right_camera;
         unique<webots::Motor> left_motor, right_motor;
+        unique<webots::Compass> compass;
 
         int timestep;
         float eye_distance, eye_height;

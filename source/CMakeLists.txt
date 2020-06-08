@@ -17,7 +17,9 @@ set(SOURCE_FILES
      window/setting.hpp
      window/window.hpp
      window/world_image.hpp
-     vision/classifier.hpp
+     vision/iclassifier.hpp
+     vision/cascade_classifier.hpp
+     vision/pool_classifier.hpp
      vision/converters.hpp
      vision/parallax.hpp
      vision/world_model.{hpp,cpp}
@@ -49,7 +51,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         CONAN_PKG::imgui
         CONAN_PKG::sdl2
         CONAN_PKG::glew
-        )
+        CONAN_PKG::magic_enum
+     )
 
 
 add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")

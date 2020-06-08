@@ -15,6 +15,7 @@ namespace robotica {
         right_camera(rbt->getCamera(camera_names[1])),
         left_motor(rbt->getMotor(motor_names[0])),
         right_motor(rbt->getMotor(motor_names[1])),
+        compass(rbt->getCompass(compass_name)),
         timestep(timestep),
         eye_distance(0.03f),
         eye_height(0.028f)
@@ -27,16 +28,25 @@ namespace robotica {
 
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
+
+        compass->enable(100);
+    }
+
+    double robot::get_bearing_in_degrees() {
+        const double *north = compass->getValues();
+        double rad = atan2(north[0], north[1]);
+        double bearing = (rad - 1.5708) / M_PI * 180.0;
+        if (bearing < 0.0)
+            bearing = bearing + 360.0;
+        return bearing;
     }
 
 
     bool robot::update(void) {
         auto& window = main_window::instance();
 
-        int result;
-        
+        int result;        
         if (result = rbt->step(timestep); result != -1) {
-            // Go in circles.
             (*left_motor).setVelocity(window.left_motor * max_speed);
             (*right_motor).setVelocity(window.right_motor * max_speed);
         }
@@ -51,7 +61,7 @@ namespace robotica {
         cv::Mat image = cv::Mat(cv::Size(camera->getWidth(), camera->getHeight()), CV_8UC4);
         image.data = (uchar*) camera->getImage();
 
-        cv::cvtColor(image, image, cv::COLOR_RGBA2BGR);
+        cv::cvtColor(image, image, cv::COLOR_BGRA2BGR);
 
         return image;
     }
@@ -76,6 +86,6 @@ namespace robotica {
 
 
     float robot::get_camera_baseline(void) const {
-        return 0.03;    // Hardcoded value from PROTO file. Supervisor mode could also obtain this.
+        return 0.065;    // Hardcoded value from PROTO file. Supervisor mode could also obtain this.
     }
 }
