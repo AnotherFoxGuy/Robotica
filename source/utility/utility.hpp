@@ -61,7 +61,7 @@ namespace robotica {
 
 
     template <typename Container, typename Pred>
-    inline void remove_if(Container& ctr, Pred& pred) {
+    inline void remove_if(Container& ctr, const Pred& pred) {
         ctr.erase(
             std::remove_if(
                 ctr.begin(),
@@ -85,10 +85,9 @@ namespace robotica {
     }
 
 
-    // Finds the size of a blob by using floodfill.
-    // cv::contourArea uses the Green formula, which can give incorrect results.
+    // Apply the predicate to each pixel found by floodfilling from the given point.
     // TODO: Optimize this, use QuickFill or similar.
-    inline int floodfill_area_estimate(const cv::Mat& m, const cv::Point& where) {
+    template <typename Pred> inline void floodfill_foreach(const cv::Mat& m, const cv::Point& where, const Pred& pred) {
         cv::Mat visited_map(m.rows, m.cols, CV_8UC1);
         visited_map = cv::Scalar(0);
 
@@ -98,7 +97,6 @@ namespace robotica {
         std::vector<cv::Point> to_visit = { where };
         uchar color = m.at<uchar>(where);
 
-        int count = 0;
         while (to_visit.size() > 0) {
             cv::Point pt = to_visit.back();
             to_visit.pop_back();
@@ -106,7 +104,7 @@ namespace robotica {
             visited(pt) = 1;
 
             if (clr_at(pt) == color) {
-                ++count;
+                pred(pt);
 
                 const std::array deltas = {
                     cv::Point{ -1,  0 },
@@ -125,7 +123,13 @@ namespace robotica {
                 }
             }
         }
+    }
 
+
+    // Finds the area of a blob through floodfill.
+    inline int floodfill_area(const cv::Mat& m, const cv::Point& where) {
+        int count = 0;
+        floodfill_foreach(m, where, [&](const auto& pt) { ++count; });
         return count;
     }
 } // namespace robotica

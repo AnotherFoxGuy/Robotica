@@ -46,17 +46,24 @@ namespace robotica {
         RBT_SETTING(PARALLAX, filtered_vis_scale, 15.0,   0,    64);
 
         // Classifier settings
-        RBT_SETTING(CLASSIFIER, min_obj_size,            5,       1,    255);
-        RBT_SETTING(CLASSIFIER, max_obj_size,            255,     1,    255);
-        RBT_SETTING(CLASSIFIER, min_neighbours,          64,      1,    255);
-        RBT_SETTING(CLASSIFIER, scale,                   1.07,    1.01, 1.2);
-        RBT_SETTING(CLASSIFIER, min_confidence,          1,       0,    255);
-        RBT_SETTING(CLASSIFIER, pool_min_area,           0.1,     0,    10);
-        RBT_SETTING(CLASSIFIER, pool_min_perimeter,      0,       0,    2000);
-        RBT_SETTING(CLASSIFIER, pool_min_circularity,    0.64,    0,    1);
-        RBT_SETTING(CLASSIFIER, pool_min_colourfullness, 0.150,   0,    1);
-        RBT_SETTING(CLASSIFIER, pool_grayscale_cutoff,   50,      0,    255);
-        RBT_SETTING(CLASSIFIER, pool_area_mode_switch,   1450,    0,    5000);
+        RBT_SETTING(CLASSIFIER, min_obj_size,                  5,       1,    255);
+        RBT_SETTING(CLASSIFIER, max_obj_size,                  255,     1,    255);
+        RBT_SETTING(CLASSIFIER, min_neighbours,                64,      1,    255);
+        RBT_SETTING(CLASSIFIER, scale,                         1.07,    1.01, 1.2);
+        RBT_SETTING(CLASSIFIER, min_confidence,                1,       0,    255);
+        RBT_SETTING(CLASSIFIER, pool_min_area,                 0.1,     0,    10);
+        RBT_SETTING(CLASSIFIER, pool_max_area,                 20000,   0,    20000);
+        RBT_SETTING(CLASSIFIER, pool_min_perimeter,            0,       0,    2000);
+        RBT_SETTING(CLASSIFIER, pool_min_circularity,          0.3,     0,    1);
+        RBT_SETTING(CLASSIFIER, pool_min_colourfullness,       0.150,   0,    1);
+        RBT_SETTING(CLASSIFIER, pool_grayscale_cutoff,         50,      0,    255);
+        RBT_SETTING(CLASSIFIER, pool_area_mode_switch,         1450,    0,    5000);
+        RBT_SETTING(CLASSIFIER, pool_white_boost,              1.25,    0,    32);
+        RBT_SETTING(CLASSIFIER, pool_white_scale,              1.7,     0,    10);
+        RBT_SETTING(CLASSIFIER, pool_variance_base,            1000,    0,    1000);
+        RBT_SETTING(CLASSIFIER, pool_max_variance,             75.0,    0,    100);
+        RBT_SETTING(CLASSIFIER, pool_min_width,                35.0,    0,    100);
+        RBT_SETTING(CLASSIFIER, pool_min_oblongness,           1.0,     0,    32);
 
 
         // Robot controls
@@ -64,10 +71,10 @@ namespace robotica {
         RBT_SETTING(ROBOT,    right_motor,        0.0,    0,    1);
 
 
-        gui_image left, right, depth, map;
     protected:
         void add_elements(void) override;
     private:
         bool has_resized = false;
+        gui_image left, right, depth, map;
     };
 }
