@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
     //EASY_PROFILER_ENABLE;
     SoundAnalyzer x;
     x.scan_mp3();
-    x.test();
+    //x.test();
 
     while (robotica::controller::instance().update());
 }
