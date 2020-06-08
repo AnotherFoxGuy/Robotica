@@ -153,11 +153,9 @@
 </div>
 
 <div class="container p-3 my-3 border">
-    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown">Robot keuze</button>
+    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" onclick="update_robot_list()">Robot keuze</button>
     <div class="dropdown-menu" id="select_robot">
-
     </div>
-    <button type="button" class="btn btn-success active" onclick="update_robot_list()">Update</button>
 </div>
 
 <div class="container p-3 my-3 border">
@@ -174,6 +172,9 @@
         "internalStrokeColor": "#666666",
         "externalStrokeColor": "#000000"
     };
+
+    var websocket
+
 
     var previous_x, previous_y
 
@@ -300,10 +301,14 @@
     }
 
     function doSend(message) {
+        if(websocket.readyState != WebSocket.OPEN)
+            return
         websocket.send("cmd|" + message);
     }
 
     function update_robot_list() {
+        if(websocket.readyState != WebSocket.OPEN)
+            return
         websocket.send("ls")
     }
 

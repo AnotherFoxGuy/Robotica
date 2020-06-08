@@ -14,7 +14,7 @@
         _ws = new ClientWebSocket();
         await _ws.ConnectAsync(new Uri("ws://vps.anotherfoxguy.com:5000/ws/Robot"), CancellationToken.None);
         
-        var buf = Encoding.Default.GetBytes("register|testcloen");
+        var buf = Encoding.Default.GetBytes("register|testclient");
         await _ws.SendAsync(buf, WebSocketMessageType.Text, true, CancellationToken.None);
 
         var buffer = new byte[1024 * 4];
