@@ -33,9 +33,6 @@ namespace robotica {
 
             std::vector<classified_object> result;
 
-            cv::Mat shown;
-            cv::cvtColor(color_detect_map, shown, cv::COLOR_GRAY2BGR);
-
             int index = 0;
             for (const auto& contour : contours) {
                 // Only take top-level contours.
@@ -63,10 +60,6 @@ namespace robotica {
                 });
 
 
-                cv::putText(shown, std::to_string(variance / pixels), bounding.tl(), cv::FONT_HERSHEY_PLAIN, 1.0, cv::Scalar(0, 0, 255));
-                cv::putText(shown, std::to_string(area), bounding.tl() + cv::Point { 0, 15 }, cv::FONT_HERSHEY_PLAIN, 1.0, cv::Scalar(0, 255, 0));
-
-
                 if (variance / pixels > settings.pool_max_variance      ) continue;
                 if (area              < settings.pool_min_area          ) continue;
                 if (area              > settings.pool_max_area          ) continue;
@@ -87,9 +80,6 @@ namespace robotica {
                     get_name()
                 });
             }
-
-            static const char name[] = "tmp";
-            show<name>(shown);
 
             return result;
         }

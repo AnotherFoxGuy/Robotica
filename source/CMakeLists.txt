@@ -43,16 +43,16 @@ get_variable_from_conan(CONAN_RES_DIRS_IMGUI)
 target_include_directories(${PROJECT_NAME} PUBLIC . ${CONAN_RES_DIRS_IMGUI}/bindings/)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-        "CRYPT32"
-        CONAN_PKG::webots-controller
-        CONAN_PKG::opencv
-        CONAN_PKG::ixwebsocket
-        CONAN_PKG::glm
-        CONAN_PKG::imgui
-        CONAN_PKG::sdl2
-        CONAN_PKG::glew
-        CONAN_PKG::magic_enum
-     )
+     "CRYPT32"
+     CONAN_PKG::webots-controller
+     CONAN_PKG::opencv
+     CONAN_PKG::ixwebsocket
+     CONAN_PKG::glm
+     CONAN_PKG::imgui
+     CONAN_PKG::sdl2
+     CONAN_PKG::glew
+     CONAN_PKG::magic_enum
+)
 
 
 add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
