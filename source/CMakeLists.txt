@@ -9,6 +9,9 @@ project(RBTC)
 
 set(SOURCE_FILES
      main.cpp
+     decode.c
+     decode.h
+     SoundAnalyzer.{hpp,cpp}
      world/controller.{hpp,cpp}
      world/robot.{hpp,cpp}
      window/gui_image.hpp
