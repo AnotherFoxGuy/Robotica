@@ -40,7 +40,25 @@ namespace robotica {
         }
 
 
-        operator stored_type&(void) { return value; }
+        stored_type& operator=(const stored_type& v) {
+            value = v;
+            return value;
+        }
+
+        stored_type& operator=(stored_type&& v) {
+            value = std::move(v);
+            return value;
+        }
+
+
+        operator       stored_type& (void)       { return value; }
+        operator const stored_type& (void) const { return value; }
+
+              stored_type* operator->(void)       { return &value; }
+        const stored_type* operator->(void) const { return &value; }
+
+              stored_type& operator*(void)       { return value; }
+        const stored_type& operator*(void) const { return value; }
     };
 
 

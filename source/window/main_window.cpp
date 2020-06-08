@@ -5,12 +5,14 @@
 #include <vision/parallax.hpp>
 #include <vision/converters.hpp>
 #include <vision/world_model.hpp>
+#include <comms/websocket.hpp>
 
 #include <opencv2/highgui.hpp>
 #include <magic_enum.hpp>
 
 #include <algorithm>
 #include <string>
+#include <iostream>
 
 
 namespace robotica {
@@ -23,49 +25,7 @@ namespace robotica {
     }
 
 
-    main_window::main_window(void) : window("Settings") {
-       
-        std::string url("ws://vps.anotherfoxguy.com:5000/ws/Robot");
-        webSocket.setUrl(url);
-
-        std::cout << "Connecting to " << url << "..." << std::endl;
-
-        // Setup a callback to be fired (in a background thread, watch out for race conditions !)
-        // when a message or an event (open, close, error) is received
-        webSocket.setOnMessageCallback([&](const ix::WebSocketMessagePtr& msg) {
-            if (msg->type == ix::WebSocketMessageType::Message)
-            {
-                auto cmd = msg->str.c_str();
-                std::cout << "received message: " << msg->str << std::endl;
-
-                if (!strncmp("joystick", cmd, 8))
-                {
-                    // -100/100
-                    // X Left/Right
-                    // Y Forward/backward
-                    int x = 0, y = 0;
-                    sscanf(cmd, "joystick(%d ,%d)", &x, &y);
-                    std::cout << "joystick " << x << "," << y << std::endl;
-                 
-
-                    //std::cout << "pwr " << pwr << std::endl;
-
-                    left_motor.value = 0.005 * std::clamp(x + y, -100,100);
-                    right_motor.value = 0.005 * std::clamp(y - x, -100, 100);
-                }
-
-            }
-            else if (msg->type == ix::WebSocketMessageType::Open)
-            {
-                std::cout << "Connection established" << std::endl;
-            }
-        });
-
-        // Now that our callback is setup, we can start our background thread and receive messages
-        webSocket.start();     
-
-        srand(time(NULL));
-    }
+    main_window::main_window(void) : window("Settings") {}
 
 
     void main_window::add_elements(void) {
@@ -166,17 +126,13 @@ namespace robotica {
             image_to_file(snapshot_folder.string(), "NEGATIVE_"s + datetime_string(), left.get_image());
         }
 
-        if (ImGui::Button("profiler dumpBlocksToFile", {200, 30}))
-        {
+        if (ImGui::Button("Save Profiler Data", {200, 30})) {
             profiler::dumpBlocksToFile("test_profile.prof");
         }
 
-        if (ImGui::Button("Connect", {200, 30}))
-        {
-            // Send a message to the server (default to TEXT mode)   
-            char buff[18];
-            snprintf(buff, sizeof(buff), "register|myBot-%d", rand() % 100);
-            webSocket.sendText(buff);
+        if (ImGui::Button("Register", {200, 30})) {
+            std::string name = websocket::instance().register_bot();
+            std::cout << "Registered bot as " << name << '\n';
         }
 
         ImGui::EndGroup();

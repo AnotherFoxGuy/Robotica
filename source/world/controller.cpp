@@ -1,6 +1,10 @@
 #include <world/controller.hpp>
+#include <vision/world_model.hpp>
 #include <vision/cascade_classifier.hpp>
 #include <vision/pool_classifier.hpp>
+#include <comms/websocket.hpp>
+#include <comms/joystick_callback.hpp>
+#include <window/main_window.hpp>
 
 
 namespace robotica {
@@ -17,17 +21,17 @@ namespace robotica {
         world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spade"  ));
         world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Club"   ));
         world_model::instance().add_classifier(std::make_unique<pool_classifier>());
+
+        websocket::instance().init();
+        websocket::instance().add_callback("joystick", &joystick_callback);
     }
 
 
     bool controller::update(void) {
-        auto& robot  = robot::instance();
-        auto& window = main_window::instance();
-        auto& model  = world_model::instance();
-
-        bool exit = robot.update();
-        model.update();
-        window.update();
+        bool exit = robot::instance().update();
+        world_model::instance().update();
+        websocket::instance().update();
+        main_window::instance().update();
 
         return exit;
     }

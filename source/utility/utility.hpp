@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility/typedefs.hpp>
+
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
@@ -9,8 +11,7 @@
 #include <string>
 #include <string_view>
 #include <algorithm>
-
-#include "typedefs.hpp"
+#include <regex>
 
 
 namespace robotica {
@@ -131,5 +132,22 @@ namespace robotica {
         int count = 0;
         floodfill_foreach(m, where, [&](const auto& pt) { ++count; });
         return count;
+    }
+
+
+    inline std::vector<std::string> regex_groups(const std::string& str, const std::regex& rgx) {
+        std::vector<std::string> result;
+        std::smatch matches;
+
+        if (std::regex_search(str, matches, rgx)) {
+            for (const auto& m : matches) result.push_back(m.str());
+        }
+
+        return result;
+    }
+
+
+    template <typename... Ts> inline std::string concat(const Ts&... ts) {
+        return (std::string(ts) + ...);
     }
 } // namespace robotica

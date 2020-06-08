@@ -1,9 +1,5 @@
 #pragma once
 
-#include <world/robot.hpp>
-#include <vision/world_model.hpp>
-#include <window/main_window.hpp>
-
 
 namespace robotica {
     class controller {
