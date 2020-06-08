@@ -1,4 +1,6 @@
 #include <vision/world_model.hpp>
+#include <window/main_window.hpp>
+#include <utility/utility.hpp>
 
 
 namespace robotica {
@@ -17,19 +19,18 @@ namespace robotica {
     }
 
 
-    void world_model::add_classifier(std::string_view mapname, std::string_view filename) {
-        cv::CascadeClassifier cc { (classifier_folder / filename).string() };
-        classifiers.push_back({ std::string(mapname), cc });
+    void world_model::add_classifier(unique<iclassifier>&& classifier) {
+        classifiers.push_back({ classifier->get_name(), std::move(classifier) });
     }
 
 
-    void world_model::remove_classifier(std::string_view mapname) {
-        auto it = std::find_if(classifiers.begin(), classifiers.end(), [&](const auto& pair) { return pair.first == mapname; });
-        if (it != classifiers.end()) classifiers.erase(it);
+    void world_model::remove_classifier(std::string_view name) {
+        remove_if(classifiers, [&](const auto& kv) { return kv.first == name; });
     }
 
 
-    const std::vector<detected_object> world_model::get_raw_object_list(void) const {
+
+    const std::vector<classified_object>& world_model::get_raw_object_list(void) const {
         return raw_objects;
     }
 
@@ -44,11 +45,13 @@ namespace robotica {
     }
 
 
-    std::vector<detected_object> world_model::update_raw_objects(void) const {
-        std::vector<detected_object> result;
+    std::vector<classified_object> world_model::update_raw_objects(void) const {
+        std::vector<classified_object> result;
 
         for (auto& [name, classifier] : classifiers) {
-            auto subresult = classify(left, classifier, name);
+            auto subresult = classifier->classify(left);
+            remove_if(subresult, [](const auto& e) { return e.confidence < main_window::instance().min_confidence; });
+
             std::move(subresult.begin(), subresult.end(), std::back_inserter(result));
         }
 
@@ -85,7 +88,6 @@ namespace robotica {
 
                 std::sort(measurements.begin(), measurements.end());
                 float distance = (measurements.size() > 0) ? measurements[measurements.size() / 2] : 0;
-
 
                 float size = distance * std::sin(
                     ((float) item.bounding_rect.width / rbt.get_camera_size(side::LEFT).x) * rbt.get_camera_fov(side::LEFT)

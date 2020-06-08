@@ -1,4 +1,6 @@
 #include <world/controller.hpp>
+#include <vision/cascade_classifier.hpp>
+#include <vision/pool_classifier.hpp>
 
 
 namespace robotica {
@@ -9,7 +11,12 @@ namespace robotica {
 
 
     controller::controller(int timestep) : timestep(timestep) {
-        world_model::instance().add_classifier("ROCK", "moonrock.xml");
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "moonrock.xml", "Rock"   ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Heart"  ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamond"));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spade"  ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Club"   ));
+        world_model::instance().add_classifier(std::make_unique<pool_classifier>());
     }
 
 

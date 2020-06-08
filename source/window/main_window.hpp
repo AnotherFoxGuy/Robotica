@@ -26,8 +26,10 @@ namespace robotica {
         static main_window& instance(void);
         main_window(void);
 
-
-        enum setting_groups { PARALLAX, ROBOT };
+        // To add a new setting category, just create a new entry in this enum, then add it to collapsable_groups.
+        // Then you can use RBT_SETTING to add settings to the category.
+        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT };
+        constexpr static auto collapsable_groups = { PARALLAX, CLASSIFIER };
 
         // Parallax Processing Settings
         RBT_SETTING(PARALLAX, num_disparities,    3,      0,    16);        // x16
@@ -45,17 +47,38 @@ namespace robotica {
         RBT_SETTING(PARALLAX, raw_vis_scale,      21.0,   0,    64);
         RBT_SETTING(PARALLAX, filtered_vis_scale, 15.0,   0,    64);
 
+        // Classifier settings
+        RBT_SETTING(CLASSIFIER, min_obj_size,                  5,       1,    255);
+        RBT_SETTING(CLASSIFIER, max_obj_size,                  255,     1,    255);
+        RBT_SETTING(CLASSIFIER, min_neighbours,                64,      1,    255);
+        RBT_SETTING(CLASSIFIER, scale,                         1.07,    1.01, 1.2);
+        RBT_SETTING(CLASSIFIER, min_confidence,                1,       0,    255);
+        RBT_SETTING(CLASSIFIER, pool_min_area,                 0.1,     0,    10);
+        RBT_SETTING(CLASSIFIER, pool_max_area,                 20000,   0,    20000);
+        RBT_SETTING(CLASSIFIER, pool_min_perimeter,            0,       0,    2000);
+        RBT_SETTING(CLASSIFIER, pool_min_circularity,          0.3,     0,    1);
+        RBT_SETTING(CLASSIFIER, pool_min_colourfullness,       0.150,   0,    1);
+        RBT_SETTING(CLASSIFIER, pool_grayscale_cutoff,         50,      0,    255);
+        RBT_SETTING(CLASSIFIER, pool_area_mode_switch,         1450,    0,    5000);
+        RBT_SETTING(CLASSIFIER, pool_white_boost,              1.25,    0,    32);
+        RBT_SETTING(CLASSIFIER, pool_white_scale,              1.7,     0,    10);
+        RBT_SETTING(CLASSIFIER, pool_variance_base,            1000,    0,    1000);
+        RBT_SETTING(CLASSIFIER, pool_max_variance,             75.0,    0,    100);
+        RBT_SETTING(CLASSIFIER, pool_min_width,                35.0,    0,    100);
+        RBT_SETTING(CLASSIFIER, pool_min_oblongness,           1.0,     0,    32);
+
+
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
 
 
-        gui_image left, right, depth, map;
     protected:
         void add_elements(void) override;
     private:
         bool has_resized = false;
-        // Our websocket object
+        gui_image left, right, depth, map;
+
         ix::WebSocket webSocket;
     };
 }

@@ -5,6 +5,7 @@ cmake
 glog/0.4.0
 gflags/2.2.2
 ixwebsocket/9.6.4
+magic_enum/0.6.5
 webots-controller/R2020a-rev1@anotherfoxguy/stable
 opencv/4.1.1@conan/stable
 glm/0.9.9.8

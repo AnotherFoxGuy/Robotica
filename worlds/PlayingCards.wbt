@@ -1,0 +1,99 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.4600423367084953 0.8709551731308727 0.17262136261876515 5.435648558650533
+  position -3.553810453916731 2.1780739372083797 3.0854557617055987
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Floor {
+  size 2 2
+  tileSize 2 2
+  appearance Appearance {
+    texture ImageTexture {
+      url [
+        "textures/floorPlus.png"
+      ]
+    }
+  }
+}
+E-puck {
+  translation 0 -0.01 0
+  controller "<extern>"
+}
+Solid {
+  translation -0.01 0.078125 1
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            "textures/Hearts.png"
+          ]
+        }
+      }
+      geometry Box {
+        size 2 0.15625 0.02
+      }
+    }
+  ]
+  name "South_Wall"
+}
+Solid {
+  translation 0 0.078125 -1
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            "textures/Diamonds.png"
+          ]
+        }
+      }
+      geometry Box {
+        size 2 0.15625 0.02
+      }
+    }
+  ]
+  name "North_Wall"
+}
+Solid {
+  translation 1 0.078125 0
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            "textures/Spades.png"
+          ]
+        }
+      }
+      geometry Box {
+        size 0.02 0.15625 2
+      }
+    }
+  ]
+  name "East_Wall"
+  description "East_Wall"
+}
+Solid {
+  translation -1 0.078125 0
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            "textures/Clubs.png"
+          ]
+        }
+      }
+      geometry Box {
+        size 0.02 0.15625 2
+      }
+    }
+  ]
+  name "West_Wall"
+}
