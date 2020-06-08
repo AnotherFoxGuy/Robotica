@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.WebSockets;
 using web.Socket;
 
 namespace web
@@ -8,6 +10,12 @@ namespace web
     {
         public List<RobotConnector> Robots = new List<RobotConnector>();
         public List<ControllerConnector> Controlers = new List<ControllerConnector>();
+
+        public void CheckClients()
+        {
+            Robots.RemoveAll(r => r.WebSocket.State != WebSocketState.Open);
+            Controlers.RemoveAll(r => r.WebSocket.State != WebSocketState.Open);
+        }
 
         public void Register(RobotConnector conn)
         {
