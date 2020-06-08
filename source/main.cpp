@@ -1,4 +1,5 @@
 #define MINIMP3_IMPLEMENTATION
+#include "SoundAnalyzer.h"
 #include <world/controller.hpp>
 #include <ixwebsocket/IXNetSystem.h>
 #include <ixwebsocket/IXWebSocket.h>
