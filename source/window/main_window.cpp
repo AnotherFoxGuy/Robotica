@@ -2,7 +2,7 @@
 #include <window/world_image.hpp>
 #include <world/robot.hpp>
 #include <utility/utility.hpp>
-#include <vision/parallax.hpp>
+#include <vision/heat_measure.hpp>
 #include <vision/converters.hpp>
 #include <vision/world_model.hpp>
 #include <comms/websocket.hpp>
@@ -65,8 +65,25 @@ namespace robotica {
         // TODO: This needs to be changed to reduce unnecessary conversions.
         for (auto& detection : world_model::instance().get_raw_object_list()) {
             auto& img = left.get_image();
+
             cv::rectangle(img, detection.bounding_rect, cv::Scalar(0, 0, 255));
             cv::putText(img, detection.type, detection.bounding_rect.tl() + cv::Point{ 2, 15 }, cv::FONT_HERSHEY_PLAIN, 1.0, cv::Scalar(0, 0, 255));
+
+            // Show temperature. Ignore far away pools for accuracy.
+            if (detection.type == "Pool" && detection.bounding_rect.height > 4) {
+                float temp = calculate_temperature(left.get_image().at<cv::Vec3b>(detection.bounding_rect.tl() + cv::Point{ detection.bounding_rect.size() / 2 }));
+                temperature tempclass = temperature_class(temp);
+
+                cv::putText(
+                    img, 
+                    concat(magic_enum::enum_name(tempclass), " (" + std::to_string(temp) + ")"), 
+                    detection.bounding_rect.tl() + cv::Point { 2, 30 }, 
+                    cv::FONT_HERSHEY_PLAIN, 
+                    1.0, 
+                    cv::Scalar(0, 255, 0)
+                );
+            }
+
             left.set_image(img);
         }
 
