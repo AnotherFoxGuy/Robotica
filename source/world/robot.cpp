@@ -18,6 +18,10 @@ namespace robotica {
         arm_base(rbt->getMotor(motor_names[2])),
         arm_short(rbt->getMotor(motor_names[3])),
         arm_long(rbt->getMotor(motor_names[4])),
+        gripper_left(rbt->getMotor(motor_names[5])),
+        gripper_right(rbt->getMotor(motor_names[6])),
+        gripper_roll(rbt->getMotor(motor_names[7])),
+        gripper_pitch(rbt->getMotor(motor_names[8])),
         compass(rbt->getCompass(compass_name)),
         lidar(rbt->getLidar(lidar_name)),
         timestep(timestep),
@@ -29,11 +33,9 @@ namespace robotica {
 
         left_motor->setPosition(INFINITY);
         right_motor->setPosition(INFINITY);
-        arm_base->setPosition(INFINITY);
 
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
-        arm_base->setVelocity(0);
 
         //provide samplingPeriod in milliseconds
         compass->enable(100);
@@ -71,9 +73,13 @@ namespace robotica {
         if (result = rbt->step(timestep); result != -1) {
             (*left_motor).setVelocity(window.left_motor * max_speed);
             (*right_motor).setVelocity(window.right_motor * max_speed);
-            (*arm_base).setVelocity(window.arm_base * max_speed);
+            (*arm_base).setPosition(window.arm_base * 3.14);
             (*arm_short).setPosition(window.arm_short * 3.14);
             (*arm_long).setPosition(window.arm_long * 3.14);
+            (*gripper_left).setPosition(window.gripper * 3.14);
+            (*gripper_right).setPosition(-window.gripper * 3.14);
+            (*gripper_roll).setPosition(window.gripper_roll * 3.14);
+            (*gripper_pitch).setPosition(window.gripper_pitch * 3.14);
         }
 
         return (result != -1);

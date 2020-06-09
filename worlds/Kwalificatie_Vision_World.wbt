@@ -13,8 +13,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 0.895398
-  orientation 0.46726060505439926 0.8518749115399081 0.23659387577253635 5.200590772956686
-  position -1.1942675660575781 0.937836591732166 0.8062040484742704
+  orientation 0.49258850816505456 0.8336979179473493 0.2496083797350984 5.181389296991092
+  position -0.7200624320553636 0.7972328842989161 0.4646037693992945
   near 0.1
 }
 TexturedBackground {
@@ -72,10 +72,6 @@ DEF GROUND Solid {
   name "ground"
   boundingObject USE GROUND_SHAPE
   locked TRUE
-}
-UWUBot {
-  translation 0 0.35 0
-  rotation 0 0 1 3.14159
 }
 Transform {
   children [
@@ -292,4 +288,8 @@ Transform {
       ]
     }
   ]
+}
+UWUBot-Tracked {
+  translation 0 0.18 1.59216e-07
+  rotation 1 0 0 3.14159
 }
