@@ -11,12 +11,58 @@
 
 namespace robotica {
     inline void arm_base_callback(std::string_view argstring) {
-        const static std::regex rgx { R"REGEX(\s*(-?\d+)\s*,\s*(-?\d+)\s*)REGEX" };
+        const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
         auto args = regex_groups(std::string(argstring), rgx);
 
         auto& settings = main_window::instance();
-        settings.arm_base  = 0.005 * std::clamp(std::stoi(args[1]), -100, 100);
+        settings.arm_base  = 0.005 * std::clamp(std::stoi(args[0]), -100, 100);
 
         std::cout << "Robot arm base was changed by joystick input.\n";
+    }
+    inline void arm_short_callback(std::string_view argstring) {
+        const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
+        auto args = regex_groups(std::string(argstring), rgx);
+
+        auto& settings = main_window::instance();
+        settings.arm_short  = 0.005 * std::clamp(std::stoi(args[0]), -100, 100);
+
+        std::cout << "Robot arm short was changed by joystick input.\n";
+    }
+    inline void arm_long_callback(std::string_view argstring) {
+        const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
+        auto args = regex_groups(std::string(argstring), rgx);
+
+        auto& settings = main_window::instance();
+        settings.arm_long  = 0.005 * std::clamp(std::stoi(args[0]), -100, 100);
+
+        std::cout << "Robot arm long was changed by joystick input.\n";
+    }
+    inline void gripper_callback(std::string_view argstring) {
+        const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
+        auto args = regex_groups(std::string(argstring), rgx);
+
+        auto& settings = main_window::instance();
+        settings.gripper  = 0.005 * std::clamp(std::stoi(args[0]), -100, 100);
+        settings.gripper  = 0.005 * std::clamp(std::stoi(args[0]), -100, 100);
+
+        std::cout << "Robot gripper was changed by joystick input.\n";
+    }
+    inline void gripper_pitch_callback(std::string_view argstring) {
+        const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
+        auto args = regex_groups(std::string(argstring), rgx);
+
+        auto& settings = main_window::instance();
+        settings.gripper_pitch  = 0.005 * std::clamp(std::stoi(args[0]), -100, 100);
+
+        std::cout << "Robot gripper pitch was changed by joystick input.\n";
+    }
+    inline void gripper_roll_callback(std::string_view argstring) {
+        const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
+        auto args = regex_groups(std::string(argstring), rgx);
+
+        auto& settings = main_window::instance();
+        settings.gripper_roll  = 0.005 * std::clamp(std::stoi(args[0]), -100, 100);
+
+        std::cout << "Robot gripper roll was changed by joystick input.\n";
     }
 }

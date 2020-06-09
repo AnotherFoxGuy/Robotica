@@ -32,7 +32,7 @@ namespace robotica {
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
         //const static inline std::string motor_names[2] = { "left wheel motor", "right wheel motor" };
-        const static inline std::string motor_names[5] = { "aandrijf_links", "aandrijf_rechts", "basis_kraan", "korte_arm", "lange_arm" };
+        const static inline std::string motor_names[9] = {"aandrijf_links", "aandrijf_rechts", "basis_kraan", "korte_arm", "lange_arm", "grijper_links", "grijper_rechts", "tandwielkast_grijper", "arm_grijper" };
 
         const static inline std::string compass_name = "compass";
         const static inline std::string lidar_name   = "lidar_sensor";
@@ -54,7 +54,7 @@ namespace robotica {
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;
-        webots::Motor  *left_motor, *right_motor, *arm_base, *arm_short, *arm_long;
+        webots::Motor *left_motor, *right_motor, *arm_base, *arm_short, *arm_long, *gripper_left, *gripper_right, *gripper_roll, *gripper_pitch;
         webots::Compass* compass;
         webots::Lidar* lidar;
 

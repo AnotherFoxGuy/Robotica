@@ -74,6 +74,9 @@ namespace robotica {
         RBT_SETTING(ARM,    arm_base,            0.0,   -1,    1);
         RBT_SETTING(ARM,    arm_short,            0.0,   -1,    1);
         RBT_SETTING(ARM,    arm_long,            0.0,   -1,    1);
+        RBT_SETTING(ARM,    gripper,            0.0,   -1,    1);
+        RBT_SETTING(ARM,    gripper_roll,            0.0,   -1,    1);
+        RBT_SETTING(ARM,    gripper_pitch,            0.0,   -1,    1);
 
 
     protected:

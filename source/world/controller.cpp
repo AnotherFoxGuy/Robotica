@@ -24,7 +24,12 @@ namespace robotica {
 
         websocket::instance().init();
         websocket::instance().add_callback("joystick", &joystick_callback);
-        websocket::instance().add_callback("armbase", &arm_base_callback);
+        websocket::instance().add_callback("rotate_arm_base", &arm_base_callback);
+        websocket::instance().add_callback("arm_short", &arm_short_callback);
+        websocket::instance().add_callback("arm_long", &arm_long_callback);
+        websocket::instance().add_callback("gripper", &gripper_callback);
+        websocket::instance().add_callback("gripper_pitch", &gripper_pitch_callback);
+        websocket::instance().add_callback("gripper_roll", &gripper_roll_callback);
     }
 
     bool controller::update(void) {
