@@ -75,7 +75,7 @@
 
         <div class="col-md-12">
             <div class="container p-3 my-3 border">
-                <h6 class="text-center">Gripper</h6>
+                <h6 class="text-center">Gripper open/close</h6>
                 <div class="slidecontainer">
                     <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_slider">
                     <p>Waarde: <span id="gripper_span"></span> graden</p>
@@ -85,40 +85,50 @@
 
         <div class="col-md-12">
             <div class="container p-3 my-3 border">
-                <h6 class="text-center">Rotate gripper</h6>
+                <h6 class="text-center">Gripper pitch</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="rotate_gripper_slider">
-                    <p>Waarde: <span id="rotate_gripper_span"></span> graden</p>
+                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_pitch_slider">
+                    <p>Waarde: <span id="gripper_pitch_span"></span> graden</p>
                 </div>
             </div>
         </div>
 
         <div class="col-md-12">
             <div class="container p-3 my-3 border">
-                <h6 class="text-center">Lift arm</h6>
+                <h6 class="text-center">Gripper roll</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="lift_arm_slider">
-                    <p>Waarde: <span id="lift_arm_span"></span> graden</p>
+                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_roll_slider">
+                    <p>Waarde: <span id="gripper_roll_span"></span> graden</p>
                 </div>
             </div>
         </div>
 
         <div class="col-md-12">
             <div class="container p-3 my-3 border">
-                <h6 class="text-center">Rotate arm</h6>
+                <h6 class="text-center">Arm long</h6>
+                <div class="slidecontainer">
+                    <input type="range" min="-90" max="90" value="0" class="slider" id="arm_long_slider">
+                    <p>Waarde: <span id="arm_long_span"></span> graden</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="container p-3 my-3 border">
+                <h6 class="text-center">Arm short</h6>
+                <div class="slidecontainer">
+                    <input type="range" min="-90" max="90" value="0" class="slider" id="arm_short_slider">
+                    <p>Waarde: <span id="arm_short_span"></span> graden</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="container p-3 my-3 border">
+                <h6 class="text-center">Rotate arm base</h6>
                 <div class="slidecontainer">
                     <input type="range" min="-90" max="90" value="0" class="slider" id="rotate_arm_slider">
                     <p>Waarde: <span id="rotate_arm_span"></span> graden</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <div class="container p-3 my-3 border">
-                <h6 class="text-center">Rotate arm mid</h6>
-                <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="rotate_arm2_slider">
-                    <p>Waarde: <span id="rotate_arm2_span"></span> graden</p>
                 </div>
             </div>
         </div>
@@ -185,7 +195,6 @@
 
     var websocket
 
-
     var previous_x, previous_y
 
     var joy = new JoyStick('joyDiv', joyparam);
@@ -208,27 +217,35 @@
         send_slider_value("gripper", this.value);
     }
 
-    var rotate_gripper_slider = document.getElementById("rotate_gripper_slider");
-    var rotate_gripper_span = document.getElementById("rotate_gripper_span");
-    rotate_gripper_span.innerHTML = rotate_gripper_slider.value; // Display the default slider value
+    var gripper_pitch_slider = document.getElementById("gripper_pitch_slider");
+    var gripper_pitch_span = document.getElementById("gripper_pitch_span");
+    gripper_pitch_span.innerHTML = gripper_pitch_slider.value; // Display the default slider value
 
     // Update the current slider value (each time you drag the slider handle)
-    rotate_gripper_slider.oninput = function () {
-        rotate_gripper_span.innerHTML = this.value;
-        send_slider_value("rotate_gripper", this.value);
+    gripper_pitch_slider.oninput = function () {
+        gripper_pitch_span.innerHTML = this.value;
+        send_slider_value("gripper_pitch", this.value);
     }
 
-
-    var lift_arm_slider = document.getElementById("lift_arm_slider");
-    var lift_arm_span = document.getElementById("lift_arm_span");
-    lift_arm_span.innerHTML = lift_arm_slider.value; // Display the default slider value
+    var gripper_roll_slider = document.getElementById("gripper_roll_slider");
+    var gripper_roll_span = document.getElementById("gripper_roll_span");
+    gripper_roll_span.innerHTML = gripper_roll_slider.value; // Display the default slider value
 
     // Update the current slider value (each time you drag the slider handle)
-    lift_arm_slider.oninput = function () {
-        lift_arm_span.innerHTML = this.value;
-        send_slider_value("lift_arm", this.value);
+    gripper_roll_slider.oninput = function () {
+        gripper_roll_span.innerHTML = this.value;
+        send_slider_value("gripper_roll", this.value);
     }
 
+    var arm_long_slider = document.getElementById("arm_long_slider");
+    var arm_long_span = document.getElementById("arm_long_span");
+    arm_long_span.innerHTML = arm_long_slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    arm_long_slider.oninput = function () {
+        arm_long_span.innerHTML = this.value;
+        send_slider_value("arm_long", this.value);
+    }
 
     var rotate_arm_slider = document.getElementById("rotate_arm_slider");
     var rotate_arm_span = document.getElementById("rotate_arm_span");
@@ -237,9 +254,8 @@
     // Update the current slider value (each time you drag the slider handle)
     rotate_arm_slider.oninput = function () {
         rotate_arm_span.innerHTML = this.value;
-        send_slider_value("rotate_arm", this.value);
+        send_slider_value("rotate_arm_base", this.value);
     }
-
 
     var snelheid_slider = document.getElementById("snelheid_slider");
     var snelheid_span = document.getElementById("snelheid_span");
@@ -252,14 +268,14 @@
 
     }
 
-    var rotate_arm2_slider = document.getElementById("rotate_arm2_slider");
-    var rotate_arm2_span = document.getElementById("rotate_arm2_span");
-    rotate_arm2_span.innerHTML = rotate_arm2_slider.value; // Display the default slider value
+    var arm_short_slider = document.getElementById("arm_short_slider");
+    var arm_short_span = document.getElementById("arm_short_span");
+    arm_short_span.innerHTML = arm_short_slider.value; // Display the default slider value
 
     // Update the current slider value (each time you drag the slider handle)
-    rotate_arm2_slider.oninput = function () {
-        rotate_arm2_span.innerHTML = this.value;
-        send_slider_value("rotate_arm2", this.value);
+    arm_short_slider.oninput = function () {
+        arm_short_span.innerHTML = this.value;
+        send_slider_value("arm_short", this.value);
     }
 
     $("#switchmodes >.btn").click(function () {
