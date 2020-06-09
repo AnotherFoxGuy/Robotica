@@ -8,6 +8,7 @@
 #include <webots/Camera.hpp>
 #include <webots/Motor.hpp>
 #include <webots/Compass.hpp>
+#include <webots/Lidar.hpp>
 #include <opencv2/opencv.hpp>
 #include <glm/glm.hpp>
 
@@ -30,9 +31,10 @@ namespace robotica {
         constexpr static float max_speed = 6.25f;
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
-        //const static inline std::string motor_names[2] = { "left wheel motor", "right wheel motor" };
-        const static inline std::string motor_names[2] = { "aandrijf_wiel_links", "aandrijf_wiel_rechts" };
+        const static inline std::string motor_names[2] = { "left wheel motor", "right wheel motor" };
+        //const static inline std::string motor_names[2] = { "aandrijf_wiel_links", "aandrijf_wiel_rechts" };
         const static inline std::string compass_name = "compass";
+        const static inline std::string lidar_name = "lidar_sensor";
 
         robot(int timestep);
 
@@ -52,6 +54,7 @@ namespace robotica {
         unique<webots::Camera> left_camera, right_camera;
         unique<webots::Motor> left_motor, right_motor;
         unique<webots::Compass> compass;
+        unique<webots::Lidar> lidar;
 
         int timestep;
         float eye_distance, eye_height;

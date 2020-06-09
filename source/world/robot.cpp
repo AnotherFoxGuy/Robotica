@@ -16,6 +16,7 @@ namespace robotica {
         left_motor(rbt->getMotor(motor_names[0])),
         right_motor(rbt->getMotor(motor_names[1])),
         compass(rbt->getCompass(compass_name)),
+        lidar(rbt->getLidar(lidar_name)),
         timestep(timestep),
         eye_distance(0.03f),
         eye_height(0.028f)
@@ -29,7 +30,9 @@ namespace robotica {
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
 
+        //provide samplingPeriod in milliseconds
         compass->enable(100);
+        lidar->enable(100);
     }
 
     double robot::get_bearing_in_degrees() {
