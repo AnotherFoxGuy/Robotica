@@ -7,7 +7,7 @@
 PROTO UWUBot [
   field  SFVec3f     translation  0 0 0
   field  SFRotation  rotation     0 1 0 0
-  field  SFString    controller   "<extern>"
+  field  SFString    controller   "void"
 
 # Camera
   field SFFloat            camera_fieldOfView           0.84                     # Is `Camera.fieldOfView`.
@@ -41,10 +41,6 @@ PROTO UWUBot [
   field SFFloat            lidar_minFrequency           1                        # [0, maxFrequency)
   field SFFloat            lidar_maxFrequency           25                       # [minFrequency, inf)
   field SFNode             lidar_rotatingHead           NULL                     # {Solid (or derived), PROTO}
-
-  field	SFFloat		   kraan_motor_min             -3.14
-  field	SFFloat		   kraan_motor_max              3.14
-
 ]
 {
   Robot {
@@ -512,8 +508,6 @@ PROTO UWUBot [
         device [
           RotationalMotor {
             name "basis_kraan"
-	    minPosition IS kraan_motor_min
-	    maxPosition IS kraan_motor_max
           }
           PositionSensor {
             name "basis_kraan_sensor"

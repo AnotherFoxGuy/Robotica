@@ -34,8 +34,6 @@ namespace robotica {
 
             std::vector<classified_object> result;
 
-            cv::Mat shown;
-            cv::cvtColor(color_detect_map, shown, cv::COLOR_GRAY2BGR);
 
             int index = 0;
             for (const auto& contour : contours) {
@@ -87,9 +85,6 @@ namespace robotica {
                     avg_color
                 });
             }
-
-            static const char name[] = "TMP";
-            show<name>(shown);
 
             return result;
         }
