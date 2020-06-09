@@ -15,7 +15,11 @@ namespace robotica {
         right_camera(rbt->getCamera(camera_names[1])),
         left_motor(rbt->getMotor(motor_names[0])),
         right_motor(rbt->getMotor(motor_names[1])),
+        arm_base(rbt->getMotor(motor_names[2])),
+        arm_short(rbt->getMotor(motor_names[3])),
+        arm_long(rbt->getMotor(motor_names[4])),
         compass(rbt->getCompass(compass_name)),
+        lidar(rbt->getLidar(lidar_name)),
         timestep(timestep),
         eye_distance(0.03f),
         eye_height(0.028f)
@@ -25,11 +29,15 @@ namespace robotica {
 
         left_motor->setPosition(INFINITY);
         right_motor->setPosition(INFINITY);
+        arm_base->setPosition(INFINITY);
 
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
+        arm_base->setVelocity(0);
 
+        //provide samplingPeriod in milliseconds
         compass->enable(100);
+        lidar->enable(100);
 
         // Make sure to disconnect from webots on quick exit as well.
         std::at_quick_exit([]() {
@@ -63,6 +71,9 @@ namespace robotica {
         if (result = rbt->step(timestep); result != -1) {
             (*left_motor).setVelocity(window.left_motor * max_speed);
             (*right_motor).setVelocity(window.right_motor * max_speed);
+            (*arm_base).setVelocity(window.arm_base * max_speed);
+            (*arm_short).setPosition(window.arm_short * 3.14);
+            (*arm_long).setPosition(window.arm_long * 3.14);
         }
 
         return (result != -1);

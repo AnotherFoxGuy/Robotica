@@ -4,15 +4,16 @@
 #include <vision/converters.hpp>
 #include <window/main_window.hpp>
 
-#include <webots/Robot.hpp>
-#include <webots/Camera.hpp>
-#include <webots/Motor.hpp>
-#include <webots/Compass.hpp>
-#include <opencv2/opencv.hpp>
 #include <glm/glm.hpp>
+#include <opencv2/opencv.hpp>
+#include <webots/Camera.hpp>
+#include <webots/Compass.hpp>
+#include <webots/Lidar.hpp>
+#include <webots/Motor.hpp>
+#include <webots/Robot.hpp>
 
-#include <string_view>
 #include <iostream>
+#include <string_view>
 
 
 namespace robotica {
@@ -31,8 +32,10 @@ namespace robotica {
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
         //const static inline std::string motor_names[2] = { "left wheel motor", "right wheel motor" };
-        const static inline std::string motor_names[2] = { "aandrijf_wiel_links", "aandrijf_wiel_rechts" };
+        const static inline std::string motor_names[5] = { "aandrijf_links", "aandrijf_rechts", "basis_kraan", "korte_arm", "lange_arm" };
+
         const static inline std::string compass_name = "compass";
+        const static inline std::string lidar_name   = "lidar_sensor";
 
         robot(int timestep);
         ~robot(void);
@@ -51,8 +54,9 @@ namespace robotica {
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;
-        webots::Motor  *left_motor,  *right_motor;
+        webots::Motor  *left_motor, *right_motor, *arm_base, *arm_short, *arm_long;
         webots::Compass* compass;
+        webots::Lidar* lidar;
 
         int timestep;
         float eye_distance, eye_height;

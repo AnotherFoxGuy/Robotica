@@ -13,8 +13,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 0.895398
-  orientation -0.07445745225001055 0.9712708101262648 0.22602898309974942 2.511666899004436
-  position 1.7513374776545643 1.4955620929970097 -2.3062509302012706
+  orientation 0.46726060505439926 0.8518749115399081 0.23659387577253635 5.200590772956686
+  position -1.1942675660575781 0.937836591732166 0.8062040484742704
   near 0.1
 }
 TexturedBackground {
@@ -72,6 +72,10 @@ DEF GROUND Solid {
   name "ground"
   boundingObject USE GROUND_SHAPE
   locked TRUE
+}
+UWUBot {
+  translation 0 0.35 0
+  rotation 0 0 1 3.14159
 }
 Transform {
   children [
@@ -288,8 +292,4 @@ Transform {
       ]
     }
   ]
-}
-AssemblyRobotURDF-Camera {
-  translation 0 0.09 5.5098e-07
-  rotation -1 0 0 1.5708
 }

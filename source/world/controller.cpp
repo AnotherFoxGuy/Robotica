@@ -4,6 +4,7 @@
 #include <vision/pool_classifier.hpp>
 #include <comms/websocket.hpp>
 #include <comms/joystick_callback.hpp>
+#include <comms/gripper_callback.hpp>
 #include <window/main_window.hpp>
 
 
@@ -12,7 +13,6 @@ namespace robotica {
         static controller i { default_timestep };
         return i;
     }
-
 
     controller::controller(int timestep) : timestep(timestep) {
         world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "moonrock.xml", "Rock"   ));
@@ -24,8 +24,8 @@ namespace robotica {
 
         websocket::instance().init();
         websocket::instance().add_callback("joystick", &joystick_callback);
+        websocket::instance().add_callback("armbase", &arm_base_callback);
     }
-
 
     bool controller::update(void) {
         bool not_done = robot::instance().update() && !should_exit;
