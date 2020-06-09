@@ -5,7 +5,7 @@
 int main(int argc, char** argv) {
     ix::initNetSystem();
 
-    EASY_PROFILER_ENABLE;
+    //EASY_PROFILER_ENABLE;
 
     while (robotica::controller::instance().update());
 }

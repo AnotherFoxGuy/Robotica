@@ -38,7 +38,21 @@ namespace robotica {
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);
+
+        // Make sure to disconnect from webots on quick exit as well.
+        std::at_quick_exit([]() {
+            auto& self = robot::instance();
+
+            delete self.rbt;
+            self.manually_destroyed = true;
+        });
     }
+
+
+    robot::~robot(void) {
+        if (!manually_destroyed) delete rbt;
+    }
+
 
     double robot::get_bearing_in_degrees() {
         const double *north = compass->getValues();

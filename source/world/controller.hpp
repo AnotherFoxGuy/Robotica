@@ -13,7 +13,9 @@ namespace robotica {
         bool update(void);
 
         int get_timestep(void) const { return timestep; }
+        void request_exit(void) { should_exit = true; }
     private:
         int timestep;
+        bool should_exit = false;
     };
 }

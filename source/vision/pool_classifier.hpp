@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vision/iclassifier.hpp>
+#include <vision/floodfill.hpp>
 #include <utility/typedefs.hpp>
 #include <utility/utility.hpp>
 #include <utility/math.hpp>
@@ -33,6 +34,7 @@ namespace robotica {
 
             std::vector<classified_object> result;
 
+
             int index = 0;
             for (const auto& contour : contours) {
                 // Only take top-level contours.
@@ -48,7 +50,7 @@ namespace robotica {
 
                 auto getclr = [&](const cv::Point& pt) { return image.at<cv::Vec3b>(pt); };
 
-                unsigned long long variance = settings.pool_variance_base, pixels = 0;
+                /*unsigned long long variance = settings.pool_variance_base, pixels = 0;
                 cv::Vec3b reference = getclr(center);
                 floodfill_foreach(color_detect_map, center, [&](const auto& pt) {
                     ++pixels;
@@ -57,10 +59,10 @@ namespace robotica {
                     for (int i = 0; i < reference.channels; ++i) {
                         variance += std::abs(((int) reference[i]) - value[i]);
                     }
-                });
+                });*/
 
 
-                if (variance / pixels > settings.pool_max_variance      ) continue;
+                //if (variance / pixels > settings.pool_max_variance      ) continue;
                 if (area              < settings.pool_min_area          ) continue;
                 if (area              > settings.pool_max_area          ) continue;
                 if (perimeter         < settings.pool_min_perimeter     ) continue;
@@ -74,10 +76,13 @@ namespace robotica {
                 if (area < settings.pool_area_mode_switch && bounding.width / bounding.height < settings.pool_min_oblongness) continue;
 
 
+                auto avg_color = floodfill_avgcolor(color_detect_map, image, center);
+
                 result.push_back({
                     bounding,
                     1000,
-                    get_name()
+                    get_name(),
+                    avg_color
                 });
             }
 
@@ -88,19 +93,39 @@ namespace robotica {
             auto& settings = main_window::instance();
             cv::Mat dst(src.rows, src.cols, CV_8UC1);
 
+            // Filter out wood colors.
+            auto inverse_woodyness = [&](const cv::Vec3b& clr) {
+                // Yes, this really is the only way to do this conversion with OpenCV...
+                cv::Mat m(1, 1, CV_8UC3);
+                m.at<cv::Vec3b>(0, 0) = clr;
+                cv::cvtColor(m, m, cv::COLOR_BGR2HSV);
+                cv::Vec3b hsv = m.at<cv::Vec3b>(0, 0);
+
+                const cv::Vec3b wood_min { 40, 10, 50 };
+                const cv::Vec3b wood_max { 70, 45, 80 };
+
+                auto dist = [](uchar min, uchar max, uchar clr) {
+                    if (clr < min) return min - clr;
+                    if (clr > max) return clr - max;
+                    return 0;
+                };
+
+                cv::Vec3b result;
+                for (int i = 0; i < result.channels; ++i) result[i] = dist(wood_min[i], wood_max[i], hsv[i]);
+
+                return (((int) result[0]) + result[1] + result[2]) / 3;
+            };
+
             std::transform(
                 std::execution::par_unseq,
                 src.begin<cv::Vec3b>(),
                 src.end<cv::Vec3b>(),
                 dst.begin<uchar>(),
                 [&](const cv::Vec3b& bgr) {
-                    int avg = (((int) bgr[0]) + bgr[1] + bgr[2]) / 3;
-
                     auto diff = [](const auto& a, const auto& b) { return (int) std::abs(a - b); };
                     int colourfullness = (diff(bgr[0], bgr[1]) + diff(bgr[0], bgr[2]) + diff(bgr[1], bgr[2])) / 2;
-                    colourfullness += std::powf(avg * settings.pool_white_boost, settings.pool_white_scale) / 255;
+                    colourfullness -= std::clamp(settings.pool_wood_filter_limit - inverse_woodyness(bgr), 0, *settings.pool_wood_filter_limit) * settings.pool_wood_filter_strength;
                     colourfullness = std::clamp(colourfullness, 0, 255);
-
                     return (uchar) colourfullness;
                 }
             );

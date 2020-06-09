@@ -28,11 +28,14 @@ namespace robotica {
     }
 
     bool controller::update(void) {
-        bool exit = robot::instance().update();
-        world_model::instance().update();
-        websocket::instance().update();
-        main_window::instance().update();
+        bool not_done = robot::instance().update() && !should_exit;
 
-        return exit;
+        if (not_done) {
+            world_model::instance().update();
+            websocket::instance().update();
+            main_window::instance().update();
+        }
+
+        return not_done;
     }
 }
