@@ -1,6 +1,7 @@
 #include <window/main_window.hpp>
 #include <window/world_image.hpp>
 #include <world/robot.hpp>
+#include <world/controller.hpp>
 #include <utility/utility.hpp>
 #include <vision/heat_measure.hpp>
 #include <vision/converters.hpp>
@@ -71,7 +72,9 @@ namespace robotica {
 
             // Show temperature. Ignore far away pools for accuracy.
             if (detection.type == "Pool" && detection.bounding_rect.height > 4) {
-                float temp = calculate_temperature(left.get_image().at<cv::Vec3b>(detection.bounding_rect.tl() + cv::Point{ detection.bounding_rect.size() / 2 }));
+                auto avg_color = std::any_cast<cv::Vec3b>(detection.data);
+
+                float temp = calculate_temperature(avg_color);
                 temperature tempclass = temperature_class(temp);
 
                 cv::putText(
@@ -164,5 +167,10 @@ namespace robotica {
         depth.show();
         ImGui::SameLine();
         map.show();
+    }
+
+
+    void main_window::process_event(SDL_Event* e) {
+        if (e->type == SDL_QUIT) controller::instance().request_exit();
     }
 }

@@ -35,6 +35,7 @@ namespace robotica {
         const static inline std::string compass_name = "compass";
 
         robot(int timestep);
+        ~robot(void);
 
 
         // Updates the simulation. Returns false if the simulation has ended.
@@ -48,12 +49,13 @@ namespace robotica {
         float      get_camera_focal_length(side side) const;
         float      get_camera_baseline    (void)      const;
     private:
-        unique<webots::Robot> rbt;
-        unique<webots::Camera> left_camera, right_camera;
-        unique<webots::Motor> left_motor, right_motor;
-        unique<webots::Compass> compass;
+        webots::Robot* rbt;
+        webots::Camera *left_camera, *right_camera;
+        webots::Motor  *left_motor,  *right_motor;
+        webots::Compass* compass;
 
         int timestep;
         float eye_distance, eye_height;
+        bool manually_destroyed = false;
     };
 }
