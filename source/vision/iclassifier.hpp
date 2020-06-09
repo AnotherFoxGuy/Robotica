@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <any>
 
 
 namespace robotica {
@@ -16,6 +17,7 @@ namespace robotica {
         cv::Rect bounding_rect;
         int confidence;
         std::string type;
+        std::any data;
     };
 
 

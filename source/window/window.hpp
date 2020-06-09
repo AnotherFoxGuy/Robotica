@@ -119,9 +119,14 @@ namespace robotica {
             SDL_Event e;
 
             while (SDL_PollEvent(&e)) {
-                ImGui_ImplSDL2_ProcessEvent(&e);
                 process_event(&e);
-                if (e.type == SDL_QUIT) close();
+
+                if (e.type == SDL_QUIT) {
+                    close();
+                    break;
+                }
+
+                ImGui_ImplSDL2_ProcessEvent(&e);
             }
         }
 

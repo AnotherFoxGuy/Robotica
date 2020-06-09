@@ -59,11 +59,11 @@ namespace robotica {
         RBT_SETTING(CLASSIFIER, pool_min_colourfullness,       0.150,   0,    1);
         RBT_SETTING(CLASSIFIER, pool_grayscale_cutoff,         50,      0,    255);
         RBT_SETTING(CLASSIFIER, pool_area_mode_switch,         1450,    0,    5000);
-        RBT_SETTING(CLASSIFIER, pool_white_boost,              1.25,    0,    32);
-        RBT_SETTING(CLASSIFIER, pool_white_scale,              1.7,     0,    10);
+        RBT_SETTING(CLASSIFIER, pool_wood_filter_strength,     72,      0,    255);
+        RBT_SETTING(CLASSIFIER, pool_wood_filter_limit,        72,      0,    255);
         RBT_SETTING(CLASSIFIER, pool_variance_base,            1000,    0,    1000);
         RBT_SETTING(CLASSIFIER, pool_max_variance,             75.0,    0,    100);
-        RBT_SETTING(CLASSIFIER, pool_min_width,                35.0,    0,    100);
+        RBT_SETTING(CLASSIFIER, pool_min_width,                20.0,    0,    100);
         RBT_SETTING(CLASSIFIER, pool_min_oblongness,           1.0,     0,    32);
 
 
@@ -78,6 +78,7 @@ namespace robotica {
 
     protected:
         void add_elements(void) override;
+        void process_event(SDL_Event* e) override;
     private:
         bool has_resized = false;
         gui_image left, right, depth, map;
