@@ -717,8 +717,8 @@ PROTO UWUBot-Tracked [
     physics Physics {
       density -1
 	  # mass 1.349811
-	  mass 40
-      centerOfMass [ 0.000002 -0.019943 0.076469 ]
+      mass 5
+      centerOfMass [ 0 -0.05 -0.03 ]
     }
   }
 }

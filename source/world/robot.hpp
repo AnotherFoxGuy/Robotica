@@ -28,11 +28,10 @@ namespace robotica {
         static robot& instance(void);
 
 
-        constexpr static float max_speed = 6.25f;
+        constexpr static float max_speed = -1;
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
-        //const static inline std::string motor_names[2] = { "left wheel motor", "right wheel motor" };
-        const static inline std::string motor_names[9] = {"aandrijf_links", "aandrijf_rechts", "basis_kraan", "korte_arm", "lange_arm", "grijper_links", "grijper_rechts", "tandwielkast_grijper", "arm_grijper" };
+        const static inline std::string motor_names[9] = {"left_motor", "right_motor", "basis_kraan", "korte_arm", "lange_arm", "grijper_links", "grijper_rechts", "tandwielkast_grijper", "arm_grijper" };
 
         const static inline std::string compass_name = "compass";
         const static inline std::string lidar_name   = "lidar_sensor";
