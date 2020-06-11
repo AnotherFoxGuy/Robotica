@@ -13,6 +13,7 @@
 #include <webots/Robot.hpp>
 #include <webots/Speaker.hpp>
 #include <webots/Display.hpp>
+#include <webots/TouchSensor.hpp>
 
 #include <iostream>
 #include <string_view>
@@ -35,6 +36,7 @@ namespace robotica {
         const static inline std::string lidar_name   = "lidar_sensor";
         const static inline std::string speaker_name   = "speaker";
         const static inline std::string display_name   = "emoticon_display";
+        const static inline std::string scale_name   = "scale";
 
         robot(int timestep);
         ~robot(void);
@@ -61,6 +63,7 @@ namespace robotica {
         webots::Motor *left_motor, *right_motor, *arm_base, *arm_short, *arm_long, *gripper_left, *gripper_right, *gripper_roll, *gripper_pitch;
         webots::Compass* compass;
         webots::Lidar* lidar;
+        webots::TouchSensor* scale;
 
         int timestep;
         float eye_distance, eye_height;

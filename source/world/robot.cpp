@@ -24,6 +24,7 @@ namespace robotica {
         gripper_pitch(rbt->getMotor(motor_names[8])),
         compass(rbt->getCompass(compass_name)),
         lidar(rbt->getLidar(lidar_name)),
+        scale(rbt->getTouchSensor(scale_name)),
         timestep(timestep),
         eye_distance(0.03f),
         eye_height(0.028f)
@@ -48,6 +49,7 @@ namespace robotica {
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);
+        scale->enable(1000);
 
         // Make sure to disconnect from webots on quick exit as well.
         std::at_quick_exit([]() {
@@ -88,8 +90,8 @@ namespace robotica {
             (*gripper_right).setPosition(-window.gripper * 3.14);
             (*gripper_roll).setPosition(window.gripper_roll * 3.14);
             (*gripper_pitch).setPosition(window.gripper_pitch * 3.14);
+            printf("%f", scale->getValue());
         }
-
         return (result != -1);
     }
 
