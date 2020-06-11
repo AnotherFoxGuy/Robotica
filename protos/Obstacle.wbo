@@ -1,0 +1,198 @@
+#VRML_OBJ R2020a utf8
+
+Solid {
+  translation 0 0.11 0
+  children [
+    Solid {
+      children [
+        Solid {
+          translation 0 -0.025 2.975
+          children [
+            Shape {
+              appearance DEF COLOR Appearance {
+                material Material {
+                  diffuseColor 0.54902 0.54902 0.54902
+                }
+              }
+              geometry DEF RAMP IndexedFaceSet {
+                coord Coordinate {
+                  point [
+                    0.5 0 1.35
+                    0.5 0.45 0
+                    0.5 0 0
+                    -0.5 0 1.35
+                    -0.5 0.45 0
+                    -0.5 0 0
+                  ]
+                }
+                coordIndex [
+                  -1, 3, 5, 2, 0, -1, 1, 2, 5, 4
+                  -1, 1, 4, 3, 0, -1, 3, 4, 5, -1
+                  2, 1, 0
+                ]
+              }
+            }
+          ]
+          name "ramp"
+          boundingObject USE RAMP
+        }
+        Solid {
+          translation 0 0.2 2.6
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF TOP_RAMP Box {
+                size 1 0.45 0.75
+              }
+            }
+          ]
+          name "top_ramp"
+          boundingObject USE TOP_RAMP
+        }
+        Solid {
+          translation 0 0.2 2.125
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF GAP_SPACER Box {
+                size 0.1 0.45 0.2
+              }
+            }
+          ]
+          name "gap_spacer"
+          boundingObject USE GAP_SPACER
+        }
+        Solid {
+          translation 0 0.2 1.65
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF TOP_STAIRS Box {
+                size 1 0.45 0.75
+              }
+            }
+          ]
+          name "top_stairs"
+          boundingObject USE TOP_STAIRS
+        }
+        Solid {
+          translation 0 0.1875 1.2
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP9 Box {
+                size 1 0.425 0.15
+              }
+            }
+          ]
+          name "step 9"
+          boundingObject USE STEP9
+        }
+        Solid {
+          translation 0 0.175 1.05
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP8 Box {
+                size 1 0.4 0.15
+              }
+            }
+          ]
+          name "step 8"
+          boundingObject USE STEP8
+        }
+        Solid {
+          translation 0 0.15 0.9
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP7 Box {
+                size 1 0.35 0.15
+              }
+            }
+          ]
+          name "step 7"
+          boundingObject USE STEP7
+        }
+        Solid {
+          translation 0 0.125 0.75
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP6 Box {
+                size 1 0.3 0.15
+              }
+            }
+          ]
+          name "step 6"
+          boundingObject USE STEP6
+        }
+        Solid {
+          translation 0 0.1 0.6
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP5 Box {
+                size 1 0.25 0.15
+              }
+            }
+          ]
+          name "step 5"
+          boundingObject USE STEP5
+        }
+        Solid {
+          translation 0 0.075 0.45
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP4 Box {
+                size 1 0.2 0.15
+              }
+            }
+          ]
+          name "step 4"
+          boundingObject USE STEP4
+        }
+        Solid {
+          translation 0 0.05 0.3
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP3 Box {
+                size 1 0.15 0.15
+              }
+            }
+          ]
+          name "step 3"
+          boundingObject USE STEP3
+        }
+        Solid {
+          translation 0 0.025 0.15
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP2 Box {
+                size 1 0.1 0.15
+              }
+            }
+          ]
+          name "step 2"
+          boundingObject USE STEP2
+        }
+        Solid {
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP1 Box {
+                size 1 0.05 0.15
+              }
+            }
+          ]
+          name "step 1"
+          boundingObject USE STEP1
+        }
+      ]
+      name "Obstacle"
+    }
+  ]
+}

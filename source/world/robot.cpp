@@ -71,8 +71,8 @@ namespace robotica {
 
         int result;        
         if (result = rbt->step(timestep); result != -1) {
-            (*left_motor).setVelocity(window.left_motor * max_speed);
-            (*right_motor).setVelocity(window.right_motor * max_speed);
+            (*left_motor).setVelocity(-(window.left_motor * window.speed * 0.1));
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.1));
             (*arm_base).setPosition(window.arm_base * 3.14);
             (*arm_short).setPosition(window.arm_short * 3.14);
             (*arm_long).setPosition(window.arm_long * 3.14);

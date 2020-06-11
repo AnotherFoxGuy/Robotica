@@ -31,7 +31,7 @@ namespace robotica {
 
     void main_window::add_elements(void) {
         constexpr int topbar_height  = 19;
-        constexpr int slider_height  = 23;
+        constexpr int slider_height  = 15;
         constexpr int image_size     = 255;
         constexpr int collapse_width = 3 * image_size;
         constexpr int padding_top    = 42;

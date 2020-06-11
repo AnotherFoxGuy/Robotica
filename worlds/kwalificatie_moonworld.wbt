@@ -13,8 +13,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 0.895398
-  orientation -0.9920642821787287 -0.11553519266721322 -0.049599186289229664 0.8626501859571596
-  position -0.0826154579805316 1.4182506492607099 1.180959687552914
+  orientation 0.4295046609611985 -0.8865920061881893 -0.17169845886264615 5.450153671405707
+  position 3.5212172471946834 3.5628878079634085 7.1797423478936775
   near 0.1
   follow "ground"
 }
@@ -75,61 +75,234 @@ DEF GROUND Solid {
   locked TRUE
 }
 Bron {
-  translation -0.17611576612734406 -0.14622283104975037 -0.9055175160503829
-  rotation -0.9953837187721225 0.09589722267129212 -0.0038697657955539763 0.04015672609853449
+  translation -0.1761157661219339 -0.1462228313702069 -0.9055175240617965
+  rotation -0.9953836950816696 0.09589746837430409 -0.003869770660041652 0.04015672705441262
   locked FALSE
   color 1 0.06 0.06
 }
 Bron {
-  translation 0.08024483350468105 -0.15967392473874556 -1.060431215582037
-  rotation -0.9968319703403715 0.0790862894602928 -0.008448770723323768 0.15888251673267867
+  translation 0.08024483353814053 -0.15967393715502162 -1.0604312931837918
+  rotation -0.9968319581967975 0.07908644123383142 -0.008448782782511443 0.1588825186643054
   name "Bron(2)"
   locked FALSE
   color 0.86 0.86 0.44
 }
 Bron {
-  translation 0.18991451070721627 -0.13354143446265437 -0.5884826013732529
-  rotation -0.9610854437436102 0.2761519672687696 -0.007406807526616876 0.0415897053027314
+  translation 0.1899145107120966 -0.13354143478311273 -0.588482609384747
+  rotation -0.9610853801238851 0.2761521885676539 -0.007406811825775626 0.04158970805541448
   name "Bron(3)"
   locked FALSE
   color 0.7 0.86 0.86
 }
 Bron {
-  translation 0.0014062092290985163 -0.1345047635188509 -0.6125658277779986
-  rotation -0.9863278069094299 0.16471224992091815 -0.005228005664047994 0.04052543452924081
+  translation 0.0014062092343129545 -0.13450476383930993 -0.6125658357894439
+  rotation -0.986327766954153 0.16471248903120675 -0.005228010365178014 0.04052543617084782
   name "Bron(1)"
   locked FALSE
   color 0 0 0.9
 }
-AssemblyRobotURDF-Camera {
-  hidden position_0_0 -2.2819219387967893e-12
-  hidden position_0_1 -6.271855123875768e-12
-  hidden position_0_2 3.881246662720893e-09
-  hidden linearVelocity_0 -3.749842115004601e-10 -3.883537099024636e-09 -9.708579748216315e-08
-  hidden angularVelocity_0 1.8644192744398435e-13 1.4059064027090513e-07 -5.6246972360865104e-09
-  hidden linearVelocity_13 -2.2944534977898983e-08 -4.392935633180701e-09 -1.0981908039183965e-07
-  hidden angularVelocity_13 1.8644155753753343e-13 1.4059064023948383e-07 -5.624697471266712e-09
-  hidden linearVelocity_14 -2.2959775399294683e-08 -3.375135587432744e-09 -8.437892803323912e-08
-  hidden angularVelocity_14 2.033463969431627e-13 1.4059064025027538e-07 -5.624696742209426e-09
-  hidden position_15_0 1.752232316599751e-09
-  hidden rotation_16 -0.531450896253375 0.6596357098753571 -0.5314514795620745 1.9753534030205284
-  hidden linearVelocity_16 2.4612865387582414e-08 -3.3610708068034457e-09 -8.402590208934903e-08
-  hidden angularVelocity_16 -1.2713058139098362e-09 1.3475017415588745e-07 -5.392208452157644e-09
-  hidden position_17_0 -5.495152082011392e-10
-  hidden rotation_18 0.35531037987529557 0.8645859533397866 0.35531065736958356 1.715789605363633
-  hidden linearVelocity_18 2.4642760945630025e-08 -4.408276536977378e-09 -1.1020102588592448e-07
-  hidden angularVelocity_18 -4.20077519956059e-09 1.447399059491787e-07 -5.7929198250246846e-09
-  hidden rotation_19 -1 8.485649076884618e-09 1.4697577250116695e-15 3.141593
-  hidden position_19_0 -1.4063297607387756e-08
-  hidden linearVelocity_19 1.1485044818544418e-08 -3.8835734100659624e-09 -9.708637175469247e-08
-  hidden angularVelocity_19 3.039776477759846e-12 1.27594821099976e-07 -5.105687249681676e-09
-  hidden rotation_20 -0.574537801924323 -0.5833687985702308 0.5740968202443669 2.0847429818296868
-  hidden position_20_0 -4.6546374617349494e-08
-  hidden linearVelocity_20 1.8543282336310153e-08 -3.83773183509098e-09 -9.707987974387041e-08
-  hidden angularVelocity_20 -8.149077246595105e-10 1.2955989383949955e-07 4.4102725096693645e-08
-  hidden rotation_21 -0.0018379772982423683 -0.9999983109182992 -4.031034812145066e-15 3.141593
-  hidden linearVelocity_21 1.2764574345696505e-08 -4.00720808652487e-09 -9.668877764299616e-08
-  hidden angularVelocity_21 -8.149063803303309e-10 1.295598988877783e-07 4.410272615401533e-08
-  translation 0.0956407477283096 -0.06633305499785688 0.031106739966681916
-  rotation -0.9999999022814168 -0.0004046927609436841 -0.00017793517420730916 1.6107119826291916
+UWUBot-Tracked {
+  rotation 1 0 0 3.14159
+}
+Poortje {
+  translation -1.37 -0.1 0
+}
+Floor {
+  translation 0 -0.1 0
+}
+Solid {
+  translation -3.56 0.11 0
+  children [
+    Solid {
+      children [
+        Solid {
+          translation 0 -0.025 2.975
+          children [
+            Shape {
+              appearance DEF COLOR Appearance {
+                material Material {
+                  diffuseColor 0.54902 0.54902 0.54902
+                }
+              }
+              geometry DEF RAMP IndexedFaceSet {
+                coord Coordinate {
+                  point [
+                    0.5 0 1.35
+                    0.5 0.45 0
+                    0.5 0 0
+                    -0.5 0 1.35
+                    -0.5 0.45 0
+                    -0.5 0 0
+                  ]
+                }
+                coordIndex [
+                  -1, 3, 5, 2, 0, -1, 1, 2, 5, 4
+                  -1, 1, 4, 3, 0, -1, 3, 4, 5, -1
+                  2, 1, 0
+                ]
+              }
+            }
+          ]
+          name "ramp"
+          boundingObject USE RAMP
+        }
+        Solid {
+          translation 0 0.2 2.6
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF TOP_RAMP Box {
+                size 1 0.45 0.75
+              }
+            }
+          ]
+          name "top_ramp"
+          boundingObject USE TOP_RAMP
+        }
+        Solid {
+          translation 0 0.2 2.125
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF GAP_SPACER Box {
+                size 0.1 0.45 0.2
+              }
+            }
+          ]
+          name "gap_spacer"
+          boundingObject USE GAP_SPACER
+        }
+        Solid {
+          translation 0 0.2 1.65
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF TOP_STAIRS Box {
+                size 1 0.45 0.75
+              }
+            }
+          ]
+          name "top_stairs"
+          boundingObject USE TOP_STAIRS
+        }
+        Solid {
+          translation 0 0.1875 1.2
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP9 Box {
+                size 1 0.425 0.15
+              }
+            }
+          ]
+          name "step 9"
+          boundingObject USE STEP9
+        }
+        Solid {
+          translation 0 0.175 1.05
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP8 Box {
+                size 1 0.4 0.15
+              }
+            }
+          ]
+          name "step 8"
+          boundingObject USE STEP8
+        }
+        Solid {
+          translation 0 0.15 0.9
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP7 Box {
+                size 1 0.35 0.15
+              }
+            }
+          ]
+          name "step 7"
+          boundingObject USE STEP7
+        }
+        Solid {
+          translation 0 0.125 0.75
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP6 Box {
+                size 1 0.3 0.15
+              }
+            }
+          ]
+          name "step 6"
+          boundingObject USE STEP6
+        }
+        Solid {
+          translation 0 0.1 0.6
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP5 Box {
+                size 1 0.25 0.15
+              }
+            }
+          ]
+          name "step 5"
+          boundingObject USE STEP5
+        }
+        Solid {
+          translation 0 0.075 0.45
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP4 Box {
+                size 1 0.2 0.15
+              }
+            }
+          ]
+          name "step 4"
+          boundingObject USE STEP4
+        }
+        Solid {
+          translation 0 0.05 0.3
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP3 Box {
+                size 1 0.15 0.15
+              }
+            }
+          ]
+          name "step 3"
+          boundingObject USE STEP3
+        }
+        Solid {
+          translation 0 0.025 0.15
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP2 Box {
+                size 1 0.1 0.15
+              }
+            }
+          ]
+          name "step 2"
+          boundingObject USE STEP2
+        }
+        Solid {
+          children [
+            Shape {
+              appearance USE COLOR
+              geometry DEF STEP1 Box {
+                size 1 0.05 0.15
+              }
+            }
+          ]
+          name "step 1"
+          boundingObject USE STEP1
+        }
+      ]
+      name "Obstacle"
+    }
+  ]
 }

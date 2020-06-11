@@ -23,12 +23,8 @@ namespace robotica {
 
     class robot {
     public:
-        constexpr static int default_timestep = 1000 / 30;
 
         static robot& instance(void);
-
-
-        constexpr static float max_speed = -1;
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
         const static inline std::string motor_names[9] = {"left_motor", "right_motor", "basis_kraan", "korte_arm", "lange_arm", "grijper_links", "grijper_rechts", "tandwielkast_grijper", "arm_grijper" };

@@ -24,4 +24,15 @@ inline void joystick_callback(std::string_view argstring)
 
     std::cout << "Robot movement speed was changed by joystick input.\n";
 }
+
+inline void speed_callback(std::string_view argstring)
+{
+    const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
+    auto args = regex_groups(std::string(argstring), rgx);
+
+    auto& settings = main_window::instance();
+    settings.speed = std::stoi(args[0]);
+
+    std::cout << "speed input.\n";
+}
 } // namespace robotica
