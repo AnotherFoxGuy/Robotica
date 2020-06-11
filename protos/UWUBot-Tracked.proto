@@ -41,10 +41,10 @@ PROTO UWUBot-Tracked [
   field SFFloat            lidar_minFrequency           1                        # [0, maxFrequency)
   field SFFloat            lidar_maxFrequency           25                       # [minFrequency, inf)
   field SFNode             lidar_rotatingHead           NULL                     # {Solid (or derived), PROTO}
-  
+    
 # Tracks
-  field SFRotation         track_rotation              0.707107 0 0.707107 3.14159 		      # 0.707107 0 0.707107 3.14159
-  field SFVec3f            track_translation           0.0219 0 0	  		              # -0.095 -0.05 0
+  field SFRotation         track_rotation              0 0 0 0		      # 0.707107 0 0.707107 3.14159
+  field SFVec3f            track_translation           0 0 0	  		              # -0.095 -0.05 0
 ]
 {
   Robot {
@@ -74,7 +74,7 @@ PROTO UWUBot-Tracked [
       }
 	  DEF RIGHT_TRACK Track {
 	    translation -0.095 -0.05 0
-		rotation IS track_rotation
+		rotation 0.707107 0 0.707107 3.14159
 		children [
 		  DEF RIGHT_PROPULSION_TRACK_WHEEL TrackWheel {
 		    position 0.17 0.035
@@ -160,7 +160,7 @@ PROTO UWUBot-Tracked [
         boundingObject DEF TRACK_BO Group {
           children [
             Transform {
-              translation IS track_translation #0.0219 0 0
+              translation 0.0219 0 0
               children [
                 Box {
                   size 0.237 0.105 0.02
@@ -691,6 +691,33 @@ PROTO UWUBot-Tracked [
       yAxis IS compass_yAxis
       zAxis IS compass_zAxis
       resolution IS compass_resolution
+    }
+	DEF SCALE TouchSensor {
+      translation 0 -0.085 0.05
+      rotation 1 0 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 1 0.647059 0
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BUMPER Box {
+            size 0.09 0.09 0.02
+          }
+        }
+      ]
+      name "scale"
+      boundingObject USE BUMPER
+      physics Physics {
+        density -1
+        mass 0.01
+      }
+      type "force"
+      lookupTable [
+        0 0 0
+        1000 1000 0
+      ]
     }
 	DEF LIDAR Lidar {
 	  name "lidar_sensor"
