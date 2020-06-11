@@ -15,6 +15,10 @@
 
 #define RBT_SETTING(group, name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max, (int) group }
 
+#define EMOTICON_WIDTH 14
+#define EMOTICON_HEIGHT 14
+#define EMOTICONS_NUMBER_X 5
+#define EMOTICONS_NUMBER_Y 11
 
 namespace robotica {
     const inline fs::path snapshot_folder = ROOT_DIR "/snapshots/";

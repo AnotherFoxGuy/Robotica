@@ -178,6 +178,16 @@ namespace robotica {
             std::cout << "Registered bot as ";
         }
 
+        if (ImGui::Button("emote", {200, 30})) {
+            int x = -EMOTICON_WIDTH * (rand() % EMOTICONS_NUMBER_X);
+            int y = -EMOTICON_HEIGHT * (rand() % EMOTICONS_NUMBER_Y);
+            //wb_display_image_paste(emoticon_display, emoticonsImage, x, y, true);
+            robot::instance().display->imagePaste(robot::instance().emotes, x, y, true);
+        }
+
+
+
+
         ImGui::EndGroup();
         ImGui::Columns();
 
