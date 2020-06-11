@@ -711,6 +711,9 @@ PROTO UWUBot-Tracked [
       maxFrequency IS lidar_maxFrequency
       rotatingHead IS lidar_rotatingHead
 	}
+	DEF SPEAKER Speaker {
+        name "speaker"
+    }
     ]
     name "base_link"
     boundingObject USE base_link

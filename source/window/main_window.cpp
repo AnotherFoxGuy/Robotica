@@ -78,11 +78,11 @@ namespace robotica {
                 temperature tempclass = temperature_class(temp);
 
                 cv::putText(
-                    img, 
-                    concat(magic_enum::enum_name(tempclass), " (" + std::to_string(temp) + ")"), 
-                    detection.bounding_rect.tl() + cv::Point { 2, 30 }, 
-                    cv::FONT_HERSHEY_PLAIN, 
-                    1.0, 
+                    img,
+                    concat(magic_enum::enum_name(tempclass), " (" + std::to_string(temp) + ")"),
+                    detection.bounding_rect.tl() + cv::Point { 2, 30 },
+                    cv::FONT_HERSHEY_PLAIN,
+                    1.0,
                     cv::Scalar(0, 255, 0)
                 );
             }
@@ -155,9 +155,31 @@ namespace robotica {
             std::cout << "Registered bot as " << name << '\n';
         }
 
+        if (ImGui::Button("Speak", {200, 30})) {
+            //webots::Speaker::playSound( robot::instance().speaker, robot::instance().speaker,"C:/projects/Robotica/protos/kaas.mp3",1,speed,0,false);
+            robot::instance().speaker->speak("According to all known laws"
+                                             "of aviation,"
+                                             "there is no way a bee"
+                                             "should be able to fly\n"
+                                             "Its wings are too small to get"
+                                             "its fat little body off the ground\n"
+                                             "The bee, of course, flies anyway"
+                                             "because bees don't care"
+                                             "what humans think is impossible\n"
+                                             "<prosody rate=\"1.5\">"
+                                             "Yellow, black. Yellow, black\n"
+                                             "Yellow, black. Yellow, black\n"
+                                             "Ooh, black and yellow!"
+                                             "Let's shake it up a little\n"
+                                             "Barry! Breakfast is ready!"
+                                             "Ooming!"
+                                             "</prosody>",1);
+
+            std::cout << "Registered bot as ";
+        }
+
         ImGui::EndGroup();
         ImGui::Columns();
-
 
         // Image views
         left.show();

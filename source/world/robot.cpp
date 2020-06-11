@@ -37,6 +37,9 @@ namespace robotica {
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
 
+        speaker = rbt->getSpeaker(speaker_name);
+        speaker->setEngine("microsoft");
+        speaker->setLanguage("de-DE");
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);
