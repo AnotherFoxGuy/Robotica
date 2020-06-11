@@ -11,6 +11,7 @@
 #include <webots/Lidar.hpp>
 #include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
+#include <webots/Speaker.hpp>
 
 #include <iostream>
 #include <string_view>
@@ -31,6 +32,7 @@ namespace robotica {
 
         const static inline std::string compass_name = "compass";
         const static inline std::string lidar_name   = "lidar_sensor";
+        const static inline std::string speaker_name   = "speaker";
 
         robot(int timestep);
         ~robot(void);
@@ -46,12 +48,15 @@ namespace robotica {
         glm::ivec2 get_camera_size        (side side) const;
         float      get_camera_focal_length(side side) const;
         float      get_camera_baseline    (void)      const;
+
+        webots::Speaker* speaker;
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;
         webots::Motor *left_motor, *right_motor, *arm_base, *arm_short, *arm_long, *gripper_left, *gripper_right, *gripper_roll, *gripper_pitch;
         webots::Compass* compass;
         webots::Lidar* lidar;
+
 
         int timestep;
         float eye_distance, eye_height;
