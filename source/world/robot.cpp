@@ -49,7 +49,7 @@ namespace robotica {
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);
-        scale->enable(1000);
+        scale->enable(100);
 
         // Make sure to disconnect from webots on quick exit as well.
         std::at_quick_exit([]() {
@@ -81,8 +81,8 @@ namespace robotica {
 
         int result;        
         if (result = rbt->step(timestep); result != -1) {
-            (*left_motor).setVelocity(-(window.left_motor * window.speed * 0.1));
-            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.1));
+            (*left_motor).setVelocity(-(window.left_motor * window.speed * 0.01));
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
             (*arm_base).setPosition(window.arm_base * 3.14);
             (*arm_short).setPosition(window.arm_short * 3.14);
             (*arm_long).setPosition(window.arm_long * 3.14);
@@ -90,7 +90,7 @@ namespace robotica {
             (*gripper_right).setPosition(-window.gripper * 3.14);
             (*gripper_roll).setPosition(window.gripper_roll * 3.14);
             (*gripper_pitch).setPosition(window.gripper_pitch * 3.14);
-            printf("%f", scale->getValue());
+            printf("%f\n", scale->getValue());
         }
         return (result != -1);
     }

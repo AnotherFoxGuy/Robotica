@@ -33,10 +33,10 @@ namespace robotica {
         const static inline std::string motor_names[9] = {"left_motor", "right_motor", "basis_kraan", "korte_arm", "lange_arm", "grijper_links", "grijper_rechts", "tandwielkast_grijper", "arm_grijper" };
 
         const static inline std::string compass_name = "compass";
-        const static inline std::string lidar_name   = "lidar_sensor";
-        const static inline std::string speaker_name   = "speaker";
-        const static inline std::string display_name   = "emoticon_display";
-        const static inline std::string scale_name   = "scale";
+        const static inline std::string lidar_name = "lidar_sensor";
+        const static inline std::string speaker_name = "speaker";
+        const static inline std::string display_name = "display";
+        const static inline std::string scale_name = "scale";
 
         robot(int timestep);
         ~robot(void);
