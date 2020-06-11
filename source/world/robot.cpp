@@ -38,8 +38,13 @@ namespace robotica {
         right_motor->setVelocity(0);
 
         speaker = rbt->getSpeaker(speaker_name);
+
         speaker->setEngine("microsoft");
         speaker->setLanguage("de-DE");
+
+        display = rbt->getDisplay(display_name);
+
+        emotes = display->imageLoad("emoticons.png");
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);

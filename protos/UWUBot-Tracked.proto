@@ -714,6 +714,56 @@ PROTO UWUBot-Tracked [
 	DEF SPEAKER Speaker {
         name "speaker"
     }
+    DEF EMOTICONS Display {
+      translation 0 -0.09 -0.14
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+            }
+            roughness 1
+            metalness 0
+          }
+          geometry IndexedFaceSet {
+            coord Coordinate {
+              point [
+                0.048 0.023 -0.006
+                0.048 -0.023 -0.006
+                -0.048 -0.023 -0.006
+                -0.048 0.023 -0.006
+              ]
+            }
+            texCoord TextureCoordinate {
+              point [
+                0 1
+                0 0
+                1 0
+                1 1
+              ]
+            }
+            coordIndex [
+              0, 1, 2, 3
+            ]
+            texCoordIndex [
+              0, 1, 2, 3
+            ]
+          }
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.247059 0.788235 0.235294
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.1 0.05 0.01
+          }
+        }
+      ]
+      name "emoticon_display"
+      width 24
+      height 14
+    }
     ]
     name "base_link"
     boundingObject USE base_link
