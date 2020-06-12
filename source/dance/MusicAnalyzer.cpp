@@ -1,0 +1,1 @@
+#include "dance/MusicAnalyzer.hpp"
