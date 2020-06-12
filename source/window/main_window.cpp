@@ -26,46 +26,41 @@ namespace robotica {
     }
 
 
-    main_window::main_window(void) : window("Settings"), lidar_view({ 750, 422 }) /* 16 : 9 */  {
-        const static std::vector<triangle> t {
-            {
-                {{ -0.5, -0.5, 1.0 }},
-                {{  0.5,  0.5, 1.0 }},
-                {{ -0.5,  0.5, 1.0 }}
-            },
+    main_window::main_window(void) : window("Settings"), lidar_view({ 750, 422 }), lidar_buffer(std::make_shared<buffer>()) {
+        lidar_view.get_program().add_buffer(lidar_buffer);
+        
 
-            {
-                {{ -0.5, -0.5, -1.0 }},
-                {{  0.5,  0.5, -1.0 }},
-                {{ -0.5,  0.5, -1.0 }}
-            },
+        // Draw a grid to reduce disorientation.
+        shared<buffer> grid = std::make_shared<buffer>();
+        std::vector<line> lines;
+        lines.reserve(100 * 100 * 100);
 
-            {
-                {{ -0.5, -0.5, -1.0 }},
-                {{ -0.5,  0.5, -1.0 }},
-                {{ -0.5,  0.5,  1.0 }}
-            },
-
-            {
-                {{ 0.5, -0.5, -1.0 }},
-                {{ 0.5,  0.5, -1.0 }},
-                {{ 0.5,  0.5,  1.0 }}
-            },
-
-            {
-                {{ -0.5,  1, -1.0 }},
-                {{ -0.5,  1,  1.0 }},
-                {{  0.5,  1,  1.0 }}
-            },
-
-            {
-                {{ -0.5, -1, -1.0 }},
-                {{ -0.5, -1,  1.0 }},
-                {{  0.5, -1,  1.0 }}
+        constexpr int delta = 20;
+        for (int x = -100; x < 100; x += delta) {
+            for (int y = -100; y < 100; y += delta) {
+                for (int z = -100; z < 100; z += delta) {
+                    lines.push_back({ {{ x, y, z }}, {{ x + delta, y, z }} });
+                    lines.push_back({ {{ x, y, z }}, {{ x, y + delta, z }} });
+                    lines.push_back({ {{ x, y, z }}, {{ x, y, z + delta }} });
+                }
             }
-        };
+        }
 
-        lidar_view.get_program().add_buffer(t);
+        grid->set_data(lines);
+        grid->set_color({ 0, 1, 0 });
+        grid->set_mode(GL_LINES);
+        lidar_view.get_program().add_buffer(grid);
+    }
+
+
+    void main_window::on_frame_start(void) {
+        const auto& cloud = world_model::instance().get_lidar_pointcloud();
+
+        lidar_buffer->set_data(cloud);
+        lidar_buffer->set_mode(GL_POINTS);
+        lidar_buffer->set_color({ 1, 0, 0 });
+
+        glPointSize(lidar_point_size);
     }
 
 
@@ -80,6 +75,7 @@ namespace robotica {
         constexpr int button_height      = 30;
         constexpr int top_section_height = 420;
 
+        check_input();
         lidar_view.render();
 
 
@@ -164,6 +160,12 @@ namespace robotica {
                 SDL_SetRelativeMouseMode(SDL_TRUE);
                 has_capture = true;
             }
+
+
+            if (ImGui::Button("Goto Cloud", { 200, 30 })) {
+                const auto& cloud = world_model::instance().get_lidar_pointcloud();
+                if (cloud.size() > 0) lidar_view.get_camera().move_to(cloud[0].position);
+            }
         }
 
 
@@ -223,9 +225,6 @@ namespace robotica {
 
 
     void main_window::process_event(SDL_Event* e) {
-        constexpr float mouse_sens = 0.003;
-        constexpr float move_speed = 0.04;
-
         if (e->type == SDL_QUIT) controller::instance().request_exit();
 
         // Disable capture when ESC is pressed.
@@ -233,30 +232,38 @@ namespace robotica {
             SDL_SetRelativeMouseMode(SDL_FALSE);
             has_capture = false;
         }
+    }
 
-        // Rotate camera when captured and mouse is moved.
-        if (e->type == SDL_MOUSEMOTION && has_capture) {
+
+    void main_window::check_input(void) {
+        constexpr float mouse_sens = 0.005;
+        constexpr float move_speed = 0.1;
+        camera& c = lidar_view.get_camera();
+
+        // SDL unfortunately doesn't provide events every tick,
+        // so we just have to check the keyboard state instead.
+        if (has_capture) {
+            // Mouse motion
             int dx, dy;
             SDL_GetRelativeMouseState(&dx, &dy);
 
-            camera& c = lidar_view.get_camera();
             c.add_yaw(mouse_sens * -dx);
             c.add_pitch(mouse_sens * dy);
-        }
 
-        // Move camera when captured and WASD is pressed.
-        if (e->type == SDL_KEYDOWN && has_capture) {
-            camera& c = lidar_view.get_camera();
 
-            switch (e->key.keysym.sym) {
-                case SDLK_w: c.move(camera::absolute_fwd   *  move_speed); break;
-                case SDLK_s: c.move(camera::absolute_fwd   * -move_speed); break;
-                case SDLK_a: c.move(camera::absolute_right *  move_speed); break;
-                case SDLK_d: c.move(camera::absolute_right * -move_speed); break;
-                case SDLK_q: c.move(camera::absolute_up    *  move_speed); break;
-                case SDLK_e: c.move(camera::absolute_up    * -move_speed); break;
-                default: break;
-            }
+            // Keyboard input
+
+            // Move faster when shift is pressed.
+            float speed = move_speed;
+            if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_LSHIFT]) speed *= 10;
+
+            if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_W]) c.move(camera::absolute_fwd   *  speed);
+            if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_S]) c.move(camera::absolute_fwd   * -speed);
+            if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_A]) c.move(camera::absolute_right *  speed);
+            if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_D]) c.move(camera::absolute_right * -speed);
+            if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_Q]) c.move(camera::absolute_up    *  speed);
+            if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_E]) c.move(camera::absolute_up    * -speed);
         }
     }
+
 }

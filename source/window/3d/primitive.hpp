@@ -16,6 +16,11 @@ namespace robotica {
     };
 
 
+    struct line {
+        vertex a, b;
+    };
+
+
     using mesh       = std::vector<triangle>;
     using pointcloud = std::vector<vertex>;
 }

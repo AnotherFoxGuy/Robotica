@@ -24,6 +24,11 @@ namespace robotica {
             movement += delta;
         }
 
+        void move_to(glm::vec3 pos) {
+            position = pos;
+        }
+
+
         void add_pitch(float amount) {
             constexpr float half_pi = pi / 2.0;
 

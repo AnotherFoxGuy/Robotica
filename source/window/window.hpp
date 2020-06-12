@@ -55,6 +55,8 @@ namespace robotica {
         virtual void update(void) {
             EASY_BLOCK("window update", profiler::colors::Red);
 
+            on_frame_start();
+
             poll_events();
             if (closed) return;
 
@@ -84,6 +86,8 @@ namespace robotica {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
             SDL_GL_SwapWindow(handle);
+
+            on_frame_end();
         }
 
 
@@ -98,13 +102,12 @@ namespace robotica {
             SDL_DestroyWindow(handle);
         }
 
-
-        void register_scene(gui_scene* scene) {
-            
-        }
     protected:
         virtual void add_elements(void) = 0;
-        virtual void process_event(SDL_Event*) {} 
+        virtual void process_event(SDL_Event*) {}
+
+        virtual void on_frame_start(void) {}
+        virtual void on_frame_end(void) {}
 
 
         SDL_Window* handle;

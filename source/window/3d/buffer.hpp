@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <cstddef>
+#include <array>
 
 
 namespace robotica {
@@ -55,11 +56,15 @@ namespace robotica {
             glBindVertexArray(vao);
             glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+
             GLint index = glGetAttribLocation(program, "position");
             assert(index != -1);
 
             glEnableVertexAttribArray(index);
             glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*) 0);
+
+
+            glUniform3fv(glGetUniformLocation(program, "color"), 1, glm::value_ptr(color));
         }
 
 
@@ -74,6 +79,9 @@ namespace robotica {
         }
 
 
+        void set_color(glm::vec3 color) { this->color = color; }
+
+
         void set_mode(GLenum mode) { this->mode = mode; }
         GLenum get_mode(void) const { return mode; }
 
@@ -85,6 +93,7 @@ namespace robotica {
 
         GLuint vao = 0, vbo = 0;
         GLenum mode = GL_TRIANGLES;
+        glm::vec3 color = { 1, 0, 0 };
         std::size_t size;
         std::size_t id;
     };

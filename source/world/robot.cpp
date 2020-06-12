@@ -37,9 +37,10 @@ namespace robotica {
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
 
-        //provide samplingPeriod in milliseconds
-        compass->enable(100);
-        lidar->enable(100);
+        compass->enable(timestep);
+
+        lidar->enable(timestep);
+        lidar->enablePointCloud();
 
         // Make sure to disconnect from webots on quick exit as well.
         std::at_quick_exit([]() {
@@ -121,5 +122,21 @@ namespace robotica {
 
     float robot::get_camera_baseline(void) const {
         return 0.065;    // Hardcoded value from PROTO file. Supervisor mode could also obtain this.
+    }
+
+
+    pointcloud robot::get_lidar_pointcloud(void) const {
+        auto& settings = main_window::instance();
+        std::size_t points = lidar->getNumberOfPoints();
+
+        pointcloud pc;
+        pc.reserve(points);
+
+        for (std::size_t i = 0; i < points; ++i) {
+            const auto& pt = lidar->getPointCloud()[i];
+            pc.push_back({ glm::vec3{ pt.x * settings.lidar_scale_factor, pt.y * settings.lidar_scale_factor, pt.z * settings.lidar_scale_factor } });
+        }
+
+        return pc;
     }
 }

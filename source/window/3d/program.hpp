@@ -80,9 +80,11 @@ namespace robotica {
         program& operator=(program&& o) {
             if (id) glDeleteProgram(id);
 
-            name = std::move(o.name);
-            tgt  = std::move(o.tgt);
-            id   = o.id;
+            name    = std::move(o.name);
+            tgt     = std::move(o.tgt);
+            buffers = std::move(o.buffers);
+
+            id = o.id;
             o.id = 0;
 
             return *this;
@@ -103,21 +105,21 @@ namespace robotica {
 
             glUseProgram(id);
             for (auto& buf : buffers) {
-                buf.bind(id);
-                glDrawArrays(buf.get_mode(), 0, buf.get_size());
+                buf->bind(id);
+                glDrawArrays(buf->get_mode(), 0, buf->get_size());
             }
 
             tgt->unbind();
         }
 
 
-        void add_buffer(buffer&& buf) {
+        void add_buffer(shared<buffer> buf) {
             buffers.push_back(std::move(buf));
         }
 
 
         void remove_buffer(std::size_t id) {
-            remove_if(buffers, [&](const auto& buf) { return buf.get_id() == id; });
+            remove_if(buffers, [&](const auto& buf) { return buf->get_id() == id; });
         }
 
 
@@ -130,6 +132,6 @@ namespace robotica {
         shared<target> tgt;
         GLuint id = 0;
 
-        std::vector<buffer> buffers;
+        std::vector<shared<buffer>> buffers;
     };
 }
