@@ -1,13 +1,13 @@
 #pragma once
 
 #include <utility/math.hpp>
-#include <utility/mesh.hpp>
 #include <utility/cache.hpp>
 #include <utility/traits.hpp>
 #include <utility/typedefs.hpp>
 #include <vision/iclassifier.hpp>
 #include <vision/parallax.hpp>
 #include <world/robot.hpp>
+#include <window/3d/primitive.hpp>
 
 #include <glm/glm.hpp>
 #include <opencv2/core.hpp>

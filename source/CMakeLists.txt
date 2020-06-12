@@ -8,27 +8,34 @@ project(RBTC)
 ####################################################################################################
 
 set(SOURCE_FILES
-     main.cpp
-     world/controller.{hpp,cpp}
-     world/robot.{hpp,cpp}
-     window/gui_image.hpp
-     window/imgui_bindings.{hpp,cpp}
-     window/main_window.{hpp,cpp}
-     window/setting.hpp
-     window/window.hpp
-     window/world_image.hpp
-     vision/iclassifier.hpp
-     vision/cascade_classifier.hpp
-     vision/pool_classifier.hpp
-     vision/converters.hpp
-     vision/parallax.hpp
-     vision/world_model.{hpp,cpp}
+     comms/websocket.hpp
+     comms/joystick_callback.hpp
+     comms/gripper_callback.hpp
      utility/cache.hpp
      utility/math.hpp
-     utility/mesh.hpp
      utility/traits.hpp
      utility/typedefs.hpp
      utility/utility.hpp
+     vision/cascade_classifier.hpp
+     vision/pool_classifier.hpp
+     vision/iclassifier.hpp
+     vision/world_model.{hpp,cpp}
+     vision/converters.hpp
+     vision/floodfill.hpp
+     vision/heat_measure.hpp
+     vision/parallax.hpp
+     window/window.{hpp,cpp}
+     window/main_window.{hpp,cpp}
+     window/setting.hpp
+     window/gui_image.hpp
+     window/world_image.hpp
+     window/imgui_bindings.{hpp,cpp}
+     window/3d/buffer.hpp
+     window/3d/primitive.hpp
+     window/3d/program.hpp
+     world/controller.{hpp,cpp}
+     world/robot.{hpp,cpp}
+     main.cpp
 )
 
 # Expand file extensions (i.e. path/to/file.{hpp,cpp} becomes path/to/file.hpp;path/to/file.cpp)

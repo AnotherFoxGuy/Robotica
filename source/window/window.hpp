@@ -1,6 +1,7 @@
 #pragma once
 
 #include <window/imgui_bindings.hpp>
+#include <window/3d/gui_scene.hpp>
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -9,52 +10,41 @@
 #include <string>
 #include <cstdlib>
 
+#include <window/3d/program.hpp>
+#include <window/3d/primitive.hpp>
+
 
 namespace robotica {
     namespace detail {
-        inline void assure_sdl_init(void) {
-            static bool initialized = false;
-            if (initialized) return; else initialized = true;
-
-            SDL_SetMainReady();
-            SDL_Init(SDL_INIT_EVERYTHING);
-
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-            SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-            SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-            SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-
-            std::atexit([]() {
-                SDL_Quit();
-            });
-        }
+        extern void init_sdl(void);
     }
 
 
     class window {
     public:
         window(std::string&& name) : name(std::move(name)) {
-            detail::assure_sdl_init();
+            detail::init_sdl();
 
-            handle = SDL_CreateWindow(this->name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+            handle = SDL_CreateWindow(this->name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
             context = SDL_GL_CreateContext(handle);
 
-            SDL_GL_MakeCurrent(handle, context);
             SDL_GL_SetSwapInterval(1);
 
             glewInit();
 
+
             IMGUI_CHECKVERSION();
             ImGui::CreateContext();
             io = &ImGui::GetIO();
-
+            
             ImGui::StyleColorsDark();
-
+            
             ImGui_ImplSDL2_InitForOpenGL(handle, context);
-            ImGui_ImplOpenGL3_Init("#version 130");
+            ImGui_ImplOpenGL3_Init("#version 330");
+
+
+            glClearColor(0.5, 0.5, 0.5, 1.0);
+            glEnable(GL_DEPTH_TEST);
         }
 
         virtual ~window(void) {
@@ -64,31 +54,35 @@ namespace robotica {
 
         virtual void update(void) {
             EASY_BLOCK("window update", profiler::colors::Red);
+
             poll_events();
             if (closed) return;
 
+            //glViewport(0, 0, (int) io->DisplaySize.x, (int) io->DisplaySize.y);
+            
+            int w, h;
+            SDL_GL_GetDrawableSize(handle, &w, &h);
+            glViewport(0, 0, w, h);
 
-            SDL_GL_MakeCurrent(handle, context);
+
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplSDL2_NewFrame(handle);
             ImGui::NewFrame();
-
+            
             if (!ImGui::Begin(name.c_str())) {
                 ImGui::End();
                 return;
             }
-
+            
             add_elements();
+
             ImGui::End();
             ImGui::Render();
 
-            glViewport(0, 0, (int) io->DisplaySize.x, (int) io->DisplaySize.y);
-
-            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
-
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
             SDL_GL_SwapWindow(handle);
         }
 
@@ -102,6 +96,11 @@ namespace robotica {
 
             SDL_GL_DeleteContext(context);
             SDL_DestroyWindow(handle);
+        }
+
+
+        void register_scene(gui_scene* scene) {
+            
         }
     protected:
         virtual void add_elements(void) = 0;

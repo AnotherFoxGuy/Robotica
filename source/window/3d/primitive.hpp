@@ -6,7 +6,9 @@
 
 
 namespace robotica {
-    using vertex = glm::vec3;
+    struct vertex {
+        glm::vec3 position;
+    };
 
 
     struct triangle {
@@ -14,7 +16,6 @@ namespace robotica {
     };
 
 
-    struct mesh {
-        std::vector<triangle> triangles;
-    };
+    using mesh       = std::vector<triangle>;
+    using pointcloud = std::vector<vertex>;
 }

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <window/window.hpp>
-#include <window/gui_image.hpp>
 #include <window/setting.hpp>
+#include <window/gui_image.hpp>
+#include <window/3d/gui_scene.hpp>
 #include <utility/traits.hpp>
 #include <utility/typedefs.hpp>
 
@@ -71,12 +72,12 @@ namespace robotica {
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
         
-        RBT_SETTING(ARM,    arm_base,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    arm_short,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    arm_long,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    gripper,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    gripper_roll,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    gripper_pitch,            0.0,   -1,    1);
+        RBT_SETTING(ARM,      arm_base,           0.0,   -1,    1);
+        RBT_SETTING(ARM,      arm_short,          0.0,   -1,    1);
+        RBT_SETTING(ARM,      arm_long,           0.0,   -1,    1);
+        RBT_SETTING(ARM,      gripper,            0.0,   -1,    1);
+        RBT_SETTING(ARM,      gripper_roll,       0.0,   -1,    1);
+        RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1,    1);
 
 
     protected:
@@ -84,6 +85,8 @@ namespace robotica {
         void process_event(SDL_Event* e) override;
     private:
         bool has_resized = false;
+        bool has_capture = false;
         gui_image left, right, depth, map;
+        gui_scene lidar_view;
     };
 }

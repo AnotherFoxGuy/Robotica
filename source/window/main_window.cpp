@@ -26,36 +26,79 @@ namespace robotica {
     }
 
 
-    main_window::main_window(void) : window("Settings") {}
+    main_window::main_window(void) : window("Settings"), lidar_view({ 255, 255 }) {
+        const static std::vector<triangle> t {
+            {
+                {{ -0.5, -0.5, 1.0 }},
+                {{  0.5,  0.5, 1.0 }},
+                {{ -0.5,  0.5, 1.0 }}
+            },
+
+            {
+                {{ -0.5, -0.5, -1.0 }},
+                {{  0.5,  0.5, -1.0 }},
+                {{ -0.5,  0.5, -1.0 }}
+            },
+
+            {
+                {{ -0.5, -0.5, -1.0 }},
+                {{ -0.5,  0.5, -1.0 }},
+                {{ -0.5,  0.5,  1.0 }}
+            },
+
+            {
+                {{ 0.5, -0.5, -1.0 }},
+                {{ 0.5,  0.5, -1.0 }},
+                {{ 0.5,  0.5,  1.0 }}
+            },
+
+            {
+                {{ -0.5,  1, -1.0 }},
+                {{ -0.5,  1,  1.0 }},
+                {{  0.5,  1,  1.0 }}
+            },
+
+            {
+                {{ -0.5, -1, -1.0 }},
+                {{ -0.5, -1,  1.0 }},
+                {{  0.5, -1,  1.0 }}
+            }
+        };
+
+        lidar_view.get_program().add_buffer(t);
+    }
 
 
     void main_window::add_elements(void) {
-        constexpr int topbar_height  = 19;
-        constexpr int slider_height  = 23;
-        constexpr int image_size     = 255;
-        constexpr int collapse_width = 3 * image_size;
-        constexpr int padding_top    = 42;
-        constexpr int padding_bottom = 8;
-        constexpr int padding_side   = 8;
-        constexpr int button_height  = 30;
+        constexpr int topbar_height      = 19;
+        constexpr int slider_height      = 23;
+        constexpr int image_size         = 255;
+        constexpr int collapse_width     = 3 * image_size;
+        constexpr int padding_top        = 42;
+        constexpr int padding_bottom     = 20;
+        constexpr int padding_side       = 8;
+        constexpr int button_height      = 30;
+        constexpr int top_section_height = 420;
 
 
-        // Count parallax settings.
-        int num_elems = 0;
-        expand(settings[(int) PARALLAX], [&](const auto& v) { num_elems += std::count_if(v.begin(), v.end(), [](const auto& e) { return e.get().setting_group == (int) PARALLAX; }); });
+        lidar_view.get_camera().add_pitch(0.03);
+        lidar_view.get_camera().add_yaw(0.03);
+        lidar_view.render();
 
-
-        // Calculate settings area size.
-        const int target_height = padding_top + (slider_height * num_elems) + (2 * image_size) + padding_bottom;
-        const int target_width = (4 * image_size) + (5 * padding_side);
-
-        if (!has_resized) ImGui::SetWindowSize({ (float) target_width, (float) target_height });
-        has_resized = true;
 
         // Resize window to GUI size.
         ImGui::SetWindowPos({ 0, 0 });
         auto size = ImGui::GetWindowContentRegionMax();
         SDL_SetWindowSize(handle, size.x + 8, size.y + 8);
+
+
+        // Calculate settings area size.
+        const int target_height = padding_top + top_section_height + (2 * image_size) + (2 * padding_bottom);
+        const int target_width = (4 * image_size) + (5 * padding_side);
+
+        if (!has_resized) ImGui::SetWindowSize({ (float) target_width, (float) target_height });
+        has_resized = true;
+
 
         left.set_image(world_model::instance().get_left_camera());
         right.set_image(world_model::instance().get_right_camera());
@@ -115,6 +158,18 @@ namespace robotica {
             }
         }
 
+        // LIDAR Preview Group
+        if (ImGui::CollapsingHeader("LIDAR PREVIEW")) {
+            lidar_view.show();
+
+            // Enable capture when scene is clicked.
+            //if (ImGui::IsItemClicked()) {
+            //    SDL_SetRelativeMouseMode(SDL_TRUE);
+            //    has_capture = true;
+            //}
+        }
+
+
         ImGui::EndGroup();
         ImGui::NextColumn();
 
@@ -131,7 +186,7 @@ namespace robotica {
 
                 if (!first) ImGui::SameLine(); else first = false;
 
-                const int h = slider_height * num_elems - (2 * button_height + 2 * padding_bottom);
+                const int h = top_section_height - (2 * button_height + 2 * padding_bottom);
                 if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
                 if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
             }
@@ -172,5 +227,34 @@ namespace robotica {
 
     void main_window::process_event(SDL_Event* e) {
         if (e->type == SDL_QUIT) controller::instance().request_exit();
+
+        // Disable capture when ESC is pressed.
+        /*if (e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_ESCAPE && has_capture) {
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+            has_capture = false;
+        }
+
+        // Rotate camera when captured and mouse is moved.
+        if (e->type == SDL_MOUSEMOTION && has_capture) {
+            camera& c = lidar_preview.get_camera();
+            c.add_yaw(e->motion.x);
+            c.add_pitch(e->motion.y);
+        }
+
+        // Move camera when captured and WASD is pressed.
+        if (e->type == SDL_KEYDOWN && has_capture) {
+            camera& c = lidar_preview.get_camera();
+
+            constexpr float speed = 0.02;
+            switch (e->key.keysym.sym) {
+                case SDLK_w: c.move(camera::absolute_fwd   *  speed); break;
+                case SDLK_s: c.move(camera::absolute_fwd   * -speed); break;
+                case SDLK_d: c.move(camera::absolute_right *  speed); break;
+                case SDLK_a: c.move(camera::absolute_right * -speed); break;
+                case SDLK_e: c.move(camera::absolute_up    *  speed); break;
+                case SDLK_q: c.move(camera::absolute_up    * -speed); break;
+                default: break;
+            }
+        } */
     }
 }
