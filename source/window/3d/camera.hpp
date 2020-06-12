@@ -14,6 +14,9 @@ namespace robotica {
         constexpr static inline glm::vec3 absolute_right { 1, 0, 0 };
 
 
+        camera(float aspect_ratio = 16.0 / 9.0) : aspect_ratio(aspect_ratio) {}
+
+
         void move(glm::vec3 delta) {
             movement += delta;
         }
@@ -29,33 +32,29 @@ namespace robotica {
 
         // Yes, I know GLM has methods for this, but I can't be bothered to find out what they're called.
         glm::mat4 get_matrix(void) {
-            glm::vec3 camera_up    = glm::normalize(rotate_vec(absolute_up, absolute_right, pitch));
-            glm::vec3 camera_fwd   = glm::normalize(rotate_vec(rotate_vec(absolute_fwd, absolute_right, pitch), camera_up, yaw));
-            glm::vec3 camera_right = glm::normalize(glm::cross(camera_fwd, camera_up));
+            glm::vec3 direction = {
+                std::cos(yaw) * std::cos(pitch),
+                std::sin(pitch),
+                std::sin(yaw) * cos(pitch)
+            };
+
+
+            glm::vec3 camera_fwd   = glm::normalize(position + direction);
+            glm::vec3 camera_right = glm::normalize(glm::cross(absolute_up, camera_fwd));
+            glm::vec3 camera_up    = glm::cross(camera_fwd, camera_right);
+
 
             position += movement.x * camera_right;
             position += movement.y * camera_up;
             position += movement.z * camera_fwd;
-            movement = glm::vec3{};
+            movement = glm::vec3 { };
 
-            return glm::mat4 {
-                camera_right.x,     camera_right.y,     camera_right.z,     0,
-                camera_up.x,        camera_up.y,        camera_up.z,        0,
-                camera_fwd.x,       camera_fwd.y,       camera_fwd.z,       0,
-                0,                  0,                  0,                  1
-            } * glm::mat4 {
-                1,                  0,                  0,                  -position.x,
-                0,                  1,                  0,                  -position.y,
-                0,                  0,                  1,                  -position.z,
-                0,                  0,                  0,                  1
-            };
+
+            return glm::infinitePerspective(90.0f, aspect_ratio, 0.001f) * glm::lookAt(position, position + direction, { 0, 1, 0 });
         }
     private:
         glm::vec3 position, movement;
         float pitch, yaw;
-
-        static glm::vec3 rotate_vec(glm::vec3 vec, glm::vec3 axis, float angle) {
-            return std::cos(angle) * vec + std::sin(angle) * glm::cross(axis, vec) + (1 - std::cos(angle)) * glm::dot(axis, vec) * axis;
-        }
+        float aspect_ratio;
     };
 }

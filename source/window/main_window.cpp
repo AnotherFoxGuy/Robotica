@@ -26,7 +26,7 @@ namespace robotica {
     }
 
 
-    main_window::main_window(void) : window("Settings"), lidar_view({ 255, 255 }) {
+    main_window::main_window(void) : window("Settings"), lidar_view({ 750, 422 }) /* 16 : 9 */  {
         const static std::vector<triangle> t {
             {
                 {{ -0.5, -0.5, 1.0 }},
@@ -80,9 +80,6 @@ namespace robotica {
         constexpr int button_height      = 30;
         constexpr int top_section_height = 420;
 
-
-        lidar_view.get_camera().add_pitch(0.03);
-        lidar_view.get_camera().add_yaw(0.03);
         lidar_view.render();
 
 
@@ -163,10 +160,10 @@ namespace robotica {
             lidar_view.show();
 
             // Enable capture when scene is clicked.
-            //if (ImGui::IsItemClicked()) {
-            //    SDL_SetRelativeMouseMode(SDL_TRUE);
-            //    has_capture = true;
-            //}
+            if (ImGui::IsItemClicked()) {
+                SDL_SetRelativeMouseMode(SDL_TRUE);
+                has_capture = true;
+            }
         }
 
 
@@ -229,21 +226,21 @@ namespace robotica {
         if (e->type == SDL_QUIT) controller::instance().request_exit();
 
         // Disable capture when ESC is pressed.
-        /*if (e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_ESCAPE && has_capture) {
+        if (e->type == SDL_KEYDOWN && e->key.keysym.sym == SDLK_ESCAPE && has_capture) {
             SDL_SetRelativeMouseMode(SDL_FALSE);
             has_capture = false;
         }
 
         // Rotate camera when captured and mouse is moved.
         if (e->type == SDL_MOUSEMOTION && has_capture) {
-            camera& c = lidar_preview.get_camera();
+            camera& c = lidar_view.get_camera();
             c.add_yaw(e->motion.x);
             c.add_pitch(e->motion.y);
         }
 
         // Move camera when captured and WASD is pressed.
         if (e->type == SDL_KEYDOWN && has_capture) {
-            camera& c = lidar_preview.get_camera();
+            camera& c = lidar_view.get_camera();
 
             constexpr float speed = 0.02;
             switch (e->key.keysym.sym) {
@@ -255,6 +252,6 @@ namespace robotica {
                 case SDLK_q: c.move(camera::absolute_up    * -speed); break;
                 default: break;
             }
-        } */
+        }
     }
 }

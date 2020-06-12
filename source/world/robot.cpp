@@ -92,8 +92,8 @@ namespace robotica {
         cv::Mat image = cv::Mat(cv::Size(camera->getWidth(), camera->getHeight()), CV_8UC4);
         image.data = (uchar*) camera->getImage();
 
-        // WeBots might not be ready yet.
-        if (image.empty()) return cv::Mat(cv::Size(camera->getWidth(), camera->getHeight()), CV_8UC3);
+        // WeBots will sometimes not send any data because its stupid.
+        if (image.empty()) return cv::imread(ROOT_DIR "/assets/debug_image.png");
 
         cv::cvtColor(image, image, cv::COLOR_BGRA2BGR);
 
