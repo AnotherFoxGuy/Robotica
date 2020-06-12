@@ -16,6 +16,10 @@
 
 #define RBT_SETTING(group, name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max, (int) group }
 
+#define EMOTICON_WIDTH 14
+#define EMOTICON_HEIGHT 14
+#define EMOTICONS_NUMBER_X 5
+#define EMOTICONS_NUMBER_Y 11
 
 namespace robotica {
     const inline fs::path snapshot_folder = ROOT_DIR "/snapshots/";
@@ -71,17 +75,18 @@ namespace robotica {
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
         RBT_SETTING(LIDAR,      lidar_point_size,              5.0,     1,    10);
 
+
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
-        
+        RBT_SETTING(ROBOT,    speed,              1,      1,    100);
+
         RBT_SETTING(ARM,      arm_base,           0.0,   -1,    1);
         RBT_SETTING(ARM,      arm_short,          0.0,   -1,    1);
         RBT_SETTING(ARM,      arm_long,           0.0,   -1,    1);
         RBT_SETTING(ARM,      gripper,            0.0,   -1,    1);
         RBT_SETTING(ARM,      gripper_roll,       0.0,   -1,    1);
         RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1,    1);
-
 
     protected:
         void add_elements(void) override;

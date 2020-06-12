@@ -23,6 +23,7 @@ namespace robotica {
         world_model::instance().add_classifier(std::make_unique<pool_classifier>());
 
         websocket::instance().init();
+        websocket::instance().add_callback("speed", &speed_callback);
         websocket::instance().add_callback("joystick", &joystick_callback);
         websocket::instance().add_callback("rotate_arm_base", &arm_base_callback);
         websocket::instance().add_callback("arm_short", &arm_short_callback);

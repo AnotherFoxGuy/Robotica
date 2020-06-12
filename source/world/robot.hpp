@@ -12,6 +12,9 @@
 #include <webots/Lidar.hpp>
 #include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
+#include <webots/Speaker.hpp>
+#include <webots/Display.hpp>
+#include <webots/TouchSensor.hpp>
 
 #include <iostream>
 #include <string_view>
@@ -25,18 +28,17 @@ namespace robotica {
 
     class robot {
     public:
-        constexpr static int default_timestep = 1000 / 30;
 
         static robot& instance(void);
-
-
-        constexpr static float max_speed = -1;
 
         const static inline std::string camera_names[2] = { "left_camera", "right_camera" };
         const static inline std::string motor_names[9] = {"left_motor", "right_motor", "basis_kraan", "korte_arm", "lange_arm", "grijper_links", "grijper_rechts", "tandwielkast_grijper", "arm_grijper" };
 
         const static inline std::string compass_name = "compass";
-        const static inline std::string lidar_name   = "lidar_sensor";
+        const static inline std::string lidar_name = "lidar_sensor";
+        const static inline std::string speaker_name = "speaker";
+        const static inline std::string display_name = "display";
+        const static inline std::string scale_name = "scale";
 
         robot(int timestep);
         ~robot(void);
@@ -53,6 +55,10 @@ namespace robotica {
         float      get_camera_focal_length(side side) const;
         float      get_camera_baseline    (void)      const;
 
+        webots::Speaker* speaker;
+        webots::ImageRef* emotes;
+        webots::Display* display;
+
         pointcloud get_lidar_pointcloud(void) const;
     private:
         webots::Robot* rbt;
@@ -60,6 +66,7 @@ namespace robotica {
         webots::Motor *left_motor, *right_motor, *arm_base, *arm_short, *arm_long, *gripper_left, *gripper_right, *gripper_roll, *gripper_pitch;
         webots::Compass* compass;
         webots::Lidar* lidar;
+        webots::TouchSensor* scale;
 
         int timestep;
         float eye_distance, eye_height;

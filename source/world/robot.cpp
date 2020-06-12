@@ -24,6 +24,7 @@ namespace robotica {
         gripper_pitch(rbt->getMotor(motor_names[8])),
         compass(rbt->getCompass(compass_name)),
         lidar(rbt->getLidar(lidar_name)),
+        scale(rbt->getTouchSensor(scale_name)),
         timestep(timestep),
         eye_distance(0.03f),
         eye_height(0.028f)
@@ -36,6 +37,19 @@ namespace robotica {
 
         left_motor->setVelocity(0);
         right_motor->setVelocity(0);
+
+        speaker = rbt->getSpeaker(speaker_name);
+
+        speaker->setEngine("microsoft");
+        speaker->setLanguage("de-DE");
+
+        display = rbt->getDisplay(display_name);
+
+        emotes = display->imageLoad("emoticons.png");
+        //provide samplingPeriod in milliseconds
+        compass->enable(100);
+        lidar->enable(100);
+        scale->enable(100);
 
         compass->enable(timestep);
 
@@ -71,23 +85,24 @@ namespace robotica {
         auto& window = main_window::instance();
 
         std::array components {
-            std::tuple { left_motor,    &window.left_motor,    max_speed   },
-            std::tuple { right_motor,   &window.right_motor,   max_speed   },
-            std::tuple { arm_base,      &window.arm_base,      (float) pi  },
-            std::tuple { arm_short,     &window.arm_short,     (float) pi  },
-            std::tuple { arm_long,      &window.arm_long,      (float) pi  },
-            std::tuple { gripper_left,  &window.gripper,       (float) pi  },
-            std::tuple { gripper_right, &window.gripper,       (float) -pi },
-            std::tuple { gripper_roll,  &window.gripper_roll,  (float) pi  },
-            std::tuple { gripper_pitch, &window.gripper_pitch, (float) pi  }
+            std::tuple { arm_base,      &window.arm_base,      (float) pi           },
+            std::tuple { arm_short,     &window.arm_short,     (float) pi           },
+            std::tuple { arm_long,      &window.arm_long,      (float) pi           },
+            std::tuple { gripper_left,  &window.gripper,       (float) pi           },
+            std::tuple { gripper_right, &window.gripper,       (float) -pi          },
+            std::tuple { gripper_roll,  &window.gripper_roll,  (float) pi           },
+            std::tuple { gripper_pitch, &window.gripper_pitch, (float) pi           }
         };
 
         int result;        
         if (result = rbt->step(timestep); result != -1) {
             for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
+
+            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
+
+            std::cout << "Measured weight: " << scale->getValue() << '\n';
         }
-
-
 
         return (result != -1);
     }

@@ -74,6 +74,7 @@ namespace robotica {
         constexpr int padding_side       = 8;
         constexpr int button_height      = 30;
         constexpr int top_section_height = 420;
+        constexpr int sidebar_width      = 350;
 
         check_input();
         lidar_view.render();
@@ -87,7 +88,7 @@ namespace robotica {
 
         // Calculate settings area size.
         const int target_height = padding_top + top_section_height + (2 * image_size) + (2 * padding_bottom);
-        const int target_width = (4 * image_size) + (5 * padding_side);
+        const int target_width = std::max(4 * image_size, collapse_width + sidebar_width) + 2 * padding_side;
 
         if (!has_resized) ImGui::SetWindowSize({ (float) target_width, (float) target_height });
         has_resized = true;
@@ -114,11 +115,11 @@ namespace robotica {
                 temperature tempclass = temperature_class(temp);
 
                 cv::putText(
-                    img, 
-                    concat(magic_enum::enum_name(tempclass), " (" + std::to_string(temp) + ")"), 
-                    detection.bounding_rect.tl() + cv::Point { 2, 30 }, 
-                    cv::FONT_HERSHEY_PLAIN, 
-                    1.0, 
+                    img,
+                    concat(magic_enum::enum_name(tempclass), " (" + std::to_string(temp) + ")"),
+                    detection.bounding_rect.tl() + cv::Point { 2, 30 },
+                    cv::FONT_HERSHEY_PLAIN,
+                    1.0,
                     cv::Scalar(0, 255, 0)
                 );
             }
@@ -130,6 +131,7 @@ namespace robotica {
         // Collapsable groups
         ImGui::Columns(2);
         ImGui::SetColumnWidth(0, collapse_width);
+        ImGui::SetColumnWidth(1, target_width - collapse_width);
 
         ImGui::BeginGroup();
 
@@ -183,11 +185,9 @@ namespace robotica {
             for (auto& elem : vector) {
                 auto& setting = elem.get();
 
-                if (!first) ImGui::SameLine(); else first = false;
-
                 const int h = top_section_height - (2 * button_height + 2 * padding_bottom);
-                if constexpr (std::is_integral_v<type>)       ImGui::VSliderInt(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
-                if constexpr (std::is_floating_point_v<type>) ImGui::VSliderFloat(setting.name.c_str(), ImVec2(slider_height, h), &setting.value, setting.min, setting.max);
+                if constexpr (std::is_integral_v<type>)       ImGui::SliderInt(setting.name.c_str(), &setting.value, setting.min, setting.max);
+                if constexpr (std::is_floating_point_v<type>) ImGui::SliderFloat(setting.name.c_str(), &setting.value, setting.min, setting.max);
             }
         });
 
@@ -209,9 +209,42 @@ namespace robotica {
             std::cout << "Registered bot as " << name << '\n';
         }
 
+        if (ImGui::Button("Speak", {200, 30})) {
+            //webots::Speaker::playSound( robot::instance().speaker, robot::instance().speaker,"C:/projects/Robotica/protos/kaas.mp3",1,speed,0,false);
+            robot::instance().speaker->speak(
+                 "According to all known laws"
+                 "of aviation,"
+                 "there is no way a bee"
+                 "should be able to fly\n"
+                 "Its wings are too small to get"
+                 "its fat little body off the ground\n"
+                 "The bee, of course, flies anyway"
+                 "because bees don't care"
+                 "what humans think is impossible\n"
+                 "<prosody rate=\"1.5\">"
+                 "Yellow, black. Yellow, black\n"
+                 "Yellow, black. Yellow, black\n"
+                 "Ooh, black and yellow!"
+                 "Let's shake it up a little\n"
+                 "Barry! Breakfast is ready!"
+                 "Ooming!"
+                 "</prosody>",
+                1
+            );
+        }
+
+        if (ImGui::Button("emote", {200, 30})) {
+            int x = -EMOTICON_WIDTH * (rand() % EMOTICONS_NUMBER_X);
+            int y = -EMOTICON_HEIGHT * (rand() % EMOTICONS_NUMBER_Y);
+            //wb_display_image_paste(emoticon_display, emoticonsImage, x, y, true);
+            robot::instance().display->imagePaste(robot::instance().emotes, x, y, true);
+        }
+
+
+
+
         ImGui::EndGroup();
         ImGui::Columns();
-
 
         // Image views
         left.show();
