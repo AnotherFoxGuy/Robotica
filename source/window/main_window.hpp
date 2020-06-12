@@ -79,7 +79,8 @@ namespace robotica {
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
-        RBT_SETTING(ROBOT,    speed,              1,      1,    100);
+        RBT_SETTING(ROBOT,    speed,              1,     30,    100);
+
 
         RBT_SETTING(ARM,      arm_base,           0.0,   -1,    1);
         RBT_SETTING(ARM,      arm_short,          0.0,   -1,    1);
