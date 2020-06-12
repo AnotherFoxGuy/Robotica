@@ -43,8 +43,8 @@ PROTO UWUBot-Tracked [
   field SFNode             lidar_rotatingHead           NULL                     # {Solid (or derived), PROTO}
     
 # Tracks
-  field SFRotation         track_rotation              0 0 0 0            # 0.707107 0 0.707107 3.14159
-  field SFVec3f            track_translation           0 0.021 0.0095      # -0.095 -0.05 0
+  #field SFRotation         track_rotation              0 0 0 0            # 0.707107 0 0.707107 3.14159
+  #field SFVec3f            track_translation           0 0.021 0.0095      # -0.095 -0.05 0
 ]
 {
   Robot {
@@ -891,7 +891,7 @@ PROTO UWUBot-Tracked [
     }
     DEF DISPLAY Display {
       translation 0 -0.09 -0.15
-      rotation IS track_rotation #0 0 0 0
+      rotation 1 0 0 -0.3927
       children [
         Shape {
           appearance PBRAppearance {
