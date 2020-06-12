@@ -70,18 +70,24 @@ namespace robotica {
     bool robot::update(void) {
         auto& window = main_window::instance();
 
+        std::array components {
+            std::tuple { left_motor,    &window.left_motor,    max_speed   },
+            std::tuple { right_motor,   &window.right_motor,   max_speed   },
+            std::tuple { arm_base,      &window.arm_base,      (float) pi  },
+            std::tuple { arm_short,     &window.arm_short,     (float) pi  },
+            std::tuple { arm_long,      &window.arm_long,      (float) pi  },
+            std::tuple { gripper_left,  &window.gripper,       (float) pi  },
+            std::tuple { gripper_right, &window.gripper,       (float) -pi },
+            std::tuple { gripper_roll,  &window.gripper_roll,  (float) pi  },
+            std::tuple { gripper_pitch, &window.gripper_pitch, (float) pi  }
+        };
+
         int result;        
         if (result = rbt->step(timestep); result != -1) {
-            (*left_motor).setVelocity(window.left_motor * max_speed);
-            (*right_motor).setVelocity(window.right_motor * max_speed);
-            (*arm_base).setPosition(window.arm_base * 3.14);
-            (*arm_short).setPosition(window.arm_short * 3.14);
-            (*arm_long).setPosition(window.arm_long * 3.14);
-            (*gripper_left).setPosition(window.gripper * 3.14);
-            (*gripper_right).setPosition(-window.gripper * 3.14);
-            (*gripper_roll).setPosition(window.gripper_roll * 3.14);
-            (*gripper_pitch).setPosition(window.gripper_pitch * 3.14);
+            for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
         }
+
+
 
         return (result != -1);
     }
