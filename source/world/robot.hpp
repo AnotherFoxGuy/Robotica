@@ -3,6 +3,7 @@
 #include <utility/typedefs.hpp>
 #include <vision/converters.hpp>
 #include <window/main_window.hpp>
+#include <window/3d/primitive.hpp>
 
 #include <glm/glm.hpp>
 #include <opencv2/opencv.hpp>
@@ -17,6 +18,7 @@
 
 #include <iostream>
 #include <string_view>
+#include <vector>
 
 
 namespace robotica {
@@ -57,6 +59,7 @@ namespace robotica {
         webots::ImageRef* emotes;
         webots::Display* display;
 
+        pointcloud get_lidar_pointcloud(void) const;
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;

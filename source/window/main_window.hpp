@@ -1,8 +1,9 @@
 #pragma once
 
 #include <window/window.hpp>
-#include <window/gui_image.hpp>
 #include <window/setting.hpp>
+#include <window/gui_image.hpp>
+#include <window/3d/gui_scene.hpp>
 #include <utility/traits.hpp>
 #include <utility/typedefs.hpp>
 
@@ -31,8 +32,8 @@ namespace robotica {
 
         // To add a new setting category, just create a new entry in this enum, then add it to collapsable_groups.
         // Then you can use RBT_SETTING to add settings to the category.
-        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT, ARM };
-        constexpr static auto collapsable_groups = { PARALLAX, CLASSIFIER, ARM };
+        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT, ARM, LIDAR };
+        constexpr static auto collapsable_groups = { PARALLAX, CLASSIFIER, ARM, LIDAR };
 
         // Parallax Processing Settings
         RBT_SETTING(PARALLAX, num_disparities,    3,      0,    16);        // x16
@@ -70,25 +71,35 @@ namespace robotica {
         RBT_SETTING(CLASSIFIER, pool_min_width,                20.0,    0,    100);
         RBT_SETTING(CLASSIFIER, pool_min_oblongness,           1.0,     0,    32);
 
+        // LIDAR Settings
+        RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
+        RBT_SETTING(LIDAR,      lidar_point_size,              5.0,     1,    10);
+
 
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
-        RBT_SETTING(ROBOT,    speed,                1,   1,    100);
+        RBT_SETTING(ROBOT,    speed,              1,      1,    100);
 
-        RBT_SETTING(ARM,    arm_base,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    arm_short,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    arm_long,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    gripper,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    gripper_roll,            0.0,   -1,    1);
-        RBT_SETTING(ARM,    gripper_pitch,            0.0,   -1,    1);
-
+        RBT_SETTING(ARM,      arm_base,           0.0,   -1,    1);
+        RBT_SETTING(ARM,      arm_short,          0.0,   -1,    1);
+        RBT_SETTING(ARM,      arm_long,           0.0,   -1,    1);
+        RBT_SETTING(ARM,      gripper,            0.0,   -1,    1);
+        RBT_SETTING(ARM,      gripper_roll,       0.0,   -1,    1);
+        RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1,    1);
 
     protected:
         void add_elements(void) override;
         void process_event(SDL_Event* e) override;
+        void on_frame_start(void) override;
     private:
+        void check_input(void);
+
         bool has_resized = false;
+        bool has_capture = false;
         gui_image left, right, depth, map;
+
+        gui_scene lidar_view;
+        shared<buffer> lidar_buffer;
     };
 }
