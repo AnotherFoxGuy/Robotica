@@ -223,6 +223,9 @@ namespace robotica {
 
 
     void main_window::process_event(SDL_Event* e) {
+        constexpr float mouse_sens = 0.003;
+        constexpr float move_speed = 0.04;
+
         if (e->type == SDL_QUIT) controller::instance().request_exit();
 
         // Disable capture when ESC is pressed.
@@ -233,23 +236,25 @@ namespace robotica {
 
         // Rotate camera when captured and mouse is moved.
         if (e->type == SDL_MOUSEMOTION && has_capture) {
+            int dx, dy;
+            SDL_GetRelativeMouseState(&dx, &dy);
+
             camera& c = lidar_view.get_camera();
-            c.add_yaw(e->motion.x);
-            c.add_pitch(e->motion.y);
+            c.add_yaw(mouse_sens * -dx);
+            c.add_pitch(mouse_sens * dy);
         }
 
         // Move camera when captured and WASD is pressed.
         if (e->type == SDL_KEYDOWN && has_capture) {
             camera& c = lidar_view.get_camera();
 
-            constexpr float speed = 0.02;
             switch (e->key.keysym.sym) {
-                case SDLK_w: c.move(camera::absolute_fwd   *  speed); break;
-                case SDLK_s: c.move(camera::absolute_fwd   * -speed); break;
-                case SDLK_d: c.move(camera::absolute_right *  speed); break;
-                case SDLK_a: c.move(camera::absolute_right * -speed); break;
-                case SDLK_e: c.move(camera::absolute_up    *  speed); break;
-                case SDLK_q: c.move(camera::absolute_up    * -speed); break;
+                case SDLK_w: c.move(camera::absolute_fwd   *  move_speed); break;
+                case SDLK_s: c.move(camera::absolute_fwd   * -move_speed); break;
+                case SDLK_a: c.move(camera::absolute_right *  move_speed); break;
+                case SDLK_d: c.move(camera::absolute_right * -move_speed); break;
+                case SDLK_q: c.move(camera::absolute_up    *  move_speed); break;
+                case SDLK_e: c.move(camera::absolute_up    * -move_speed); break;
                 default: break;
             }
         }
