@@ -9,15 +9,27 @@ public:
     void printInfo() { audioFile.printSummary();}
     void getSampels()
     {
-        int channel = audioFile.getNumChannels();
+        double avrageSamples = 0;
+        int length = 0;
+        int channel = 0; //audioFile.getNumChannels();
         int numSamples = audioFile.getNumSamplesPerChannel();
-        for (int j = 0; j < channel; j++)
-        {   
-            for (int i = 0; i < numSamples; i++)
+        for (int j = 0; j < numSamples; j++)
+        {
+            //for (int i = 0; i < channel; i++)
+            //{
+                double currentSample = audioFile.samples[channel][j];
+                avrageSamples += currentSample * audioFile.getBitDepth();
+      
+            //}
+            if (j % audioFile.getSampleRate() == 0 && j != 0)
             {
-                double currentSample = audioFile.samples[j][i];
-                std::cout << currentSample << std::endl;
+                int sec = j/ audioFile.getSampleRate();
+                
+                printf("sample %f sec: %d \n", (avrageSamples / audioFile.getSampleRate()) * audioFile.getSampleRate(),sec);
+                avrageSamples = 0;
             }
+            
+
         }
     }
 };

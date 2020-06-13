@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     if(music.loadfile())
     {
         music.printInfo();
-       // music.getSampels();
+       music.getSampels();
     }
     
 
