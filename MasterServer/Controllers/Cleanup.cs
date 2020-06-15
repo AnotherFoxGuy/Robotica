@@ -1,8 +1,9 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
 namespace web.Controllers
 {
-    [Microsoft.AspNetCore.Components.Route("api/Cleanup")]
+    [Route("api/Cleanup")]
     [ApiController]
     public class Cleanup
     {
