@@ -19,6 +19,7 @@ set(SOURCE_FILES
      window/setting.hpp
      window/window.hpp
      window/world_image.hpp
+     window/imgui_plot/imgui_plot.{hpp,cpp}
      vision/iclassifier.hpp
      vision/cascade_classifier.hpp
      vision/pool_classifier.hpp
