@@ -139,7 +139,7 @@
     <h6 class="text-center">Snelheid instellen robot voortbeweging</h6>
     <div class="slidecontainer">
         <input type="range" min="1" max="100" value="50" class="slider" id="snelheid_slider">
-        <p>Waarde: <span id="snelheid_span"></span></p>
+        <p>Waarde: <span id="snelheid_span"></span>%</p>
     </div>
 </div>
 
@@ -154,14 +154,13 @@
         <button type="button" onclick="doSend('moonmaze')" class="btn btn-outline-primary autonoom">Moonmaze</button>
         <button type="button" onclick="doSend('plant_the_flag')" class="btn btn-outline-primary">Plant the Flag</button>
         <div class="dropup">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Cart
-                Search
+            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Select card
             </button>
             <div class="dropdown-menu">
-                <a onclick="doSend('harten')" class="dropdown-item" href="#">Harten</a>
-                <a onclick="doSend('klaver')" class="dropdown-item" href="#">Klaver</a>
-                <a onclick="doSend('ruiten')" class="dropdown-item" href="#">Ruiten</a>
-                <a onclick="doSend('schopen')" class="dropdown-item" href="#">Schopen</a>
+                <a onclick="doSend('harten')" class="dropdown-item" >Harten</a>
+                <a onclick="doSend('klaver')" class="dropdown-item" >Klaver</a>
+                <a onclick="doSend('ruiten')" class="dropdown-item" >Ruiten</a>
+                <a onclick="doSend('schopen')" class="dropdown-item">Schopen</a>
             </div>
         </div>
     </div>
@@ -194,7 +193,6 @@
     };
 
     var websocket
-
 
     var previous_x, previous_y
 
