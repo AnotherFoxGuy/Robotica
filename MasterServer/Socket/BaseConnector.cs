@@ -33,18 +33,25 @@ namespace web.Socket
 
         public async Task HandleClient(WebSocket webSocket, HttpContext context)
         {
-            WebSocket = webSocket;
-            _context = context;
-            var buffer = new byte[1024 * 4];
-            var result = await WebSocket.ReceiveAsync(buffer, CancellationToken.None);
-            while (!result.CloseStatus.HasValue)
+            try
             {
-                HandleMessage(Encoding.Default.GetString(buffer.Take(result.Count).ToArray()).ToLower());
-                result = await WebSocket.ReceiveAsync(buffer, CancellationToken.None);
-            }
+                WebSocket = webSocket;
+                _context = context;
+                var buffer = new byte[1024 * 4];
+                var result = await WebSocket.ReceiveAsync(buffer, CancellationToken.None);
+                while (!result.CloseStatus.HasValue)
+                {
+                    HandleMessage(Encoding.Default.GetString(buffer.Take(result.Count).ToArray()).ToLower());
+                    result = await WebSocket.ReceiveAsync(buffer, CancellationToken.None);
+                }
 
-            await WebSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription,
-                CancellationToken.None);
+                await WebSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription,
+                    CancellationToken.None);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
             OnClose();
         }
 
