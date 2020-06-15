@@ -69,7 +69,6 @@ namespace robotica {
         webots::Lidar* lidar;
         webots::TouchSensor* scale;
 
-        const static int autonomousSpeed = 30;
         int timestep;
         float eye_distance, eye_height;
         bool manually_destroyed = false;
