@@ -9,8 +9,6 @@ project(RBTC)
 
 set(SOURCE_FILES
      main.cpp
-     dance/MusicAnalyzer.{hpp,cpp}
-     dance/AudioFile.h
      world/controller.{hpp,cpp}
      world/robot.{hpp,cpp}
      window/gui_image.hpp
@@ -19,7 +17,6 @@ set(SOURCE_FILES
      window/setting.hpp
      window/window.hpp
      window/world_image.hpp
-     window/imgui_plot/imgui_plot.{hpp,cpp}
      vision/iclassifier.hpp
      vision/cascade_classifier.hpp
      vision/pool_classifier.hpp
@@ -61,7 +58,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX SDL_MAIN_HANDLED)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC USING_EASY_PROFILER IMGUI_DEFINE_MATH_OPERATORS)
+target_compile_definitions(${PROJECT_NAME} PUBLIC USING_EASY_PROFILER)
 target_link_libraries(${PROJECT_NAME} PRIVATE CONAN_PKG::easy_profiler)
 
 cotire(${PROJECT_NAME})

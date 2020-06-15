@@ -7,7 +7,6 @@
 #include <vision/converters.hpp>
 #include <vision/world_model.hpp>
 #include <comms/websocket.hpp>
-#include <window/imgui_plot/imgui_plot.hpp>
 
 #include <opencv2/highgui.hpp>
 #include <magic_enum.hpp>
