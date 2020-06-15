@@ -61,7 +61,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX SDL_MAIN_HANDLED)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC USING_EASY_PROFILER)
+target_compile_definitions(${PROJECT_NAME} PUBLIC USING_EASY_PROFILER IMGUI_DEFINE_MATH_OPERATORS)
 target_link_libraries(${PROJECT_NAME} PRIVATE CONAN_PKG::easy_profiler)
 
 cotire(${PROJECT_NAME})
