@@ -1,16 +1,20 @@
 using System;
+using System.Text.Json;
 
 namespace web.Socket
 {
     /// <summary>
-    ///     ws://localhost:5000/ws/Robot
+    ///     ws://localhost:5000/ws/Telemetry
     /// </summary>
-    public class RobotConnector : BaseConnector
+    public class TelemetryConnector : BaseConnector
     {
-        public RobotConnector(ConnectionManager connectionManager) : base(connectionManager)
+        public TelemetryConnector(ConnectionManager connectionManager) : base(connectionManager)
         {
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="msg"></param>
         protected override void HandleMessage(string msg)
         {
             try
@@ -23,14 +27,17 @@ namespace web.Socket
                     case "register":
                         Name = dat;
                         ConnectionManager.Register(this);
-                        SendData($"Registered {Name}");
                         break;
-                    case "data":
-                        ConnectionManager.SendData(this, dat);
+                    case "ls":
+                        var robs = ConnectionManager.Robots.Values;
+                        SendData(JsonSerializer.Serialize(robs));
+                        break;
+                    case "set":
+                        ConnectionManager.SetRobot(this, dat);
                         break;
                     default:
                         SendData($"Unknown Command: {cmd}");
-                        Console.WriteLine($"[RobotConnector] Unknown Command: {cmd}");
+                        Console.WriteLine($"[TelemetryConnector] Unknown Command: {cmd}");
                         break;
                 }
             }
