@@ -71,12 +71,11 @@ namespace robotica {
     }
 
 
-    double robot::get_bearing_in_degrees() {
+    double robot::get_bearing_in_radian() {
         const double *north = compass->getValues();
-        double rad = atan2(north[0], north[1]);
-        double bearing = (rad - 1.5708) / M_PI * 180.0;
+        double bearing = atan2(north[0], north[2]);
         if (bearing < 0.0)
-            bearing = bearing + 360.0;
+            bearing = bearing + 6.28319;
         return bearing;
     }
 
@@ -102,11 +101,11 @@ namespace robotica {
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
 
             //std::cout << "Measured weight: " << scale->getValue() << '\n';
+            std::cout << "Direction: " << get_bearing_in_radian() << '\n';
         }
 
         return (result != -1);
     }
-
 
     cv::Mat robot::get_camera_output(side side) const {
         auto& camera = (side == side::LEFT) ? left_camera : right_camera;
@@ -160,4 +159,14 @@ namespace robotica {
 
         return pc;
     }
+    void robot::rotate_robot_in_radian(float radian) {
+        // motor->setPosition()  //how far the motor will turn before it stops (in meters)
+        // motor->setVelocity()  //motor speed
+
+        auto start = get_bearing_in_radian();
+        auto destination = start + radian;
+
+
+    }
+
 }
