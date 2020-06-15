@@ -6,6 +6,7 @@
 #include <utility/typedefs.hpp>
 #include <vision/iclassifier.hpp>
 #include <vision/parallax.hpp>
+#include <vision/mesher.hpp>
 #include <world/robot.hpp>
 #include <window/3d/primitive.hpp>
 
@@ -52,6 +53,7 @@ namespace robotica {
         const cv::Mat& get_depth_map   (void) const { return depth; }
 
         const pointcloud& get_lidar_pointcloud(void) const { return lidar_pointcloud; }
+        const mesh& get_lidar_mesh(void) const { return lidar_mesh; }
     private:
         std::vector<classified_object> update_raw_objects(void) const;
         std::vector<world_object> update_objects(const std::vector<world_object>& prev) const;
@@ -68,6 +70,10 @@ namespace robotica {
             return robot::instance().get_lidar_pointcloud();
         }
 
+        mesh update_lidar_mesh(void) {
+            return create_mesh(lidar_pointcloud);
+        }
+
 
 
         // We want to cache these members and bind them to their respective update methods.
@@ -82,15 +88,17 @@ namespace robotica {
         #endif
 
         template <auto Fn, typename... Args> using bound_cache = cache<typename make_member_function_info<decltype(Fn)>::return_type, bound_t<Fn, Args...>>;
+        #define RBT_WM_CACHE_ITEM(fn, name) bound_cache<&world_model::fn> name { {}, std::bind_front(&world_model::fn, this) }
 
 
-        bound_cache<&world_model::update_raw_objects             > raw_objects      { {}, std::bind_front(&world_model::update_raw_objects,              this) };
-        bound_cache<&world_model::update_objects                 > objects          { {}, std::bind_front(&world_model::update_objects,                  this) };
-        bound_cache<&world_model::update_mesh                    > world_mesh       { {}, std::bind_front(&world_model::update_mesh,                     this) };
-        bound_cache<&world_model::update_camera_data<side::LEFT> > left             { {}, std::bind_front(&world_model::update_camera_data<side::LEFT>,  this) };
-        bound_cache<&world_model::update_camera_data<side::RIGHT>> right            { {}, std::bind_front(&world_model::update_camera_data<side::RIGHT>, this) };
-        bound_cache<&world_model::update_depth_map               > depth            { {}, std::bind_front(&world_model::update_depth_map,                this) };
-        bound_cache<&world_model::update_lidar_pointcloud        > lidar_pointcloud { {}, std::bind_front(&world_model::update_lidar_pointcloud,         this) };
+        RBT_WM_CACHE_ITEM(update_raw_objects,               raw_objects);
+        RBT_WM_CACHE_ITEM(update_objects,                   objects);
+        RBT_WM_CACHE_ITEM(update_mesh,                      world_mesh);
+        RBT_WM_CACHE_ITEM(update_camera_data<side::LEFT>,   left);
+        RBT_WM_CACHE_ITEM(update_camera_data<side::RIGHT>,  right);
+        RBT_WM_CACHE_ITEM(update_depth_map,                 depth);
+        RBT_WM_CACHE_ITEM(update_lidar_pointcloud,          lidar_pointcloud);
+        RBT_WM_CACHE_ITEM(update_lidar_mesh,                lidar_mesh);
 
 
         // cv::CascadeClassifier is unfortunately not const-correct.

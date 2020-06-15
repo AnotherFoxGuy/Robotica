@@ -16,10 +16,6 @@
 
 #define RBT_SETTING(group, name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max, (int) group }
 
-#define EMOTICON_WIDTH 14
-#define EMOTICON_HEIGHT 14
-#define EMOTICONS_NUMBER_X 5
-#define EMOTICONS_NUMBER_Y 11
 
 namespace robotica {
     const inline fs::path snapshot_folder = ROOT_DIR "/snapshots/";
@@ -27,12 +23,18 @@ namespace robotica {
 
     class main_window : public window, public setting_storage<main_window> {
     public:
+        constexpr static inline int EMOTICON_WIDTH     = 14;
+        constexpr static inline int EMOTICON_HEIGHT    = 14;
+        constexpr static inline int EMOTICONS_NUMBER_X = 5;
+        constexpr static inline int EMOTICONS_NUMBER_Y = 11;
+
+
         static main_window& instance(void);
         main_window(void);
 
         // To add a new setting category, just create a new entry in this enum, then add it to collapsable_groups.
         // Then you can use RBT_SETTING to add settings to the category.
-        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT, ARM, LIDAR };
+        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT, ARM, LIDAR, MISC };
         constexpr static auto collapsable_groups = { PARALLAX, CLASSIFIER, ARM, LIDAR };
 
         // Parallax Processing Settings
@@ -75,7 +77,6 @@ namespace robotica {
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
         RBT_SETTING(LIDAR,      lidar_point_size,              5.0,     1,    10);
 
-
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
@@ -89,6 +90,8 @@ namespace robotica {
         RBT_SETTING(ARM,      gripper_roll,       0.0,   -1,    1);
         RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1,    1);
 
+        // Miscelanneous Settings
+        RBT_SETTING(MISC,     enable_meshing,     false, false, true);
     protected:
         void add_elements(void) override;
         void process_event(SDL_Event* e) override;

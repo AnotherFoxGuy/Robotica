@@ -59,6 +59,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
      CONAN_PKG::sdl2
      CONAN_PKG::glew
      CONAN_PKG::magic_enum
+     CONAN_PKG::cgal
 )
 
 

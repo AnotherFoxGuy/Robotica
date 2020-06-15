@@ -54,12 +54,17 @@ namespace robotica {
 
 
     void main_window::on_frame_start(void) {
-        const auto& cloud = world_model::instance().get_lidar_pointcloud();
+        auto& wm = world_model::instance();
 
-        lidar_buffer->set_data(cloud);
-        lidar_buffer->set_mode(GL_POINTS);
+        if (enable_meshing) {
+            lidar_buffer->set_data(wm.get_lidar_mesh());
+            lidar_buffer->set_mode(GL_TRIANGLES);
+        } else {
+            lidar_buffer->set_data(wm.get_lidar_pointcloud());
+            lidar_buffer->set_mode(GL_POINTS);
+        }
+
         lidar_buffer->set_color({ 1, 0, 0 });
-
         glPointSize(lidar_point_size);
     }
 
@@ -167,6 +172,10 @@ namespace robotica {
             if (ImGui::Button("Goto Cloud", { 200, 30 })) {
                 const auto& cloud = world_model::instance().get_lidar_pointcloud();
                 if (cloud.size() > 0) lidar_view.get_camera().move_to(cloud[0].position);
+            }
+
+            if (ImGui::Button("Toggle Meshing", { 200, 30 })) {
+                enable_meshing = !enable_meshing;
             }
         }
 
