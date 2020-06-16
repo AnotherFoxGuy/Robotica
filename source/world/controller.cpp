@@ -1,4 +1,5 @@
 #include <world/controller.hpp>
+#include <world/strategy/strategy_circle.hpp>
 #include <vision/world_model.hpp>
 #include <vision/cascade_classifier.hpp>
 #include <vision/pool_classifier.hpp>
@@ -31,6 +32,8 @@ namespace robotica {
         websocket::instance().add_callback("gripper", &gripper_callback);
         websocket::instance().add_callback("gripper_pitch", &gripper_pitch_callback);
         websocket::instance().add_callback("gripper_roll", &gripper_roll_callback);
+
+        set_strategy(std::make_unique<strategy_circle>());
     }
 
     bool controller::update(void) {
@@ -39,6 +42,9 @@ namespace robotica {
         if (not_done) {
             world_model::instance().update();
             websocket::instance().update();
+
+            strategy->loop();
+
             main_window::instance().update();
         }
 
