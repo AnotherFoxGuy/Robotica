@@ -21,9 +21,7 @@ namespace web.Socket
         {
             ConnectionManager = connectionManager;
         }
-
-       
-
+        
         protected virtual void HandleMessage(string msg)
         {
             Console.Write($"|{msg}|");

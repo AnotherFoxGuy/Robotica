@@ -33,8 +33,7 @@ namespace web
                     RegisteredConnectors.Remove(e.Key)
             );
         }
-
-        public void SetRobot(BaseConnector controller, string robotName)
+        public void SetRobot(ControllerConnector controller, string robotName)
         {
             var robot = RegisteredConnectors.Single(r => r.Key == robotName).Value;
             if (!Connections.ContainsKey(controller.Name))
@@ -43,6 +42,15 @@ namespace web
                 Connections[controller.Name].Add(robot.Name);
         }
 
+        public void SetRobot(TelemetryConnector telemetry, string robotName)
+        {
+            var rob = RegisteredConnectors.Single(r => r.Key == robotName).Value;
+            if (!Connections.ContainsKey(rob.Name))
+                Connections.Add(rob.Name, new List<string> {telemetry.Name});
+            else if (!Connections[rob.Name].Contains(telemetry.Name))
+                Connections[rob.Name].Add(telemetry.Name);
+        }
+        
         public void SendData(BaseConnector from, string dat)
         {
             if (!Connections.ContainsKey(from.Name))
