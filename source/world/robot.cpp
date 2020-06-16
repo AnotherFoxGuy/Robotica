@@ -101,7 +101,7 @@ namespace robotica {
             (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
 
-            std::cout << "Measured weight: " << scale->getValue() << '\n';
+            //std::cout << "Measured weight: " << scale->getValue() << '\n';
         }
 
         return (result != -1);
