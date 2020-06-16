@@ -47,6 +47,7 @@ namespace robotica {
         // Updates the simulation. Returns false if the simulation has ended.
         bool update(void);
         double get_bearing_in_radian();
+        double get_bearing_in_degrees();
 
         // Camera output is a reference to the WeBots buffer and will be overridden on robot update!
         cv::Mat    get_camera_output      (side side) const;
