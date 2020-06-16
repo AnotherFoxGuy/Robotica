@@ -7,6 +7,7 @@
 #include <vision/iclassifier.hpp>
 #include <vision/parallax.hpp>
 #include <vision/mesher.hpp>
+#include <vision/partition_space.hpp>
 #include <world/robot.hpp>
 #include <window/3d/primitive.hpp>
 
@@ -45,7 +46,6 @@ namespace robotica {
 
         const std::vector<classified_object>& get_raw_object_list(void) const;
         const std::vector<world_object>& get_object_list(void) const;
-        const mesh& get_world_mesh(void) const;
 
 
         const cv::Mat& get_left_camera (void) const { return left;  }
@@ -53,11 +53,10 @@ namespace robotica {
         const cv::Mat& get_depth_map   (void) const { return depth; }
 
         const pointcloud& get_lidar_pointcloud(void) const { return lidar_pointcloud; }
-        const mesh& get_lidar_mesh(void) const { return lidar_mesh; }
+        const partition_space<vertex>& get_partition_space(void) const { return part_space; }
     private:
         std::vector<classified_object> update_raw_objects(void) const;
         std::vector<world_object> update_objects(const std::vector<world_object>& prev) const;
-        mesh update_mesh(void) const;
         cv::Mat update_depth_map(void);
 
 
@@ -70,8 +69,9 @@ namespace robotica {
             return robot::instance().get_lidar_pointcloud();
         }
 
-        mesh update_lidar_mesh(void) {
-            return create_mesh(lidar_pointcloud);
+        partition_space<vertex> update_partition_space(partition_space<vertex>&& old) {
+            old.set_data(lidar_pointcloud);
+            return std::move(old);
         }
 
 
@@ -93,12 +93,11 @@ namespace robotica {
 
         RBT_WM_CACHE_ITEM(update_raw_objects,               raw_objects);
         RBT_WM_CACHE_ITEM(update_objects,                   objects);
-        RBT_WM_CACHE_ITEM(update_mesh,                      world_mesh);
         RBT_WM_CACHE_ITEM(update_camera_data<side::LEFT>,   left);
         RBT_WM_CACHE_ITEM(update_camera_data<side::RIGHT>,  right);
         RBT_WM_CACHE_ITEM(update_depth_map,                 depth);
         RBT_WM_CACHE_ITEM(update_lidar_pointcloud,          lidar_pointcloud);
-        RBT_WM_CACHE_ITEM(update_lidar_mesh,                lidar_mesh);
+        RBT_WM_CACHE_ITEM(update_partition_space,           part_space);
 
 
         // cv::CascadeClassifier is unfortunately not const-correct.

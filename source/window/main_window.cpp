@@ -26,8 +26,9 @@ namespace robotica {
     }
 
 
-    main_window::main_window(void) : window("Settings"), lidar_view({ 750, 422 }), lidar_buffer(std::make_shared<buffer>()) {
+    main_window::main_window(void) : window("Settings"), lidar_view({ 750, 422 }), lidar_buffer(std::make_shared<buffer>()), path_buffer(std::make_shared<buffer>()) {
         lidar_view.get_program().add_buffer(lidar_buffer);
+        lidar_view.get_program().add_buffer(path_buffer);
         
 
         // Draw a grid to reduce disorientation.
@@ -55,16 +56,25 @@ namespace robotica {
 
     void main_window::on_frame_start(void) {
         auto& wm = world_model::instance();
+        const auto& pc = wm.get_lidar_pointcloud();
 
-        if (enable_meshing) {
-            lidar_buffer->set_data(wm.get_lidar_mesh());
-            lidar_buffer->set_mode(GL_TRIANGLES);
+        if (enable_graph) {
+            std::vector<line> lines;
+            for (const auto& nearby : wm.get_partition_space().nearby(pc[0].position, max_path_length, { true, false, false })) {
+                if (&nearby.get() != &pc[0]) lines.push_back({ pc[0].position, nearby.get().position });
+            }
+
+            path_buffer->set_data(lines);
         } else {
-            lidar_buffer->set_data(wm.get_lidar_pointcloud());
-            lidar_buffer->set_mode(GL_POINTS);
+            path_buffer->set_data(std::vector<vertex>{});
         }
+        path_buffer->set_color({ 0, 0, 1 });
+        path_buffer->set_mode(GL_LINES);
 
+        lidar_buffer->set_data(pc);
+        lidar_buffer->set_mode(GL_POINTS);
         lidar_buffer->set_color({ 1, 0, 0 });
+
         glPointSize(lidar_point_size);
     }
 
@@ -174,8 +184,10 @@ namespace robotica {
                 if (cloud.size() > 0) lidar_view.get_camera().move_to(cloud[0].position);
             }
 
-            if (ImGui::Button("Toggle Meshing", { 200, 30 })) {
-                enable_meshing = !enable_meshing;
+            ImGui::SameLine();
+
+            if (ImGui::Button("Toggle Paths", { 200, 30 })) {
+                enable_graph = !enable_graph;
             }
         }
 

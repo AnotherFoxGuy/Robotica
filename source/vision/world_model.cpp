@@ -13,7 +13,7 @@ namespace robotica {
     void world_model::update(void) {
         // Foreach cached variable, invalidate it.
         expand(
-            std::forward_as_tuple(raw_objects, objects, world_mesh, left, right, depth, lidar_pointcloud),
+            std::forward_as_tuple(raw_objects, objects, part_space, left, right, depth, lidar_pointcloud),
             [](auto& cached) { cached.set_valid(false); }
         );
     }
@@ -37,11 +37,6 @@ namespace robotica {
 
     const std::vector<world_model::world_object>& world_model::get_object_list(void) const {
         return objects;
-    }
-
-
-    const mesh& world_model::get_world_mesh(void) const {
-        return world_mesh;
     }
 
 
@@ -108,12 +103,6 @@ namespace robotica {
         // TODO: Keep old detections & merge them with new ones,
         // remove detections below confidence threshold.
         return detections;
-    }
-
-
-    mesh world_model::update_mesh(void) const {
-        // TODO: Get LIDAR mesh here!
-        return {};
     }
 
 

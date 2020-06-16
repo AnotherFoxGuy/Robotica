@@ -76,6 +76,7 @@ namespace robotica {
         // LIDAR Settings
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
         RBT_SETTING(LIDAR,      lidar_point_size,              5.0,     1,    10);
+        RBT_SETTING(LIDAR,      max_path_length,               5.0,     1,    10);
 
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
@@ -91,7 +92,7 @@ namespace robotica {
         RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1,    1);
 
         // Miscelanneous Settings
-        RBT_SETTING(MISC,     enable_meshing,     false, false, true);
+        RBT_SETTING(MISC,     enable_graph,     false, false, true);
     protected:
         void add_elements(void) override;
         void process_event(SDL_Event* e) override;
@@ -104,6 +105,6 @@ namespace robotica {
         gui_image left, right, depth, map;
 
         gui_scene lidar_view;
-        shared<buffer> lidar_buffer;
+        shared<buffer> lidar_buffer, path_buffer;
     };
 }
