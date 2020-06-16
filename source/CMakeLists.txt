@@ -9,6 +9,8 @@ project(RBTC)
 
 set(SOURCE_FILES
      main.cpp
+     dance/AudioFile.h
+     dance/MusicAnalyzer.{hpp,cpp}
      world/controller.{hpp,cpp}
      world/robot.{hpp,cpp}
      window/gui_image.hpp

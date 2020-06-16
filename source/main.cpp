@@ -1,3 +1,4 @@
+#include <dance/MusicAnalyzer.hpp>
 #include <world/controller.hpp>
 #include <ixwebsocket/IXNetSystem.h>
 #include <ixwebsocket/IXWebSocket.h>
