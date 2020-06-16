@@ -1,54 +1,41 @@
 #pragma once
 #include "dance/AudioFile.h"
+#include "window/imgui_plot/imgui_plot.hpp"
+
 class MusicAnalyzer
 {
     AudioFile<double> audioFile;
-
+    std::vector<float> data;
+    ImGui::PlotConfig conf;
   public:
-    bool loadfile() { return audioFile.load("E:/Robotica/music/wariors.wav"); }
-
-    void printInfo() { audioFile.printSummary(); }
-    void getSampels()
+    static MusicAnalyzer& instance(void);
+    bool loadfile() { return audioFile.load("E:/Robotica/music/50bpm.wav"); }
+    void view() { ImGui::Plot("plot", conf); }
+    void SetConfig()
     {
-        double prefiousSamples = 0;
-        bool goingDown = true;
+        //conf.values.xs = x_data; // this line is optional
+        conf.values.ys = &data.front();
+        conf.values.count = audioFile.getNumSamplesPerChannel();
+        conf.scale.min = -1;
+        conf.scale.max = 1;
+        conf.tooltip.show = true;
+        conf.tooltip.format = "x=%.2f, y=%.2f";
+        conf.grid_x.show = true;
+        conf.grid_y.show = true;
+        conf.frame_size = ImVec2(400, 400);
+        conf.line_thickness = 2.f;
+    }
+    void SetData()
+    {
         int channel = audioFile.getNumChannels();
-        int hz[2]{0, 0};
-        int maxhz = 0;
-        int minhz = 10000;
         const int numSamples = audioFile.getNumSamplesPerChannel();
         for (int j = 0; j < numSamples; j++)
         {
             for (int i = 0; i < channel; i++)
             {
-                double currentSample = audioFile.samples[i][j];
-                // printf("sample %f \n", currentSample);
-                if (prefiousSamples > currentSample && currentSample > 0 && goingDown)
-                {
-                    hz[i]++;
-                    goingDown = false;
-                }
-                if (prefiousSamples < 0 && currentSample > 0)
-                    goingDown = true;
-
-                prefiousSamples = currentSample;
-                //printf("%f \n", currentSample);
-            }
-            if (j % audioFile.getSampleRate() == 0 && j != 0)
-            {
-                for (int i = 0; i < audioFile.getNumChannels(); i++)
-                {
-                    printf("hz[%d]: %d ", i, hz[i]);
-                    if (hz[i] > maxhz)
-                        maxhz = hz[i];
-                    if (hz[i] < minhz)
-                        minhz = hz[i];
-
-                    hz[i] = 0;
-                }
-                printf("\n");
+                double currentSample = audioFile.samples[0][j];
+                data.push_back(currentSample);
             }
         }
-        printf("minhz: %d maxhz: %d", minhz, maxhz);
     }
 };

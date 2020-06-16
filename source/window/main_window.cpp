@@ -15,6 +15,8 @@
 #include <string>
 #include <iostream>
 
+#include "dance/MusicAnalyzer.hpp"
+
 
 namespace robotica {
     using namespace std::string_literals;
@@ -114,10 +116,13 @@ namespace robotica {
                 });
             }
         }
-
+        if (ImGui::CollapsingHeader("music analysis"))
+        {
+            MusicAnalyzer::instance().view();
+        }
         ImGui::EndGroup();
         ImGui::NextColumn();
-
+      
 
         // Robot Controls
         ImGui::BeginGroup();
