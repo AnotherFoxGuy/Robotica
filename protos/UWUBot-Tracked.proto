@@ -5,9 +5,23 @@
 # Extracted from: C:\Users\rolan\Desktop\RobotStuff\uwu_robot\urdf\uwu_robot.urdf
 
 PROTO UWUBot-Tracked [
-  field  SFVec3f     translation  0 0 0
-  field  SFRotation  rotation     0 0.707107 0.707107 0
-  field  SFString    controller   "<extern>"
+  field SFVec3f            translation                  0 0 0
+  field SFRotation         rotation                     0 0.707107 0.707107 0
+  field SFString           controller                   "<extern>"
+
+# Crane
+  field SFFloat            basis_kraan_minPos              0                      # (-inf, inf) or [-pi, pi]
+  field SFFloat            basis_kraan_maxPos              6.28                      # (-inf, inf) or [-pi, pi]
+  field SFFloat            korte_arm_minPos             -3                      # (-inf, inf) or [-pi, pi]
+  field SFFloat            korte_arm_maxPos             0                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            lange_arm_minPos             0                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            lange_arm_maxPos             6                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            grijper_pitch_minPos         -1.5708                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            grijper_pitch_maxPos         1.5708                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            grijper_roll_minPos          0                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            grijper_roll_maxPos          0                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            grijper_openclose_minPos     0                        # (-inf, inf) or [-pi, pi]
+  field SFFloat            grijper_openclose_maxPos     0                        # (-inf, inf) or [-pi, pi]
 
 # Camera
   field SFFloat            camera_fieldOfView           0.84                     # Is `Camera.fieldOfView`.
@@ -334,6 +348,8 @@ PROTO UWUBot-Tracked [
         device [
           RotationalMotor {
             name "basis_kraan"
+		minPosition IS basis_kraan_minPos
+		maxPosition IS basis_kraan_maxPos
           }
           PositionSensor {
             name "basis_kraan_sensor"
@@ -381,6 +397,8 @@ PROTO UWUBot-Tracked [
               device [
                 RotationalMotor {
                   name "korte_arm"
+				  minPosition IS korte_arm_minPos
+				  maxPosition IS korte_arm_maxPos
                 }
                 PositionSensor {
                   name "korte_arm_sensor"
@@ -428,6 +446,8 @@ PROTO UWUBot-Tracked [
                     device [
                       RotationalMotor {
                         name "lange_arm"
+						minPosition IS lange_arm_minPos
+				        maxPosition IS lange_arm_maxPos
                       }
                       PositionSensor {
                         name "lange_arm_sensor"
@@ -475,6 +495,8 @@ PROTO UWUBot-Tracked [
                           device [
                             RotationalMotor {
                               name "arm_grijper"
+							  minPosition IS grijper_pitch_minPos
+							  maxPosition IS grijper_pitch_maxPos
                             }
                             PositionSensor {
                               name "arm_grijper_sensor"
@@ -522,6 +544,8 @@ PROTO UWUBot-Tracked [
                                 device [
                                   RotationalMotor {
                                     name "tandwielkast_grijper"
+									minPosition IS grijper_roll_minPos
+							        maxPosition IS grijper_roll_maxPos
                                   }
                                   PositionSensor {
                                     name "tandwielkast_grijper_sensor"
@@ -569,6 +593,8 @@ PROTO UWUBot-Tracked [
                                       device [
                                         RotationalMotor {
                                           name "grijper_rechts"
+										  minPosition IS grijper_openclose_minPos
+										  maxPosition IS grijper_openclose_maxPos
                                         }
                                         PositionSensor {
                                           name "grijper_rechts_sensor"
@@ -626,6 +652,8 @@ PROTO UWUBot-Tracked [
                                       device [
                                         RotationalMotor {
                                           name "grijper_links"
+										  minPosition IS grijper_openclose_maxPos
+										  maxPosition IS grijper_openclose_minPos
                                         }
                                         PositionSensor {
                                           name "grijper_links_sensor"
