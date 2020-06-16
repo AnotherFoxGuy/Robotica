@@ -69,6 +69,7 @@ namespace robotica {
         webots::TouchSensor* scale;
 
         int timestep;
+        int frames;
         float eye_distance, eye_height;
         bool manually_destroyed = false;
     };

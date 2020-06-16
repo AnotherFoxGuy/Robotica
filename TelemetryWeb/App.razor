@@ -14,9 +14,9 @@
             <div class="card-body">
                 <button type="button" class="btn btn-outline-primary dropdown-toggle" @onclick="update_robot_list">Robot keuze</button>
                 <div id="select_robot">
-                    @foreach (var r in robots)
+                    @foreach (var r in _robots)
                     {
-                        <button type="button" @onclick="select_robot(r.name)"> @r.name </button>
+                        <button type="button" @onclick="@(() => select_robot(r.name))"> @r.name </button>
                     }
                 </div>
             </div>
@@ -24,10 +24,17 @@
     </div>
     <div class="card-deck">
         <div class="card">
-            <div class="card-header">Line Chart</div>
+            <div class="card-header">Weight</div>
             <div class="card-body">
-                <button @onclick=test>test</button>
-                <Sparkline InputData="@string.Join(",", _weightHistory)" GenerateText="true" SegmentWidth="15"></Sparkline>
+                <Sparkline InputData="@string.Join(",", _weightHistory)" GenerateText="true" SegmentWidth="40"></Sparkline>
+            </div>
+        </div>
+    </div>
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-header">compass</div>
+            <div class="card-body">
+                <Sparkline InputData="@string.Join(",", _compassHistory)" GenerateText="true" SegmentWidth="40"></Sparkline>
             </div>
         </div>
     </div>
@@ -39,11 +46,14 @@
     {
         public string name { get; set; }
     }
-    
+
     private ClientWebSocket _ws;
 
-    List<float> _weightHistory = new List<float>();
-    List<RobCont> robots = new List<RobCont>();
+    List<string> _weightHistory = new List<string>();
+    List<string> _compassHistory = new List<string>();
+
+
+    List<RobCont> _robots = new List<RobCont>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,16 +86,18 @@
 
     void SendData(string command, string dat = null)
     {
-        var buf = Encoding.Default.GetBytes(dat == null ? $"{command}" : $"{command}|{dat}");
+        var s = dat == null ? $"{command}" : $"{command}|{dat}";
+        var buf = Encoding.Default.GetBytes(s);
         _ws.SendAsync(buf, WebSocketMessageType.Text, true, CancellationToken.None);
     }
 
-    void checkweightHistory()
+    void checkHistory()
     {
         if (_weightHistory.Count > 100)
-        {
             _weightHistory.RemoveAt(0);
-        }
+
+        if (_compassHistory.Count > 100)
+            _compassHistory.RemoveAt(0);
     }
 
     private void HandleMessage(string msg)
@@ -93,7 +105,7 @@
         Console.WriteLine(msg);
         if (msg.Contains("{"))
         {
-            robots = JsonSerializer.Deserialize<List<RobCont>>(msg);
+            _robots = JsonSerializer.Deserialize<List<RobCont>>(msg);
         }
         else
         {
@@ -105,11 +117,13 @@
                 switch (cmd)
                 {
                     case "weight":
-                        _weightHistory.Add(float.Parse(dat));
-                        checkweightHistory();
+                        _weightHistory.Add(dat);
+                        break;
+                    case "compass":
+                        _compassHistory.Add(dat);
                         break;
                     default:
-                        Console.WriteLine($"[ControllerConnector] Unknown Command: {cmd}");
+                        Console.WriteLine($"Unknown Command: {cmd}");
                         break;
                 }
             }
@@ -119,12 +133,7 @@
             }
         }
         StateHasChanged();
-    }
-
-    private void test()
-    {
-        checkweightHistory();
-        _weightHistory.Add(RandomNumberGenerator.GetInt32(10, 50));
+        checkHistory();
     }
 
     private void update_robot_list()
@@ -133,10 +142,10 @@
         SendData("ls");
     }
 
-    private EventCallback select_robot(string s)
+    private void select_robot(string s)
     {
+        Console.WriteLine("Select " + s);
         SendData("set", s);
-        return EventCallback.Empty;
     }
 
 }

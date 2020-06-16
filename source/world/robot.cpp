@@ -1,5 +1,6 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
+#include <comms/websocket.hpp>
 
 
 namespace robotica {
@@ -96,12 +97,19 @@ namespace robotica {
 
         int result;        
         if (result = rbt->step(timestep); result != -1) {
+            frames++;
             for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
 
             (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
 
-            //std::cout << "Measured weight: " << scale->getValue() << '\n';
+            if(frames > 5){
+                frames = 0;
+                websocket::instance().sendData("weight", scale->getValue());
+                websocket::instance().sendData("compass", get_bearing_in_degrees());
+            }
+
+            //std::cout << "Measured weight: " <<  << '\n';
         }
 
         return (result != -1);
