@@ -1,24 +1,18 @@
 using System;
-using System.Net.WebSockets;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Http;
 
 namespace web.Socket
 {
     /// <summary>
-    /// ws://localhost:5000/ws/Controller
+    ///     ws://localhost:5000/ws/Controller
     /// </summary>
     public class ControllerConnector : BaseConnector
     {
-        public RobotConnector Robot;
-
         public ControllerConnector(ConnectionManager connectionManager) : base(connectionManager)
         {
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="msg"></param>
         protected override void HandleMessage(string msg)
@@ -31,25 +25,18 @@ namespace web.Socket
                 switch (cmd)
                 {
                     case "register":
+                        Name = dat;
                         ConnectionManager.Register(this);
                         break;
                     case "ls":
-                        ConnectionManager.CheckClients();
-                        var robs = ConnectionManager.Robots;
+                        var robs = ConnectionManager.Robots.Values;
                         SendData(JsonSerializer.Serialize(robs));
                         break;
                     case "set":
-                        var rob = ConnectionManager.Robots.Find(r => r.Name == dat);
-                        if (rob == null)
-                            SendData($"{dat} not found");
-                        else
-                            Robot = rob;
+                        ConnectionManager.SetRobot(this, dat);
                         break;
                     case "cmd":
-                        if (Robot == null)
-                            SendData("ERROR Robot not set!");
-                        else
-                            Robot.SendData(dat);
+                        ConnectionManager.SendData(this, dat);
                         break;
                     default:
                         SendData($"Unknown Command: {cmd}");

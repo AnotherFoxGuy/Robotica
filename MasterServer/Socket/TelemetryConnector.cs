@@ -1,0 +1,56 @@
+using System;
+using System.Text.Json;
+
+namespace web.Socket
+{
+    /// <summary>
+    ///     ws://localhost:5000/ws/Telemetry
+    /// </summary>
+    public class TelemetryConnector : BaseConnector
+    {
+        public TelemetryConnector(ConnectionManager connectionManager) : base(connectionManager)
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="msg"></param>
+        protected override void HandleMessage(string msg)
+        {
+            try
+            {
+                var d = msg.Split('|');
+                var cmd = d[0];
+                var dat = d.Length != 1 ? d[1] : "NOT SET";
+                switch (cmd)
+                {
+                    case "register":
+                        Name = dat;
+                        ConnectionManager.Register(this);
+                        break;
+                    case "ls":
+                        var robs = ConnectionManager.Robots.Values;
+                        SendData(JsonSerializer.Serialize(robs));
+                        break;
+                    case "set":
+                        ConnectionManager.SetRobot(this, dat);
+                        break;
+                    default:
+                        SendData($"Unknown Command: {cmd}");
+                        Console.WriteLine($"[TelemetryConnector] Unknown Command: {cmd}");
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                SendData($"ERROR: {e.Message}");
+            }
+        }
+
+        protected override void OnClose()
+        {
+            ConnectionManager.Deregister(this);
+        }
+    }
+}

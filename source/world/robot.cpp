@@ -49,7 +49,12 @@ namespace robotica {
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);
-        scale->enable(1000);
+        scale->enable(100);
+
+        compass->enable(timestep);
+
+        lidar->enable(timestep);
+        lidar->enablePointCloud();
 
         // Make sure to disconnect from webots on quick exit as well.
         std::at_quick_exit([]() {
@@ -79,19 +84,26 @@ namespace robotica {
     bool robot::update(void) {
         auto& window = main_window::instance();
 
+        std::array components {
+            std::tuple { arm_base,      &window.arm_base,      (float) pi           },
+            std::tuple { arm_short,     &window.arm_short,     (float) pi           },
+            std::tuple { arm_long,      &window.arm_long,      (float) pi           },
+            std::tuple { gripper_left,  &window.gripper,       (float) pi           },
+            std::tuple { gripper_right, &window.gripper,       (float) -pi          },
+            std::tuple { gripper_roll,  &window.gripper_roll,  (float) pi           },
+            std::tuple { gripper_pitch, &window.gripper_pitch, (float) pi           }
+        };
+
         int result;        
         if (result = rbt->step(timestep); result != -1) {
-            (*left_motor).setVelocity(-(window.left_motor * window.speed * 0.1));
-            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.1));
-            (*arm_base).setPosition(window.arm_base * 3.14);
-            (*arm_short).setPosition(window.arm_short * 3.14);
-            (*arm_long).setPosition(window.arm_long * 3.14);
-            (*gripper_left).setPosition(window.gripper * 3.14);
-            (*gripper_right).setPosition(-window.gripper * 3.14);
-            (*gripper_roll).setPosition(window.gripper_roll * 3.14);
-            (*gripper_pitch).setPosition(window.gripper_pitch * 3.14);
-            printf("%f", scale->getValue());
+            for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
+
+            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
+
+            std::cout << "Measured weight: " << scale->getValue() << '\n';
         }
+
         return (result != -1);
     }
 
@@ -101,6 +113,9 @@ namespace robotica {
 
         cv::Mat image = cv::Mat(cv::Size(camera->getWidth(), camera->getHeight()), CV_8UC4);
         image.data = (uchar*) camera->getImage();
+
+        // WeBots will sometimes not send any data because its stupid.
+        if (image.empty()) return cv::imread(ROOT_DIR "/assets/debug_image.png");
 
         cv::cvtColor(image, image, cv::COLOR_BGRA2BGR);
 
@@ -128,5 +143,21 @@ namespace robotica {
 
     float robot::get_camera_baseline(void) const {
         return 0.065;    // Hardcoded value from PROTO file. Supervisor mode could also obtain this.
+    }
+
+
+    pointcloud robot::get_lidar_pointcloud(void) const {
+        auto& settings = main_window::instance();
+        std::size_t points = lidar->getNumberOfPoints();
+
+        pointcloud pc;
+        pc.reserve(points);
+
+        for (std::size_t i = 0; i < points; ++i) {
+            const auto& pt = lidar->getPointCloud()[i];
+            pc.push_back({ glm::vec3{ pt.x * settings.lidar_scale_factor, pt.y * settings.lidar_scale_factor, pt.z * settings.lidar_scale_factor } });
+        }
+
+        return pc;
     }
 }

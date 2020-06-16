@@ -3,6 +3,7 @@
 #include <utility/typedefs.hpp>
 #include <vision/converters.hpp>
 #include <window/main_window.hpp>
+#include <window/3d/primitive.hpp>
 
 #include <glm/glm.hpp>
 #include <opencv2/opencv.hpp>
@@ -17,6 +18,7 @@
 
 #include <iostream>
 #include <string_view>
+#include <vector>
 
 
 namespace robotica {
@@ -33,10 +35,10 @@ namespace robotica {
         const static inline std::string motor_names[9] = {"left_motor", "right_motor", "basis_kraan", "korte_arm", "lange_arm", "grijper_links", "grijper_rechts", "tandwielkast_grijper", "arm_grijper" };
 
         const static inline std::string compass_name = "compass";
-        const static inline std::string lidar_name   = "lidar_sensor";
-        const static inline std::string speaker_name   = "speaker";
-        const static inline std::string display_name   = "emoticon_display";
-        const static inline std::string scale_name   = "scale";
+        const static inline std::string lidar_name = "lidar_sensor";
+        const static inline std::string speaker_name = "speaker";
+        const static inline std::string display_name = "display";
+        const static inline std::string scale_name = "scale";
 
         robot(int timestep);
         ~robot(void);
@@ -57,6 +59,7 @@ namespace robotica {
         webots::ImageRef* emotes;
         webots::Display* display;
 
+        pointcloud get_lidar_pointcloud(void) const;
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;
