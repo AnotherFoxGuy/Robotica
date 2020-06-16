@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.Json;
 
 namespace web.Socket
@@ -27,9 +28,12 @@ namespace web.Socket
                     case "register":
                         Name = dat;
                         ConnectionManager.Register(this);
+                        SendData($"Registered {Name}");
                         break;
                     case "ls":
-                        var robs = ConnectionManager.Robots.Values;
+                        var robs = ConnectionManager.RegisteredConnectors.Values.Where(c =>
+                            c.GetType() == typeof(RobotConnector)
+                        );
                         SendData(JsonSerializer.Serialize(robs));
                         break;
                     case "set":

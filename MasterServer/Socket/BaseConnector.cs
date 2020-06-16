@@ -10,6 +10,9 @@ namespace web.Socket
 {
     public class BaseConnector
     {
+        public string Name { get; set; }
+        public string Type => GetType().ToString();
+        
         internal readonly ConnectionManager ConnectionManager;
         private HttpContext _context;
         public WebSocket WebSocket;
@@ -19,7 +22,7 @@ namespace web.Socket
             ConnectionManager = connectionManager;
         }
 
-        public string Name { get; set; }
+       
 
         protected virtual void HandleMessage(string msg)
         {
