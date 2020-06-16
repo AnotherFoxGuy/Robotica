@@ -297,7 +297,7 @@
 
     function init() {
         output = document.getElementById("output");
-        websocket = new WebSocket("ws://localhost:5000/ws/Controller");
+        websocket = new WebSocket("ws://vps.anotherfoxguy.com:5000/ws/Controller");
         websocket.onopen = function (evt) {
             onOpen(evt)
         };
