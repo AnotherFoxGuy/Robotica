@@ -8,8 +8,9 @@ class MusicAnalyzer
     std::vector<float> data;
     ImGui::PlotConfig conf;
   public:
-    bool loadfile() { return audioFile.load("E:/Robotica/music/wariors.wav"); }
-
+    static MusicAnalyzer& instance(void);
+    bool loadfile() { return audioFile.load("E:/Robotica/music/50bpm.wav"); }
+    void view() { ImGui::Plot("plot", conf); }
     void SetConfig()
     {
         //conf.values.xs = x_data; // this line is optional
@@ -24,7 +25,7 @@ class MusicAnalyzer
         conf.frame_size = ImVec2(400, 400);
         conf.line_thickness = 2.f;
     }
-    void getSampels()
+    void SetData()
     {
         int channel = audioFile.getNumChannels();
         const int numSamples = audioFile.getNumSamplesPerChannel();
@@ -32,7 +33,7 @@ class MusicAnalyzer
         {
             for (int i = 0; i < channel; i++)
             {
-                double currentSample = audioFile.samples[i][j];
+                double currentSample = audioFile.samples[0][j];
                 data.push_back(currentSample);
             }
         }

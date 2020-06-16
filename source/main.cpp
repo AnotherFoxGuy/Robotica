@@ -7,11 +7,11 @@ int main(int argc, char** argv) {
     ix::initNetSystem();
 
     //EASY_PROFILER_ENABLE;
-    MusicAnalyzer music;
-    if(music.loadfile())
+    
+    if(MusicAnalyzer::instance().loadfile())
     {
-        music.printInfo();
-       music.getSampels();
+        MusicAnalyzer::instance().SetData();
+        MusicAnalyzer::instance().SetConfig();
     }
     
 
