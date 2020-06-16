@@ -25,11 +25,11 @@ PROTO UWUBot-Tracked [
   field SFFloat            compass_resolution           -1                       # {-1, [0, inf)}
   
 # Lidar
-  field SFFloat            lidar_tiltAngle              0.04                     # [-pi/2, pi/2]
-  field SFInt32            lidar_horizontalResolution   128                      # [0, inf)
+  field SFFloat            lidar_tiltAngle              0.3                      # [-pi/2, pi/2]
+  field SFInt32            lidar_horizontalResolution   32                       # [0, inf)
   field SFFloat            lidar_fieldOfView            1.5708                   # [0, 2*pi]
-  field SFFloat            lidar_verticalFieldOfView    0.4                      # [0, pi]
-  field SFInt32            lidar_numberOfLayers         24                       # [0, inf)
+  field SFFloat            lidar_verticalFieldOfView    0.75                     # [0, pi]
+  field SFInt32            lidar_numberOfLayers         32                       # [0, inf)
   field SFFloat            lidar_near                   0.01                     # [0, inf)
   field SFFloat            lidar_minRange               0.01                     # [near, inf)
   field SFFloat            lidar_maxRange               2.5                      # [minRange, inf)

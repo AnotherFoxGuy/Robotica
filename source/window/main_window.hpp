@@ -76,7 +76,11 @@ namespace robotica {
         // LIDAR Settings
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
         RBT_SETTING(LIDAR,      lidar_point_size,              5.0,     1,    10);
-        RBT_SETTING(LIDAR,      max_path_length,               5.0,     1,    10);
+        RBT_SETTING(LIDAR,      lidar_inverse_discard_ratio,   64,      1,    64);
+        RBT_SETTING(LIDAR,      lidar_nearby_suppression,      1.15,    0,    2);
+        RBT_SETTING(LIDAR,      max_path_length,               1.0,     0,    32);
+        RBT_SETTING(LIDAR,      max_path_slope,                1.0,     0,    10);
+        RBT_SETTING(LIDAR,      max_path_edges,                10,      1,    32);
 
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);

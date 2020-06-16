@@ -56,24 +56,29 @@ namespace robotica {
 
     void main_window::on_frame_start(void) {
         auto& wm = world_model::instance();
-        const auto& pc = wm.get_lidar_pointcloud();
 
         if (enable_graph) {
             std::vector<line> lines;
-            for (const auto& nearby : wm.get_partition_space().nearby(pc[0].position, max_path_length, { true, false, false })) {
-                if (&nearby.get() != &pc[0]) lines.push_back({ pc[0].position, nearby.get().position });
+            for (const auto& edge : wm.get_pathfinding_graph().edges) {
+                lines.push_back({
+                    *edge.a,
+                    *edge.b
+                });
             }
 
             path_buffer->set_data(lines);
         } else {
             path_buffer->set_data(std::vector<vertex>{});
         }
+
         path_buffer->set_color({ 0, 0, 1 });
         path_buffer->set_mode(GL_LINES);
 
-        lidar_buffer->set_data(pc);
+
+        lidar_buffer->set_data(wm.get_lidar_pointcloud());
         lidar_buffer->set_mode(GL_POINTS);
         lidar_buffer->set_color({ 1, 0, 0 });
+
 
         glPointSize(lidar_point_size);
     }

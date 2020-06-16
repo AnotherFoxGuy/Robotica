@@ -13,7 +13,7 @@ namespace robotica {
     void world_model::update(void) {
         // Foreach cached variable, invalidate it.
         expand(
-            std::forward_as_tuple(raw_objects, objects, part_space, left, right, depth, lidar_pointcloud),
+            std::forward_as_tuple(raw_objects, objects, part_space, left, right, depth, lidar_pointcloud, pathfinding_graph),
             [](auto& cached) { cached.set_valid(false); }
         );
     }

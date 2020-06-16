@@ -2,6 +2,7 @@
 
 #include <utility/typedefs.hpp>
 #include <utility/utility.hpp>
+#include <utility/math.hpp>
 
 #include <glm/glm.hpp>
 
@@ -79,17 +80,12 @@ namespace robotica {
             glm::uvec3 minchunk = to_chunk_pos(min), maxchunk = to_chunk_pos(max);
 
 
-            auto dist_squared = [](const auto& a, const auto& b) {
-                auto delta = b - a;
-                return glm::dot(delta, delta);
-            };
-
             std::vector<std::reference_wrapper<const T>> result;
             for (std::size_t x = minchunk.x; x <= maxchunk.x; ++x) {
                 for (std::size_t y = minchunk.y; y <= maxchunk.y; ++y) {
                     for (std::size_t z = minchunk.z; z <= maxchunk.z; ++z) {
                         const auto& v = (*data)[flatten_chunk({ x, y, z })];
-                        for (const auto* e : v) if (dist_squared(where, Getter(*e)) < (radius * radius)) result.push_back(std::cref(*e));
+                        for (const auto* e : v) if (distance_squared(where, Getter(*e)) < (radius * radius)) result.push_back(std::cref(*e));
                     }
                 }
             }

@@ -1,6 +1,8 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
 
+#include <algorithm>
+
 
 namespace robotica {
     robot& robot::instance(void) {
@@ -153,9 +155,19 @@ namespace robotica {
         pointcloud pc;
         pc.reserve(points);
 
+        // We discard some points here, so the data is easier to work with for the pathfinding algorithm.
+        // Normally we'd just change the sensor, but WeBots doesn't allow us to set the number of points per scanline below some arbitrary limit.
         for (std::size_t i = 0; i < points; ++i) {
-            const auto& pt = lidar->getPointCloud()[i];
-            pc.push_back({ glm::vec3{ pt.x * settings.lidar_scale_factor, pt.y * settings.lidar_scale_factor, pt.z * settings.lidar_scale_factor } });
+            int keep_every_nth_point = settings.lidar_inverse_discard_ratio - std::clamp<float>(
+                (float(i) / float(points)) * (settings.lidar_inverse_discard_ratio - 1) * settings.lidar_nearby_suppression, 
+                0, 
+                settings.lidar_inverse_discard_ratio - 1
+            );
+
+            if (i % keep_every_nth_point == 0) {
+                const auto& pt = lidar->getPointCloud()[i];
+                pc.push_back({ glm::vec3{ pt.x * settings.lidar_scale_factor, pt.y * settings.lidar_scale_factor, pt.z * settings.lidar_scale_factor } });
+            }
         }
 
         return pc;

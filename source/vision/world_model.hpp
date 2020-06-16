@@ -8,6 +8,7 @@
 #include <vision/parallax.hpp>
 #include <vision/mesher.hpp>
 #include <vision/partition_space.hpp>
+#include <vision/weighted_graph.hpp>
 #include <world/robot.hpp>
 #include <window/3d/primitive.hpp>
 
@@ -54,6 +55,7 @@ namespace robotica {
 
         const pointcloud& get_lidar_pointcloud(void) const { return lidar_pointcloud; }
         const partition_space<vertex>& get_partition_space(void) const { return part_space; }
+        const weighted_graph& get_pathfinding_graph(void) const { return pathfinding_graph; }
     private:
         std::vector<classified_object> update_raw_objects(void) const;
         std::vector<world_object> update_objects(const std::vector<world_object>& prev) const;
@@ -72,6 +74,10 @@ namespace robotica {
         partition_space<vertex> update_partition_space(partition_space<vertex>&& old) {
             old.set_data(lidar_pointcloud);
             return std::move(old);
+        }
+
+        weighted_graph update_pathfinding_graph(void) {
+            return create_graph(part_space, &(*lidar_pointcloud)[0]);
         }
 
 
@@ -98,6 +104,7 @@ namespace robotica {
         RBT_WM_CACHE_ITEM(update_depth_map,                 depth);
         RBT_WM_CACHE_ITEM(update_lidar_pointcloud,          lidar_pointcloud);
         RBT_WM_CACHE_ITEM(update_partition_space,           part_space);
+        RBT_WM_CACHE_ITEM(update_pathfinding_graph,         pathfinding_graph);
 
 
         // cv::CascadeClassifier is unfortunately not const-correct.
