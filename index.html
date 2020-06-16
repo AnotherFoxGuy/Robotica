@@ -77,8 +77,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper open/close</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_slider">
-                    <p>Waarde: <span id="gripper_span"></span> graden</p>
+                    <input type="range" min="-0.05" max="0.7" step="0.01" value="-0.05" class="slider" id="gripper_slider">
+                    <p>Waarde: <span id="gripper_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -87,8 +87,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper pitch</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_pitch_slider">
-                    <p>Waarde: <span id="gripper_pitch_span"></span> graden</p>
+                    <input type="range" min="-1.57" max="1.57" step="0.01" value="0" class="slider" id="gripper_pitch_slider">
+                    <p>Waarde: <span id="gripper_pitch_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -97,8 +97,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper roll</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_roll_slider">
-                    <p>Waarde: <span id="gripper_roll_span"></span> graden</p>
+                    <input type="range" min="-3.14" max="3.14" step="0.01" value="0" class="slider" id="gripper_roll_slider">
+                    <p>Waarde: <span id="gripper_roll_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -107,8 +107,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Arm long</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="arm_long_slider">
-                    <p>Waarde: <span id="arm_long_span"></span> graden</p>
+                    <input type="range" min="0" max="6" step="0.01" value="0" class="slider" id="arm_long_slider">
+                    <p>Waarde: <span id="arm_long_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -117,8 +117,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Arm short</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="arm_short_slider">
-                    <p>Waarde: <span id="arm_short_span"></span> graden</p>
+                    <input type="range" min="-3.00" max="0" step="0.01" value="0" class="slider" id="arm_short_slider">
+                    <p>Waarde: <span id="arm_short_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -127,8 +127,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Rotate arm base</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="rotate_arm_slider">
-                    <p>Waarde: <span id="rotate_arm_span"></span> graden</p>
+                    <input type="range" min="0" max="6.28" step="0.01" value="0" class="slider" id="rotate_arm_slider">
+                    <p>Waarde: <span id="rotate_arm_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -154,14 +154,13 @@
         <button type="button" onclick="doSend('moonmaze')" class="btn btn-outline-primary autonoom">Moonmaze</button>
         <button type="button" onclick="doSend('plant_the_flag')" class="btn btn-outline-primary">Plant the Flag</button>
         <div class="dropup">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Select
-                card
+            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Select card
             </button>
             <div class="dropdown-menu">
-                <a onclick="doSend('harten')" class="dropdown-item">Harten</a>
-                <a onclick="doSend('klaver')" class="dropdown-item">Klaver</a>
-                <a onclick="doSend('ruiten')" class="dropdown-item">Ruiten</a>
-                <a onclick="doSend('schopen')" class="dropdown-item">Schopen</a>
+                <a onclick="doSend('harten')" class="dropdown-item" href="#">Harten</a>
+                <a onclick="doSend('klaver')" class="dropdown-item" href="#">Klaver</a>
+                <a onclick="doSend('ruiten')" class="dropdown-item" href="#">Ruiten</a>
+                <a onclick="doSend('schopen')" class="dropdown-item" href="#">Schopen</a>
             </div>
         </div>
     </div>
@@ -173,9 +172,7 @@
 </div>
 
 <div class="container p-3 my-3 border">
-    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"
-            onclick="update_robot_list()">Robot keuze
-    </button>
+    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" onclick="update_robot_list()">Robot keuze</button>
     <div class="dropdown-menu" id="select_robot">
     </div>
 </div>
@@ -345,13 +342,13 @@
     }
 
     function doSend(message) {
-        if (websocket.readyState != WebSocket.OPEN)
+        if(websocket.readyState != WebSocket.OPEN)
             return
         websocket.send("cmd|" + message);
     }
 
     function update_robot_list() {
-        if (websocket.readyState != WebSocket.OPEN)
+        if(websocket.readyState != WebSocket.OPEN)
             return
         websocket.send("ls")
     }
