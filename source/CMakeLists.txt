@@ -8,6 +8,9 @@ project(RBTC)
 ####################################################################################################
 
 set(SOURCE_FILES
+
+     dance/AudioFile.h
+     dance/MusicAnalyzer.{hpp,cpp}
      comms/websocket.hpp
      comms/joystick_callback.hpp
      comms/gripper_callback.hpp
@@ -30,6 +33,7 @@ set(SOURCE_FILES
      window/gui_image.hpp
      window/world_image.hpp
      window/imgui_bindings.{hpp,cpp}
+     window/imgui_plot/imgui_plot.{hpp,cpp}
      window/3d/buffer.hpp
      window/3d/primitive.hpp
      window/3d/program.hpp
@@ -65,7 +69,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 add_compile_definitions("ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX SDL_MAIN_HANDLED)
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC USING_EASY_PROFILER)
+target_compile_definitions(${PROJECT_NAME} PUBLIC USING_EASY_PROFILER IMGUI_DEFINE_MATH_OPERATORS)
 target_link_libraries(${PROJECT_NAME} PRIVATE CONAN_PKG::easy_profiler)
 
 cotire(${PROJECT_NAME})

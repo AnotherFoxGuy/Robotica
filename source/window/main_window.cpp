@@ -15,6 +15,8 @@
 #include <string>
 #include <iostream>
 
+#include "dance/MusicAnalyzer.hpp"
+
 
 namespace robotica {
     using namespace std::string_literals;
@@ -153,6 +155,11 @@ namespace robotica {
             }
         }
 
+        if (ImGui::CollapsingHeader("music analysis"))
+        {
+            MusicAnalyzer::instance().view();
+        }
+
         // LIDAR Preview Group
         if (ImGui::CollapsingHeader("LIDAR PREVIEW")) {
             lidar_view.show();
@@ -170,10 +177,9 @@ namespace robotica {
             }
         }
 
-
         ImGui::EndGroup();
         ImGui::NextColumn();
-
+      
 
         // Robot Controls
         ImGui::BeginGroup();
@@ -298,5 +304,4 @@ namespace robotica {
             if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_E]) c.move(camera::absolute_up    * -speed);
         }
     }
-
 }
