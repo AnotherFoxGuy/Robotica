@@ -1,5 +1,6 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
+#include <string_view>
 
 
 namespace robotica {
@@ -7,7 +8,6 @@ namespace robotica {
         static robot i { controller::instance().get_timestep() };
         return i;
     }
-
 
     robot::robot(int timestep) :
         rbt(new webots::Robot()),
@@ -71,12 +71,11 @@ namespace robotica {
     }
 
 
-    double robot::get_bearing_in_degrees() {
+    double robot::get_bearing_in_radian() {
         const double *north = compass->getValues();
-        double rad = atan2(north[0], north[1]);
-        double bearing = (rad - 1.5708) / M_PI * 180.0;
+        double bearing = atan2(north[0], north[2]);
         if (bearing < 0.0)
-            bearing = bearing + 360.0;
+            bearing = bearing + 6.28319;
         return bearing;
     }
 
@@ -94,19 +93,20 @@ namespace robotica {
             std::tuple { gripper_pitch, &window.gripper_pitch, (float) 1           }
         };
 
-        int result;        
-        if (result = rbt->step(timestep); result != -1) {
+        int result = rbt->step(timestep);
+        if (result != -1) {
             for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
 
             (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
 
-            //std::cout << "Measured weight: " << scale->getValue() << '\n';
+            // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
+            //std::cout << "Measured weight: " << (scale->getValue() / 3.73) - 0.01 << '\n';
+            //std::cout << "Direction: " << get_bearing_in_radian() << '\n';
         }
 
         return (result != -1);
     }
-
 
     cv::Mat robot::get_camera_output(side side) const {
         auto& camera = (side == side::LEFT) ? left_camera : right_camera;

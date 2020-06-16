@@ -34,8 +34,8 @@ PROTO UWUBot-Tracked [
   
 # Compass 
   field SFBool             compass_xAxis                TRUE                     # {TRUE, FALSE}
-  field SFBool             compass_yAxis                TRUE                     # {TRUE, FALSE}
-  field SFBool             compass_zAxis                FALSE                    # {TRUE, FALSE}
+  field SFBool             compass_yAxis                FALSE                    # {TRUE, FALSE}
+  field SFBool             compass_zAxis                TRUE                     # {TRUE, FALSE}
   field SFFloat            compass_resolution           -1                       # {-1, [0, inf)}
   
 # Lidar
