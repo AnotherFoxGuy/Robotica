@@ -13,11 +13,9 @@ namespace robotica {
             main_window::instance().speed = 35;
         }
 
-
         void exit(void) override {
             main_window::instance().speed = 0;
         }
-
 
         void loop(void) override {
             if (ticks % 1000 == 0) {

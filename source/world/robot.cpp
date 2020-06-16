@@ -1,5 +1,6 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
+#include <string_view>
 
 
 namespace robotica {
@@ -7,7 +8,6 @@ namespace robotica {
         static robot i { controller::instance().get_timestep() };
         return i;
     }
-
 
     robot::robot(int timestep) :
         rbt(new webots::Robot()),
@@ -93,15 +93,16 @@ namespace robotica {
             std::tuple { gripper_pitch, &window.gripper_pitch, (float) 1           }
         };
 
-        int result;        
-        if (result = rbt->step(timestep); result != -1) {
+        int result = rbt->step(timestep);
+        if (result != -1) {
             for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
 
             (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
 
-            //std::cout << "Measured weight: " << scale->getValue() << '\n';
-            std::cout << "Direction: " << get_bearing_in_radian() << '\n';
+            // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
+            //std::cout << "Measured weight: " << (scale->getValue() / 3.73) - 0.01 << '\n';
+            //std::cout << "Direction: " << get_bearing_in_radian() << '\n';
         }
 
         return (result != -1);
@@ -159,14 +160,4 @@ namespace robotica {
 
         return pc;
     }
-    void robot::rotate_robot_in_radian(float radian) {
-        // motor->setPosition()  //how far the motor will turn before it stops (in meters)
-        // motor->setVelocity()  //motor speed
-
-        auto start = get_bearing_in_radian();
-        auto destination = start + radian;
-
-
-    }
-
 }

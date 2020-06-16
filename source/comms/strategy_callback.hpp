@@ -1,14 +1,14 @@
 #pragma once
 
-#include <window/main_window.hpp>
+#include <world/controller.hpp>
 #include <world/robot.hpp>
+#include <world/strategy/strategy_playingcards.hpp>
 
 #include <iostream>
 #include <string>
 
 namespace robotica
 {
-const static int autonomousSpeed = 30;
 inline auto get_regex(std::string_view argString)
 {
     const static std::regex rgx{R"REGEX((-?\d+))REGEX"};
@@ -35,6 +35,8 @@ inline void manual_callback(std::string_view argString)
 inline void moonVision_callback(std::string_view argString)
 {
     auto args = get_regex(argString);
+    auto& controller = controller::instance();
+    controller.set_strategy(std::make_unique<strategy_playingcards>(args[0]));
 
     std::cout << "Robot mode was changed to moon vision.\n";
 }
@@ -48,17 +50,11 @@ inline void moonWalk_callback(std::string_view argString)
 {
     auto args = get_regex(argString);
 
-    auto& settings = main_window::instance();
-    settings.speed = autonomousSpeed;
-
     std::cout << "Robot mode was changed to moon walk.\n";
 }
 inline void moonSurvival_callback(std::string_view argString)
 {
     auto args = get_regex(argString);
-
-    auto& settings = main_window::instance();
-    settings.speed = autonomousSpeed;
 
     std::cout << "Robot mode was changed to moon survival.\n";
 }
@@ -66,8 +62,6 @@ inline void moonMaze_callback(std::string_view argString)
 {
     auto args = get_regex(argString);
 
-    auto& settings = main_window::instance();
-    settings.speed = autonomousSpeed;
 
     std::cout << "Robot mode was changed to moon maze.\n";
 }
