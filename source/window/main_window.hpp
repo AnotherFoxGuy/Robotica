@@ -81,12 +81,12 @@ namespace robotica {
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
         RBT_SETTING(ROBOT,    speed,                1,   30,    100);
 
-        RBT_SETTING(ARM,      arm_base,           0.0,   -1,    1);
-        RBT_SETTING(ARM,      arm_short,          0.0,   -1,    1);
-        RBT_SETTING(ARM,      arm_long,           0.0,   -1,    1);
-        RBT_SETTING(ARM,      gripper,            0.0,   -1,    1);
-        RBT_SETTING(ARM,      gripper_roll,       0.0,   -1,    1);
-        RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1,    1);
+        RBT_SETTING(ARM,      arm_base,           0.0,    0,        6.28);
+        RBT_SETTING(ARM,      arm_short,          0.0,   -3,        0);
+        RBT_SETTING(ARM,      arm_long,           0.0,    0,        6);
+        RBT_SETTING(ARM,      gripper,            -0.05,    -0.05,        0.7);
+        RBT_SETTING(ARM,      gripper_roll,       0.0,   -3.14,     3.14);
+        RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1.5708,   1.5708);
 
     protected:
         void add_elements(void) override;
