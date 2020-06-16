@@ -1,0 +1,6 @@
+[submodule "lib/Blazor-Sparkline"]
+	path = lib/Blazor-Sparkline
+	url = https://github.com/Misfits-Rebels-Outcasts/Blazor-Sparkline.git
+[submodule "lib/Blazor-Charts"]
+	path = lib/Blazor-Charts
+	url = https://github.com/Misfits-Rebels-Outcasts/Blazor-Charts.git

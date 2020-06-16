@@ -1,36 +1,142 @@
+@using Blazored.LocalStorage
 @using System.Net.WebSockets
+@using System.Security.Cryptography
 @using System.Text
+@using System.Text.Json
 @using System.Threading
+@using WebAssemblyMan;
+@inject ISyncLocalStorageService LocalStorage
 
-<p>@_lastdata</p>
+<div class="container-fluid">
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-header">Select robot</div>
+            <div class="card-body">
+                <button type="button" class="btn btn-outline-primary dropdown-toggle" @onclick="update_robot_list">Robot keuze</button>
+                <div id="select_robot">
+                    @foreach (var r in robots)
+                    {
+                        <button type="button" @onclick="select_robot(r.name)"> @r.name </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-header">Line Chart</div>
+            <div class="card-body">
+                <button @onclick=test>test</button>
+                <Sparkline InputData="@string.Join(",", _weightHistory)" GenerateText="true" SegmentWidth="15"></Sparkline>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+
+    class RobCont
+    {
+        public string name { get; set; }
+    }
+    
     private ClientWebSocket _ws;
 
-    string _lastdata = "hello";
+    List<float> _weightHistory = new List<float>();
+    List<RobCont> robots = new List<RobCont>();
 
     protected override async Task OnInitializedAsync()
     {
+        string name;
+        if (string.IsNullOrEmpty(LocalStorage.GetItem<string>("name")))
+        {
+            name = Guid.NewGuid().ToString();
+            LocalStorage.SetItem("name", name);
+        }
+        else
+        {
+            name = LocalStorage.GetItem<string>("name");
+        }
+
         _ws = new ClientWebSocket();
-        await _ws.ConnectAsync(new Uri("ws://vps.anotherfoxguy.com:5000/ws/Robot"), CancellationToken.None);
-        
-        var buf = Encoding.Default.GetBytes("register|testclient");
-        await _ws.SendAsync(buf, WebSocketMessageType.Text, true, CancellationToken.None);
+        await _ws.ConnectAsync(new Uri("ws://vps.anotherfoxguy.com:5000/ws/Telemetry"), CancellationToken.None);
+
+        SendData("register", name);
 
         var buffer = new byte[1024 * 4];
         var result = await _ws.ReceiveAsync(buffer, CancellationToken.None);
         while (!result.CloseStatus.HasValue)
         {
-            _lastdata = Encoding.Default.GetString(buffer.Take(result.Count).ToArray());
-            StateHasChanged();
+            HandleMessage(Encoding.Default.GetString(buffer.Take(result.Count).ToArray()).ToLower());
             result = await _ws.ReceiveAsync(buffer, CancellationToken.None);
         }
         await _ws.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription,
             CancellationToken.None);
     }
 
-    private void IncrementCount()
+    void SendData(string command, string dat = null)
     {
+        var buf = Encoding.Default.GetBytes(dat == null ? $"{command}" : $"{command}|{dat}");
+        _ws.SendAsync(buf, WebSocketMessageType.Text, true, CancellationToken.None);
+    }
+
+    void checkweightHistory()
+    {
+        if (_weightHistory.Count > 100)
+        {
+            _weightHistory.RemoveAt(0);
+        }
+    }
+
+    private void HandleMessage(string msg)
+    {
+        Console.WriteLine(msg);
+        if (msg.Contains("{"))
+        {
+            robots = JsonSerializer.Deserialize<List<RobCont>>(msg);
+        }
+        else
+        {
+            try
+            {
+                var d = msg.Split('=');
+                var cmd = d[0];
+                var dat = d.Length != 1 ? d[1] : "NOT SET";
+                switch (cmd)
+                {
+                    case "weight":
+                        _weightHistory.Add(float.Parse(dat));
+                        checkweightHistory();
+                        break;
+                    default:
+                        Console.WriteLine($"[ControllerConnector] Unknown Command: {cmd}");
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+        StateHasChanged();
+    }
+
+    private void test()
+    {
+        checkweightHistory();
+        _weightHistory.Add(RandomNumberGenerator.GetInt32(10, 50));
+    }
+
+    private void update_robot_list()
+    {
+        Console.WriteLine("update_robot_list");
+        SendData("ls");
+    }
+
+    private EventCallback select_robot(string s)
+    {
+        SendData("set", s);
+        return EventCallback.Empty;
     }
 
 }

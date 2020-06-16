@@ -6,10 +6,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="2.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" PrivateAssets="all" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
+	
+	<ProjectReference Include="../lib/Blazor-Charts/DonutChart/DonutChart.csproj" />
+    <ProjectReference Include="../lib/Blazor-Charts/PieChart/PieChart.csproj" />
+    <ProjectReference Include="../lib/Blazor-Charts/HorizontalBarChart/HorizontalBarChart.csproj" />
+    <ProjectReference Include="../lib/Blazor-Charts/VerticalBarChart/VerticalBarChart.csproj" />
+    <ProjectReference Include="../lib/Blazor-Charts/LineChart/LineChart.csproj" />
+
+    <ProjectReference Include="../lib/Blazor-Sparkline/Sparklines/Sparklines.csproj" />
+    <ProjectReference Include="../lib/Blazor-Sparkline/ColumnBars/ColumnBars.csproj" />
+    <ProjectReference Include="../lib/Blazor-Sparkline/MiniPie/MiniPie.csproj" />
+    <ProjectReference Include="../lib/Blazor-Sparkline/WinLoss/WinLoss.csproj" />
+    <ProjectReference Include="../lib/Blazor-Sparkline/BulletBars/BulletBars.csproj" />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -24,5 +38,6 @@
   <ItemGroup>
     <Folder Include="Pages" />
   </ItemGroup>
+  
 
 </Project>
