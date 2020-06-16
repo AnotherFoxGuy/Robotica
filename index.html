@@ -154,12 +154,13 @@
         <button type="button" onclick="doSend('moonmaze')" class="btn btn-outline-primary autonoom">Moonmaze</button>
         <button type="button" onclick="doSend('plant_the_flag')" class="btn btn-outline-primary">Plant the Flag</button>
         <div class="dropup">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Select card
+            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Select
+                card
             </button>
             <div class="dropdown-menu">
-                <a onclick="doSend('harten')" class="dropdown-item" >Harten</a>
-                <a onclick="doSend('klaver')" class="dropdown-item" >Klaver</a>
-                <a onclick="doSend('ruiten')" class="dropdown-item" >Ruiten</a>
+                <a onclick="doSend('harten')" class="dropdown-item">Harten</a>
+                <a onclick="doSend('klaver')" class="dropdown-item">Klaver</a>
+                <a onclick="doSend('ruiten')" class="dropdown-item">Ruiten</a>
                 <a onclick="doSend('schopen')" class="dropdown-item">Schopen</a>
             </div>
         </div>
@@ -172,7 +173,9 @@
 </div>
 
 <div class="container p-3 my-3 border">
-    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" onclick="update_robot_list()">Robot keuze</button>
+    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"
+            onclick="update_robot_list()">Robot keuze
+    </button>
     <div class="dropdown-menu" id="select_robot">
     </div>
 </div>
@@ -294,7 +297,7 @@
 
     function init() {
         output = document.getElementById("output");
-        websocket = new WebSocket("ws://vps.anotherfoxguy.com:5000/ws/Controller");
+        websocket = new WebSocket("ws://localhost:5000/ws/Controller");
         websocket.onopen = function (evt) {
             onOpen(evt)
         };
@@ -313,6 +316,12 @@
 
     function onOpen(evt) {
         console.log("CONNECTED");
+        let name = localStorage.getItem("name");
+        if (name == null) {
+            name = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+            localStorage.setItem("name", name);
+        }
+        websocket.send("register|" + name);
     }
 
     function onClose(evt) {
@@ -321,8 +330,7 @@
 
     function onMessage(evt) {
         console.log('RESPONSE: ' + evt.data);
-        if (evt.data.includes("ERROR")) {
-        } else {
+        if (evt.data.includes("{")) {
             var data = JSON.parse(evt.data)
             $("#select_robot").empty();
             for (let i = 0; i < data.length; i++) {
@@ -337,13 +345,13 @@
     }
 
     function doSend(message) {
-        if(websocket.readyState != WebSocket.OPEN)
+        if (websocket.readyState != WebSocket.OPEN)
             return
         websocket.send("cmd|" + message);
     }
 
     function update_robot_list() {
-        if(websocket.readyState != WebSocket.OPEN)
+        if (websocket.readyState != WebSocket.OPEN)
             return
         websocket.send("ls")
     }
