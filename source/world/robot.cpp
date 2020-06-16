@@ -85,13 +85,13 @@ namespace robotica {
         auto& window = main_window::instance();
 
         std::array components {
-            std::tuple { arm_base,      &window.arm_base,      (float) pi           },
-            std::tuple { arm_short,     &window.arm_short,     (float) pi           },
-            std::tuple { arm_long,      &window.arm_long,      (float) pi           },
-            std::tuple { gripper_left,  &window.gripper,       (float) pi           },
-            std::tuple { gripper_right, &window.gripper,       (float) -pi          },
-            std::tuple { gripper_roll,  &window.gripper_roll,  (float) pi           },
-            std::tuple { gripper_pitch, &window.gripper_pitch, (float) pi           }
+            std::tuple { arm_base,      &window.arm_base,      (float) 1           },
+            std::tuple { arm_short,     &window.arm_short,     (float) 1           },
+            std::tuple { arm_long,      &window.arm_long,      (float) 1           },
+            std::tuple { gripper_left,  &window.gripper,       (float) 1           },
+            std::tuple { gripper_right, &window.gripper,       (float) -1          },
+            std::tuple { gripper_roll,  &window.gripper_roll,  (float) 1           },
+            std::tuple { gripper_pitch, &window.gripper_pitch, (float) 1           }
         };
 
         int result;        
