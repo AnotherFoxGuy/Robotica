@@ -33,7 +33,7 @@ namespace robotica {
         websocket::instance().add_callback("gripper_pitch", &gripper_pitch_callback);
         websocket::instance().add_callback("gripper_roll", &gripper_roll_callback);
 
-        set_strategy(std::make_unique<strategy_circle>());
+        //set_strategy(std::make_unique<strategy_circle>());
     }
 
     bool controller::update(void) {
@@ -43,7 +43,7 @@ namespace robotica {
             world_model::instance().update();
             websocket::instance().update();
 
-            strategy->loop();
+            //strategy->loop();
 
             main_window::instance().update();
         }

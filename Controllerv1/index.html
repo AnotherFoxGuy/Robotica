@@ -313,6 +313,12 @@
 
     function onOpen(evt) {
         console.log("CONNECTED");
+        let name = localStorage.getItem("name");
+        if (name == null) {
+            name = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+            localStorage.setItem("name", name);
+        }
+        websocket.send("register|" + name);
     }
 
     function onClose(evt) {
@@ -321,8 +327,7 @@
 
     function onMessage(evt) {
         console.log('RESPONSE: ' + evt.data);
-        if (evt.data.includes("ERROR")) {
-        } else {
+        if (evt.data.includes("{")) {
             var data = JSON.parse(evt.data)
             $("#select_robot").empty();
             for (let i = 0; i < data.length; i++) {
