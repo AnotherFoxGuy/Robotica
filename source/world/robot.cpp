@@ -106,8 +106,8 @@ namespace robotica {
         if (result != -1) {
             for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
 
-            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
-            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
+            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.0025));
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.0025));
 
 			websocket::instance().sendData("weight", scale->getValue());
 			websocket::instance().sendData("compass", get_bearing_in_degrees());

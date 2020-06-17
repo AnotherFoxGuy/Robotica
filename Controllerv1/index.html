@@ -199,7 +199,7 @@
     var joy = new JoyStick('joyDiv', joyparam);
     //send_joystick_value
     setInterval(function () {
-        if (joy.GetX() != previous_x || joy.GetY() != previous_y) {
+        if (joy.GetX() !== previous_x || joy.GetY() !== previous_y) {
             send_joystick_value(joy.GetX(), joy.GetY())
             previous_x = joy.GetX();
             previous_y = joy.GetY();
