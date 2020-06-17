@@ -101,4 +101,12 @@ namespace robotica {
     template <typename... Ts> inline std::string concat(const Ts&... ts) {
         return (std::string(ts) + ...);
     }
+
+
+    // Not defined by GLM
+    template <typename T, std::size_t N, typename S> constexpr inline glm::vec<N, T> operator/(const glm::vec<N, T>& v, const S& s) {
+        glm::vec<N, T> result = v;
+        for (std::size_t i = 0; i < N; ++i) result[i] /= s;
+        return result;
+    }
 } // namespace robotica

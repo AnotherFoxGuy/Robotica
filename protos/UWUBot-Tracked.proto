@@ -39,14 +39,14 @@ PROTO UWUBot-Tracked [
   field SFFloat            compass_resolution           -1                       # {-1, [0, inf)}
   
 # Lidar
-  field SFFloat            lidar_tiltAngle              0.0                      # [-pi/2, pi/2]
-  field SFInt32            lidar_horizontalResolution   512                      # [0, inf)
+  field SFFloat            lidar_tiltAngle              0.3                      # [-pi/2, pi/2]
+  field SFInt32            lidar_horizontalResolution   32                       # [0, inf)
   field SFFloat            lidar_fieldOfView            1.5708                   # [0, 2*pi]
-  field SFFloat            lidar_verticalFieldOfView    0.2                      # [0, pi]
-  field SFInt32            lidar_numberOfLayers         4                        # [0, inf)
+  field SFFloat            lidar_verticalFieldOfView    0.75                     # [0, pi]
+  field SFInt32            lidar_numberOfLayers         32                       # [0, inf)
   field SFFloat            lidar_near                   0.01                     # [0, inf)
   field SFFloat            lidar_minRange               0.01                     # [near, inf)
-  field SFFloat            lidar_maxRange               1.0                      # [minRange, inf)
+  field SFFloat            lidar_maxRange               2.5                      # [minRange, inf)
   field SFString           lidar_type                   "fixed"                  # {"fixed", "rotating"}
   field SFBool             lidar_spherical              TRUE                     # {TRUE, FALSE}
   field SFFloat            lidar_noise                  0.0                      # [0, inf)
@@ -55,6 +55,7 @@ PROTO UWUBot-Tracked [
   field SFFloat            lidar_minFrequency           1                        # [0, maxFrequency)
   field SFFloat            lidar_maxFrequency           25                       # [minFrequency, inf)
   field SFNode             lidar_rotatingHead           NULL                     # {Solid (or derived), PROTO}
+  field SFVec3f            lidar_translation            0 -0.05 -0.15
     
 # Tracks
   #field SFRotation         track_rotation              0 0 0 0            # 0.707107 0 0.707107 3.14159
@@ -897,6 +898,7 @@ PROTO UWUBot-Tracked [
     }
     DEF LIDAR Lidar {
       name "lidar_sensor"
+      translation IS lidar_translation
       tiltAngle IS lidar_tiltAngle
       horizontalResolution IS lidar_horizontalResolution
       fieldOfView IS lidar_fieldOfView
