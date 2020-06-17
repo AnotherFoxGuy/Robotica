@@ -1,6 +1,7 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
 #include <string_view>
+#include <comms/websocket.hpp>
 
 
 namespace robotica {
@@ -70,6 +71,14 @@ namespace robotica {
         if (!manually_destroyed) delete rbt;
     }
 
+    double robot::get_bearing_in_degrees() {
+        const double *north = compass->getValues();
+        double rad = atan2(north[0], north[2]);
+        double bearing = (rad - 1.5708) / M_PI * 180.0;
+        if (bearing < 0.0)
+            bearing = bearing + 360.0;
+        return bearing;
+    }
 
     double robot::get_bearing_in_radian() {
         const double *north = compass->getValues();
@@ -100,6 +109,8 @@ namespace robotica {
             (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
 
+			websocket::instance().sendData("weight", scale->getValue());
+			websocket::instance().sendData("compass", get_bearing_in_degrees());
             // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
             //std::cout << "Measured weight: " << (scale->getValue() / 3.73) - 0.01 << '\n';
             //std::cout << "Direction: " << get_bearing_in_radian() << '\n';

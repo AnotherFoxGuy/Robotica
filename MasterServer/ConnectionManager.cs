@@ -53,9 +53,7 @@ namespace web
         
         public void SendData(BaseConnector from, string dat)
         {
-            if (!Connections.ContainsKey(from.Name))
-                from.SendData("ERROR Robot not set!");
-            else
+            if (Connections.ContainsKey(from.Name))
                 Connections[from.Name].ForEach(r => RegisteredConnectors[r].SendData(dat));
         }
     }

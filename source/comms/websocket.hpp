@@ -73,6 +73,15 @@ namespace robotica {
             queue.clear();
         }
 
+        void sendData(const std::string& kaas, float worst)
+        {
+            if(ws.getReadyState() != ix::ReadyState::Open)
+                return;
+
+            std::stringstream msg;
+            msg << "data|" << kaas << "=" << worst;
+            ws.sendText(msg.str());
+        }
 
         void add_callback(const std::string& key, message_handler&& fn) {
             std::lock_guard lock { mtx };
