@@ -6,6 +6,7 @@
 #include <window/3d/gui_scene.hpp>
 #include <utility/traits.hpp>
 #include <utility/typedefs.hpp>
+#include <utility/math.hpp>
 
 #include <opencv2/core.hpp>
 #include <SDL2/SDL_events.h>
@@ -16,10 +17,6 @@
 
 #define RBT_SETTING(group, name, default, min, max) setting<decltype(default), container_t> name { *this, #name, default, min, max, (int) group }
 
-#define EMOTICON_WIDTH 14
-#define EMOTICON_HEIGHT 14
-#define EMOTICONS_NUMBER_X 5
-#define EMOTICONS_NUMBER_Y 11
 
 namespace robotica {
     const inline fs::path snapshot_folder = ROOT_DIR "/snapshots/";
@@ -27,12 +24,18 @@ namespace robotica {
 
     class main_window : public window, public setting_storage<main_window> {
     public:
+        constexpr static inline int EMOTICON_WIDTH     = 14;
+        constexpr static inline int EMOTICON_HEIGHT    = 14;
+        constexpr static inline int EMOTICONS_NUMBER_X = 5;
+        constexpr static inline int EMOTICONS_NUMBER_Y = 11;
+
+
         static main_window& instance(void);
         main_window(void);
 
         // To add a new setting category, just create a new entry in this enum, then add it to collapsable_groups.
         // Then you can use RBT_SETTING to add settings to the category.
-        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT, ARM, LIDAR };
+        enum setting_groups { PARALLAX, CLASSIFIER, ROBOT, ARM, LIDAR, MISC };
         constexpr static auto collapsable_groups = { PARALLAX, CLASSIFIER, ARM, LIDAR };
 
         // Parallax Processing Settings
@@ -74,20 +77,26 @@ namespace robotica {
         // LIDAR Settings
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
         RBT_SETTING(LIDAR,      lidar_point_size,              5.0,     1,    10);
-
+        RBT_SETTING(LIDAR,      lidar_inverse_discard_ratio,   64,      1,    64);
+        RBT_SETTING(LIDAR,      lidar_nearby_suppression,      1.15,    0,    2);
+        RBT_SETTING(LIDAR,      max_path_length,               1.0,     0,    32);
+        RBT_SETTING(LIDAR,      max_path_slope,                1.0,     0,    10);
+        RBT_SETTING(LIDAR,      max_path_edges,                10,      1,    32);
 
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
-        RBT_SETTING(ROBOT,    speed,                100,    1,    100);
+        RBT_SETTING(ROBOT,    speed,              100,    1,    100);
 
-        RBT_SETTING(ARM,      arm_base,           0.0,    0,        6.28);
-        RBT_SETTING(ARM,      arm_short,          0.0,   -3,        0);
-        RBT_SETTING(ARM,      arm_long,           0.0,    0,        6);
-        RBT_SETTING(ARM,      gripper,            -0.05,    -0.05,        0.7);
-        RBT_SETTING(ARM,      gripper_roll,       0.0,   -3.14,     3.14);
-        RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1.5708,   1.5708);
+        RBT_SETTING(ARM,      arm_base,           0.0,       0,        2 * pi);
+        RBT_SETTING(ARM,      arm_short,          0.0,      -3,        0);
+        RBT_SETTING(ARM,      arm_long,           0.0,       0,        6);
+        RBT_SETTING(ARM,      gripper,            -0.05,    -0.05,     0.7);
+        RBT_SETTING(ARM,      gripper_roll,       0.0,      -pi,       +pi);
+        RBT_SETTING(ARM,      gripper_pitch,      0.0,      -pi / 2,   +pi / 2);
 
+        // Miscelanneous Settings
+        RBT_SETTING(MISC,     enable_graph,     false, false, true);
     protected:
         void add_elements(void) override;
         void process_event(SDL_Event* e) override;
@@ -100,6 +109,6 @@ namespace robotica {
         gui_image left, right, depth, map;
 
         gui_scene lidar_view;
-        shared<buffer> lidar_buffer;
+        shared<buffer> lidar_buffer, path_buffer;
     };
 }

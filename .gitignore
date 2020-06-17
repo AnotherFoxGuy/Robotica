@@ -38,3 +38,4 @@ doc/
 traindata/
 web/
 *.cache
+TelemetryWeb/obj/
