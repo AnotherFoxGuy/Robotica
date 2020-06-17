@@ -12,10 +12,6 @@ namespace robotica
 {
 inline void start_callback(std::string_view argString)
 {
-//    std::cout << "1 " << argString << '\n';
-//    const static std::regex rgx { R"REGEX((-?\d+))REGEX" };
-//    auto args = regex_groups(std::string(argString), rgx);
-//    std::cout << "2 " << args[0] << '\n';
     auto& controller = controller::instance();
 
     if (argString == "manual")

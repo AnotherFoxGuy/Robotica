@@ -106,16 +106,14 @@ namespace robotica {
 
         int result = rbt->step(timestep);
         if (result != -1) {
-            for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
+            for (auto& [component, value, factor] : components) (*component).setPosition(factor * (**value));
 
             (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.0025));
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.0025));
 
-			websocket::instance().sendData("weight", scale->getValue());
-			websocket::instance().sendData("compass", get_bearing_in_degrees());
             // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
-            //std::cout << "Measured weight: " << (scale->getValue() / 3.73) - 0.01 << '\n';
-            //std::cout << "Direction: " << get_bearing_in_radian() << '\n';
+			websocket::instance().sendData("weight", (scale->getValue() / 3.73) - 0.01);
+			websocket::instance().sendData("compass", get_bearing_in_degrees());
         }
 
         return (result != -1);
