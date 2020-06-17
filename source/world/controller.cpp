@@ -31,9 +31,10 @@ namespace robotica {
         websocket::instance().add_callback("gripper", &gripper_callback);
         websocket::instance().add_callback("gripper_pitch", &gripper_pitch_callback);
         websocket::instance().add_callback("gripper_roll", &gripper_roll_callback);
-        websocket::instance().add_callback("moonVision", &moonVision_callback);
+        websocket::instance().add_callback("start_strategy", &start_callback);
+        websocket::instance().add_callback("stop_strategy", &stop_callback);
 
-        set_strategy(std::make_unique<strategy_playingcards>("Hearts"));
+        set_strategy(std::make_unique<istrategy>());
     }
 
     bool controller::update(void) {
