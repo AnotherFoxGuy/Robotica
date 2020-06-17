@@ -77,8 +77,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper open/close</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_slider">
-                    <p>Waarde: <span id="gripper_span"></span> graden</p>
+                    <input type="range" min="-0.05" max="0.7" step="0.01" value="-0.05" class="slider" id="gripper_slider">
+                    <p>Waarde: <span id="gripper_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -87,8 +87,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper pitch</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_pitch_slider">
-                    <p>Waarde: <span id="gripper_pitch_span"></span> graden</p>
+                    <input type="range" min="-1.57" max="1.57" step="0.01" value="0" class="slider" id="gripper_pitch_slider">
+                    <p>Waarde: <span id="gripper_pitch_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -97,8 +97,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper roll</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="gripper_roll_slider">
-                    <p>Waarde: <span id="gripper_roll_span"></span> graden</p>
+                    <input type="range" min="-3.14" max="3.14" step="0.01" value="0" class="slider" id="gripper_roll_slider">
+                    <p>Waarde: <span id="gripper_roll_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -107,8 +107,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Arm long</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="arm_long_slider">
-                    <p>Waarde: <span id="arm_long_span"></span> graden</p>
+                    <input type="range" min="0" max="6" step="0.01" value="0" class="slider" id="arm_long_slider">
+                    <p>Waarde: <span id="arm_long_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -117,8 +117,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Arm short</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="arm_short_slider">
-                    <p>Waarde: <span id="arm_short_span"></span> graden</p>
+                    <input type="range" min="-3.00" max="0" step="0.01" value="0" class="slider" id="arm_short_slider">
+                    <p>Waarde: <span id="arm_short_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -127,8 +127,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Rotate arm base</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-90" max="90" value="0" class="slider" id="rotate_arm_slider">
-                    <p>Waarde: <span id="rotate_arm_span"></span> graden</p>
+                    <input type="range" min="0" max="6.28" step="0.01" value="0" class="slider" id="rotate_arm_slider">
+                    <p>Waarde: <span id="rotate_arm_span"></span> radiaal</p>
                 </div>
             </div>
         </div>
@@ -146,7 +146,7 @@
 <div class="container p-3 my-3 border">
     <div class="btn-group btn-block" id="switchmodes">
         <button type="button" onclick="doSend('manual')" class="btn btn-outline-primary active">Manual</button>
-        <button type="button" onclick="doSend('moonrace')" class="btn btn-outline-primary">Moonrace</button>
+        <button type="button" onclick="doSend('moonvision')" class="btn btn-outline-primary">Moonvision</button>
         <button type="button" onclick="doSend('moondance')" class="btn btn-outline-primary">Moondance</button>
         <button type="button" onclick="doSend('moonwalk')" class="btn btn-outline-primary autonoom">Moonwalk</button>
         <button type="button" onclick="doSend('moonsurvival')" class="btn btn-outline-primary autonoom">Moonsurvival
@@ -154,12 +154,11 @@
         <button type="button" onclick="doSend('moonmaze')" class="btn btn-outline-primary autonoom">Moonmaze</button>
         <button type="button" onclick="doSend('plant_the_flag')" class="btn btn-outline-primary">Plant the Flag</button>
         <div class="dropup">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Cart
-                Search
+            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Select card
             </button>
             <div class="dropdown-menu">
                 <a onclick="doSend('harten')" class="dropdown-item" href="#">Harten</a>
-                <a onclick="doSend('klaver')" class="dropdown-item" href="#">Klaver</a>
+                <a onclick="doSend('klavers')" class="dropdown-item" href="#">Klaver</a>
                 <a onclick="doSend('ruiten')" class="dropdown-item" href="#">Ruiten</a>
                 <a onclick="doSend('schopen')" class="dropdown-item" href="#">Schopen</a>
             </div>
@@ -200,7 +199,7 @@
     var joy = new JoyStick('joyDiv', joyparam);
     //send_joystick_value
     setInterval(function () {
-        if (joy.GetX() != previous_x || joy.GetY() != previous_y) {
+        if (joy.GetX() !== previous_x || joy.GetY() !== previous_y) {
             send_joystick_value(joy.GetX(), joy.GetY())
             previous_x = joy.GetX();
             previous_y = joy.GetY();
@@ -314,6 +313,12 @@
 
     function onOpen(evt) {
         console.log("CONNECTED");
+        let name = localStorage.getItem("name");
+        if (name == null) {
+            name = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+            localStorage.setItem("name", name);
+        }
+        websocket.send("register|" + name);
     }
 
     function onClose(evt) {
@@ -322,8 +327,7 @@
 
     function onMessage(evt) {
         console.log('RESPONSE: ' + evt.data);
-        if (evt.data.includes("ERROR")) {
-        } else {
+        if (evt.data.includes("{")) {
             var data = JSON.parse(evt.data)
             $("#select_robot").empty();
             for (let i = 0; i < data.length; i++) {

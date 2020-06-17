@@ -1,5 +1,7 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
+#include <string_view>
+#include <comms/websocket.hpp>
 
 #include <algorithm>
 
@@ -9,7 +11,6 @@ namespace robotica {
         static robot i { controller::instance().get_timestep() };
         return i;
     }
-
 
     robot::robot(int timestep) :
         rbt(new webots::Robot()),
@@ -72,13 +73,20 @@ namespace robotica {
         if (!manually_destroyed) delete rbt;
     }
 
-
     double robot::get_bearing_in_degrees() {
         const double *north = compass->getValues();
-        double rad = atan2(north[0], north[1]);
+        double rad = atan2(north[0], north[2]);
         double bearing = (rad - 1.5708) / M_PI * 180.0;
         if (bearing < 0.0)
             bearing = bearing + 360.0;
+        return bearing;
+    }
+
+    double robot::get_bearing_in_radian() {
+        const double *north = compass->getValues();
+        double bearing = atan2(north[0], north[2]);
+        if (bearing < 0.0)
+            bearing = bearing + 6.28319;
         return bearing;
     }
 
@@ -87,28 +95,31 @@ namespace robotica {
         auto& window = main_window::instance();
 
         std::array components {
-            std::tuple { arm_base,      &window.arm_base,      (float) pi  },
-            std::tuple { arm_short,     &window.arm_short,     (float) pi  },
-            std::tuple { arm_long,      &window.arm_long,      (float) pi  },
-            std::tuple { gripper_left,  &window.gripper,       (float) pi  },
-            std::tuple { gripper_right, &window.gripper,       (float) -pi },
-            std::tuple { gripper_roll,  &window.gripper_roll,  (float) pi  },
-            std::tuple { gripper_pitch, &window.gripper_pitch, (float) pi  }
+            std::tuple { arm_base,      &window.arm_base,      (float)  1 },
+            std::tuple { arm_short,     &window.arm_short,     (float)  1 },
+            std::tuple { arm_long,      &window.arm_long,      (float)  1 },
+            std::tuple { gripper_left,  &window.gripper,       (float)  1 },
+            std::tuple { gripper_right, &window.gripper,       (float) -1 },
+            std::tuple { gripper_roll,  &window.gripper_roll,  (float)  1 },
+            std::tuple { gripper_pitch, &window.gripper_pitch, (float)  1 }
         };
 
-        int result;        
-        if (result = rbt->step(timestep); result != -1) {
+        int result = rbt->step(timestep);
+        if (result != -1) {
             for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
 
-            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
-            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
+            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.0025));
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.0025));
 
-            std::cout << "Measured weight: " << scale->getValue() << '\n';
+			websocket::instance().sendData("weight", scale->getValue());
+			websocket::instance().sendData("compass", get_bearing_in_degrees());
+            // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
+            //std::cout << "Measured weight: " << (scale->getValue() / 3.73) - 0.01 << '\n';
+            //std::cout << "Direction: " << get_bearing_in_radian() << '\n';
         }
 
         return (result != -1);
     }
-
 
     cv::Mat robot::get_camera_output(side side) const {
         auto& camera = (side == side::LEFT) ? left_camera : right_camera;

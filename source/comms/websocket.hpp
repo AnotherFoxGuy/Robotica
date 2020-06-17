@@ -37,14 +37,25 @@ namespace robotica {
 
                 if (msg->type == ix::WebSocketMessageType::Open) {
                     std::cout << "Connection with server established!\n";
-                } else if (msg->type == ix::WebSocketMessageType::Message) {
+
+#ifdef _MSC_VER
+                    std::string name = std::getenv("USERNAME");
+#else
+                    std::string name = std::getenv("USER");
+#endif
+                    name = concat("UwUBot (", name, ")");
+                    ws.sendText(std::string("register|") + name);
+                }
+                else if (msg->type == ix::WebSocketMessageType::Message) {
                     const static std::regex rgx{ R"REGEX((\w+)\((.+)\))REGEX" };
 
                     auto split = regex_groups(msg->str, rgx);
-                    if (split.size() < 3) return;
-
-                    queue.push_back({ split[1], split[2] });
+                    if (split.size() >= 3)
+                        queue.push_back({ split[1], split[2] });
+                    else
+                        std::cout << "Message: " << msg->str << std::endl;
                 }
+
             });
 
             ws.start();
@@ -62,23 +73,15 @@ namespace robotica {
             queue.clear();
         }
 
+        void sendData(const std::string& kaas, float worst)
+        {
+            if(ws.getReadyState() != ix::ReadyState::Open)
+                return;
 
-        std::string register_bot(void) {
-            #ifdef _MSC_VER
-                std::string name = std::getenv("USERNAME");
-            #else
-                std::string name = std::getenv("USER");
-            #endif
-
-            name = concat("UwUBot (", name, ")");
-
-
-            std::lock_guard lock{ mtx };
-            ws.sendText(std::string("register|") + name);
-
-            return name;
+            std::stringstream msg;
+            msg << "data|" << kaas << "=" << worst;
+            ws.sendText(msg.str());
         }
-
 
         void add_callback(const std::string& key, message_handler&& fn) {
             std::lock_guard lock { mtx };

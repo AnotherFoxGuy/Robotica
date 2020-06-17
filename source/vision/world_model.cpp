@@ -29,7 +29,6 @@ namespace robotica {
     }
 
 
-
     const std::vector<classified_object>& world_model::get_raw_object_list(void) const {
         return raw_objects;
     }

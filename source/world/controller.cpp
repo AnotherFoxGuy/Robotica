@@ -1,12 +1,12 @@
-#include <world/controller.hpp>
-#include <vision/world_model.hpp>
+#include <comms/gripper_callback.hpp>
+#include <comms/joystick_callback.hpp>
+#include <comms/strategy_callback.hpp>
+#include <comms/websocket.hpp>
 #include <vision/cascade_classifier.hpp>
 #include <vision/pool_classifier.hpp>
-#include <comms/websocket.hpp>
-#include <comms/joystick_callback.hpp>
-#include <comms/gripper_callback.hpp>
+#include <vision/world_model.hpp>
 #include <window/main_window.hpp>
-
+#include <world/controller.hpp>
 
 namespace robotica {
     controller& controller::instance(void) {
@@ -16,10 +16,10 @@ namespace robotica {
 
     controller::controller(int timestep) : timestep(timestep) {
         //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "moonrock.xml", "Rock"   ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Heart"  ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamond"));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spade"  ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Club"   ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Hearts"  ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamonds"));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
         //world_model::instance().add_classifier(std::make_unique<pool_classifier>());
 
         websocket::instance().init();
@@ -31,6 +31,9 @@ namespace robotica {
         websocket::instance().add_callback("gripper", &gripper_callback);
         websocket::instance().add_callback("gripper_pitch", &gripper_pitch_callback);
         websocket::instance().add_callback("gripper_roll", &gripper_roll_callback);
+        websocket::instance().add_callback("moonVision", &moonVision_callback);
+
+        set_strategy(std::make_unique<strategy_playingcards>("Hearts"));
     }
 
     bool controller::update(void) {
@@ -39,6 +42,9 @@ namespace robotica {
         if (not_done) {
             world_model::instance().update();
             websocket::instance().update();
+
+            strategy->loop();
+
             main_window::instance().update();
         }
 

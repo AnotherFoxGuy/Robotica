@@ -1,5 +1,8 @@
 #pragma once
 
+#include <utility/typedefs.hpp>
+#include <world/strategy/istrategy.hpp>
+
 
 namespace robotica {
     class controller {
@@ -14,7 +17,15 @@ namespace robotica {
 
         int get_timestep(void) const { return timestep; }
         void request_exit(void) { should_exit = true; }
+
+        void set_strategy(unique<istrategy>&& strat) {
+            if (strategy) strategy->exit();
+            strategy = std::move(strat);
+            strategy->init();
+        }
     private:
+        unique<istrategy> strategy;
+
         int timestep;
         bool should_exit = false;
     };

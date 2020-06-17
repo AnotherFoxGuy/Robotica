@@ -15,6 +15,8 @@
 #include <string>
 #include <iostream>
 
+#include "dance/MusicAnalyzer.hpp"
+
 
 namespace robotica {
     using namespace std::string_literals;
@@ -173,6 +175,11 @@ namespace robotica {
             }
         }
 
+        if (ImGui::CollapsingHeader("music analysis"))
+        {
+            MusicAnalyzer::instance().view();
+        }
+
         // LIDAR Preview Group
         if (ImGui::CollapsingHeader("LIDAR PREVIEW")) {
             lidar_view.show();
@@ -196,10 +203,9 @@ namespace robotica {
             }
         }
 
-
         ImGui::EndGroup();
         ImGui::NextColumn();
-
+      
 
         // Robot Controls
         ImGui::BeginGroup();
@@ -230,31 +236,14 @@ namespace robotica {
             profiler::dumpBlocksToFile("test_profile.prof");
         }
 
-        if (ImGui::Button("Register", {200, 30})) {
-            std::string name = websocket::instance().register_bot();
-            std::cout << "Registered bot as " << name << '\n';
-        }
-
         if (ImGui::Button("Speak", {200, 30})) {
             //webots::Speaker::playSound( robot::instance().speaker, robot::instance().speaker,"C:/projects/Robotica/protos/kaas.mp3",1,speed,0,false);
             robot::instance().speaker->speak(
-                 "According to all known laws"
-                 "of aviation,"
-                 "there is no way a bee"
-                 "should be able to fly\n"
-                 "Its wings are too small to get"
-                 "its fat little body off the ground\n"
-                 "The bee, of course, flies anyway"
-                 "because bees don't care"
-                 "what humans think is impossible\n"
-                 "<prosody rate=\"1.5\">"
-                 "Yellow, black. Yellow, black\n"
-                 "Yellow, black. Yellow, black\n"
-                 "Ooh, black and yellow!"
-                 "Let's shake it up a little\n"
-                 "Barry! Breakfast is ready!"
-                 "Ooming!"
-                 "</prosody>",
+                 "I'd just like to interject for moment. What you're refering to as linux, is in fact, gnu/linux, or as I've recently taken to calling it, gnu plus linux. linux is not an operating system unto itself, but rather another free component of a fully functioning gnu system made useful by the gnu corelibs, shell utilities and vital system components comprising a full OS as defined by POSIX.\n"
+                "\n"
+                "Many computer users run a modified version of the gnu system every day, without realizing it. Through a peculiar turn of events, the version of gnu which is widely used today is often called linux, and many of its users are not aware that it is basically the gnu system, developed by the gnu Project.\n"
+                "\n"
+                "There really is a linux, and these people are using it, but it is just a part of the system they use. linux is the kernel: the program in the system that allocates the machine's resources to the other programs that you run. The kernel is an essential part of an operating system, but useless by itself; it can only function in the context of a complete operating system. linux is normally used in combination with the gnu operating system: the whole system is basically gnu with linux added, or gnu/linux. All the so-called linux distributions are really distributions of gnu/linux.",
                 1
             );
         }
@@ -265,9 +254,6 @@ namespace robotica {
             //wb_display_image_paste(emoticon_display, emoticonsImage, x, y, true);
             robot::instance().display->imagePaste(robot::instance().emotes, x, y, true);
         }
-
-
-
 
         ImGui::EndGroup();
         ImGui::Columns();
@@ -324,5 +310,4 @@ namespace robotica {
             if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_E]) c.move(camera::absolute_up    * -speed);
         }
     }
-
 }

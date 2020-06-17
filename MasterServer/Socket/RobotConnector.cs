@@ -1,18 +1,12 @@
 using System;
-using System.Net.WebSockets;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace web.Socket
 {
     /// <summary>
-    /// ws://localhost:5000/ws/Robot
+    ///     ws://localhost:5000/ws/Robot
     /// </summary>
     public class RobotConnector : BaseConnector
     {
-        public string Name { get; set; }
-
         public RobotConnector(ConnectionManager connectionManager) : base(connectionManager)
         {
         }
@@ -27,9 +21,12 @@ namespace web.Socket
                 switch (cmd)
                 {
                     case "register":
-                        ConnectionManager.Register(this);
                         Name = dat;
+                        ConnectionManager.Register(this);
                         SendData($"Registered {Name}");
+                        break;
+                    case "data":
+                        ConnectionManager.SendData(this, dat);
                         break;
                     default:
                         SendData($"Unknown Command: {cmd}");

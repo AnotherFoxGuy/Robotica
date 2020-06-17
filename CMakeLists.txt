@@ -16,8 +16,8 @@ set(CMAKE_USE_RELATIVE_PATHS OFF)
 
 
 include(pmm)
-
 pmm(CONAN REMOTES AnotherFoxGuy https://api.bintray.com/conan/anotherfoxguy/conan-packages BINCRAFTERS CMakeCM ROLLING)
+
 
 set(CMAKE_CXX_STANDARD 20)
 

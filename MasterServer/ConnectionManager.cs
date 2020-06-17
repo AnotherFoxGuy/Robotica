@@ -8,33 +8,53 @@ namespace web
 {
     public class ConnectionManager
     {
-        public List<RobotConnector> Robots = new List<RobotConnector>();
-        public List<ControllerConnector> Controlers = new List<ControllerConnector>();
-
-        public void CheckClients()
+        public readonly Dictionary<string, List<string>> Connections = new Dictionary<string, List<string>>();
+        public readonly Dictionary<string, BaseConnector> RegisteredConnectors = new Dictionary<string, BaseConnector>();
+        
+        public void PruneOldData()
         {
-            Robots.RemoveAll(r => r.WebSocket.State != WebSocketState.Open);
-            Controlers.RemoveAll(r => r.WebSocket.State != WebSocketState.Open);
+            foreach (var r in RegisteredConnectors.Where(r => r.Value.WebSocket.State != WebSocketState.Open))
+                RegisteredConnectors.Remove(r.Key);
         }
 
-        public void Register(RobotConnector conn)
+        public void Register(BaseConnector c)
         {
-            Robots.Add(conn);
+            if (!RegisteredConnectors.ContainsKey(c.Name))
+                RegisteredConnectors.Add(c.Name, c);
+            else
+                RegisteredConnectors[c.Name] = c;
         }
 
-        public void Register(ControllerConnector conn)
+        public void Deregister(BaseConnector connector)
         {
-            Controlers.Add(conn);
+            RegisteredConnectors.Where(c => c.Value == connector).
+                ToList().
+                ForEach(e =>
+                    RegisteredConnectors.Remove(e.Key)
+            );
+        }
+        public void SetRobot(ControllerConnector controller, string robotName)
+        {
+            var robot = RegisteredConnectors.Single(r => r.Key == robotName).Value;
+            if (!Connections.ContainsKey(controller.Name))
+                Connections.Add(controller.Name, new List<string> {robot.Name});
+            else if (!Connections[controller.Name].Contains(robot.Name))
+                Connections[controller.Name].Add(robot.Name);
         }
 
-        public void Deregister(RobotConnector conn)
+        public void SetRobot(TelemetryConnector telemetry, string robotName)
         {
-            Robots.Remove(conn);
+            var rob = RegisteredConnectors.Single(r => r.Key == robotName).Value;
+            if (!Connections.ContainsKey(rob.Name))
+                Connections.Add(rob.Name, new List<string> {telemetry.Name});
+            else if (!Connections[rob.Name].Contains(telemetry.Name))
+                Connections[rob.Name].Add(telemetry.Name);
         }
-
-        public void Deregister(ControllerConnector conn)
+        
+        public void SendData(BaseConnector from, string dat)
         {
-            Controlers.Remove(conn);
+            if (Connections.ContainsKey(from.Name))
+                Connections[from.Name].ForEach(r => RegisteredConnectors[r].SendData(dat));
         }
     }
 }

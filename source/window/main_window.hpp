@@ -6,6 +6,7 @@
 #include <window/3d/gui_scene.hpp>
 #include <utility/traits.hpp>
 #include <utility/typedefs.hpp>
+#include <utility/math.hpp>
 
 #include <opencv2/core.hpp>
 #include <SDL2/SDL_events.h>
@@ -85,15 +86,14 @@ namespace robotica {
         // Robot controls
         RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
         RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
-        RBT_SETTING(ROBOT,    speed,              1,     30,    100);
+        RBT_SETTING(ROBOT,    speed,              100,    1,    100);
 
-
-        RBT_SETTING(ARM,      arm_base,           0.0,   -1,    1);
-        RBT_SETTING(ARM,      arm_short,          0.0,   -1,    1);
-        RBT_SETTING(ARM,      arm_long,           0.0,   -1,    1);
-        RBT_SETTING(ARM,      gripper,            0.0,   -1,    1);
-        RBT_SETTING(ARM,      gripper_roll,       0.0,   -1,    1);
-        RBT_SETTING(ARM,      gripper_pitch,      0.0,   -1,    1);
+        RBT_SETTING(ARM,      arm_base,           0.0,       0,        2 * pi);
+        RBT_SETTING(ARM,      arm_short,          0.0,      -3,        0);
+        RBT_SETTING(ARM,      arm_long,           0.0,       0,        6);
+        RBT_SETTING(ARM,      gripper,            -0.05,    -0.05,     0.7);
+        RBT_SETTING(ARM,      gripper_roll,       0.0,      -pi,       +pi);
+        RBT_SETTING(ARM,      gripper_pitch,      0.0,      -pi / 2,   +pi / 2);
 
         // Miscelanneous Settings
         RBT_SETTING(MISC,     enable_graph,     false, false, true);
