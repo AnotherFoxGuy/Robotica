@@ -77,7 +77,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper open/close</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-0.05" max="0.7" step="0.01" value="-0.05" class="slider" id="gripper_slider">
+                    <input type="range" min="-0.05" max="0.7" step="0.01" value="-0.05" class="slider"
+                           id="gripper_slider">
                     <p>Waarde: <span id="gripper_span"></span> radiaal</p>
                 </div>
             </div>
@@ -87,7 +88,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper pitch</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-1.57" max="1.57" step="0.01" value="0" class="slider" id="gripper_pitch_slider">
+                    <input type="range" min="-1.57" max="1.57" step="0.01" value="0" class="slider"
+                           id="gripper_pitch_slider">
                     <p>Waarde: <span id="gripper_pitch_span"></span> radiaal</p>
                 </div>
             </div>
@@ -97,7 +99,8 @@
             <div class="container p-3 my-3 border">
                 <h6 class="text-center">Gripper roll</h6>
                 <div class="slidecontainer">
-                    <input type="range" min="-3.14" max="3.14" step="0.01" value="0" class="slider" id="gripper_roll_slider">
+                    <input type="range" min="-3.14" max="3.14" step="0.01" value="0" class="slider"
+                           id="gripper_roll_slider">
                     <p>Waarde: <span id="gripper_roll_span"></span> radiaal</p>
                 </div>
             </div>
@@ -145,42 +148,55 @@
 
 <div class="container p-3 my-3 border">
     <div class="btn-group btn-block" id="switchmodes">
-        <button type="button" onclick="doSend('manual')" class="btn btn-outline-primary active">Manual</button>
-        <button type="button" onclick="doSend('moonrace')" class="btn btn-outline-primary">Moonrace</button>
-        <button type="button" onclick="doSend('moondance')" class="btn btn-outline-primary">Moondance</button>
-        <button type="button" onclick="doSend('moonwalk')" class="btn btn-outline-primary autonoom">Moonwalk</button>
-        <button type="button" onclick="doSend('moonsurvival')" class="btn btn-outline-primary autonoom">Moonsurvival
+        <button type="button" onclick="setStrategy('manual')" class="btn btn-outline-primary active">
+            Manual
         </button>
-        <button type="button" onclick="doSend('moonmaze')" class="btn btn-outline-primary autonoom">Moonmaze</button>
-        <button type="button" onclick="doSend('plant_the_flag')" class="btn btn-outline-primary">Plant the Flag</button>
-        <div class="dropup">
-            <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">Select card
-            </button>
-            <div class="dropdown-menu">
-                <a onclick="doSend('harten')" class="dropdown-item" href="#">Harten</a>
-                <a onclick="doSend('klaver')" class="dropdown-item" href="#">Klaver</a>
-                <a onclick="doSend('ruiten')" class="dropdown-item" href="#">Ruiten</a>
-                <a onclick="doSend('schopen')" class="dropdown-item" href="#">Schopen</a>
-            </div>
+        <button type="button" onclick="setStrategy('moondance')" class="btn btn-outline-primary">
+            Moondance
+        </button>
+        <button type="button" onclick="setStrategy('moonwalk')" class="btn btn-outline-primary autonoom">
+            Moonwalk
+        </button>
+        <button type="button" onclick="setStrategy('moonsurvival')" class="btn btn-outline-primary autonoom">
+            Moonsurvival
+        </button>
+        <button type="button" onclick="setStrategy('moonmaze')" class="btn btn-outline-primary autonoom">
+            Moonmaze
+        </button>
+        <button type="button" onclick="setStrategy('plant_the_flag')" class="btn btn-outline-primary">
+            Plant the Flag
+        </button>
+        <button type="button" class="btn btn-outline-primary dropdown-toggle autonoom" data-toggle="dropdown">
+            Moon vision
+        </button>
+        <div class="dropdown-menu">
+            <a onclick="setStrategy('hearts')" class="dropdown-item">Harten</a>
+            <a onclick="setStrategy('clubs')" class="dropdown-item">Klavers</a>
+            <a onclick="setStrategy('diamonds')" class="dropdown-item">Ruiten</a>
+            <a onclick="setStrategy('spades')" class="dropdown-item">Schoppen</a>
         </div>
     </div>
 
+
     <div class="btn-group btn-block" data-toggle="button" aria-label="Basic example">
-        <button type="button" onclick="doSend('autonoom')" class="btn btn-outline-warning" id="btnAutonoom">Autonoom
+        <button type="button" onclick="doSend('autonoom')" class="btn btn-outline-warning" id="btnAutonoom">
+            Autonoom
         </button>
     </div>
 </div>
 
 <div class="container p-3 my-3 border">
-    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" onclick="update_robot_list()">Robot keuze</button>
+    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"
+            onclick="update_robot_list()">Robot keuze
+    </button>
     <div class="dropdown-menu" id="select_robot">
     </div>
 </div>
 
 <div class="container p-3 my-3 border">
     <div class="btn-group btn-block" id="startstop">
-        <button type="button" onclick="doSend('start')" class="btn btn-outline-success">Start</button>
-        <button type="button" onclick="doSend('stop')" class="btn btn-outline-danger active">Stop</button>
+        <button type="button" onclick="startStrategy()" class="btn btn-outline-success">Start</button>
+        <button type="button" onclick="stopStrategy()" class="btn btn-outline-danger active">Stop</button>
         <br>
     </div>
 </div>
@@ -283,7 +299,7 @@
         $(this).addClass("active");
         if (this.classList.contains("autonoom")) {
             $("#btnAutonoom").addClass("active")
-            doSend('autonoom')
+            //doSend('autonoom')
         }
     })
 
@@ -342,13 +358,13 @@
     }
 
     function doSend(message) {
-        if(websocket.readyState != WebSocket.OPEN)
+        if (websocket.readyState !== WebSocket.OPEN)
             return
         websocket.send("cmd|" + message);
     }
 
     function update_robot_list() {
-        if(websocket.readyState != WebSocket.OPEN)
+        if (websocket.readyState !== WebSocket.OPEN)
             return
         websocket.send("ls")
     }
@@ -363,6 +379,20 @@
 
     function send_joystick_value(x, y) {
         doSend("joystick(" + x + " ," + y + ")")
+    }
+
+    let strategy = "";
+
+    function setStrategy(s) {
+        strategy = s;
+    }
+
+    function startStrategy() {
+        doSend("start_strategy(" + strategy + ")");
+    }
+
+    function stopStrategy() {
+        doSend("stop_strategy");
     }
 
 
