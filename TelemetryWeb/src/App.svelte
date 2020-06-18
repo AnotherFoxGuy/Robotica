@@ -1,14 +1,11 @@
 <div class="container-fluid">
     <div class="card-deck">
         <div class="card">
-            <div class="card-header">Select robot</div>
+            <div class="card-header">temps</div>
             <div class="card-body">
-                <button type="button" class="btn btn-outline-primary dropdown-toggle" on:click={update_robot_list}>Robot keuze</button>
-                <div id="select_robot">
-                    {#each _robots as r}
-                        <button type="button" on:click={select_robot(r.Name)}>{r.Name}</button>
-                    {/each}
-                </div>
+                {#each temps as t}
+                    <p>Temp: {t}</p>
+                {/each}
             </div>
         </div>
     </div>
@@ -28,7 +25,21 @@
             </div>
         </div>
     </div>
-
+    <div class="card-deck">
+        <div class="card">
+            <div class="card-header">Select robot</div>
+            <div class="card-body">
+                <button type="button" class="btn btn-outline-primary dropdown-toggle" on:click={update_robot_list}>Robot
+                    keuze
+                </button>
+                <div id="select_robot">
+                    {#each _robots as r}
+                        <button type="button" on:click={select_robot(r.Name)}>{r.Name}</button>
+                    {/each}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -38,6 +49,8 @@
     var _robots = []
 
     var websocket
+
+    var temps = []
 
     var _weightHistory = [0]
     $: if (_weightHistory.length >= 100) {
@@ -50,7 +63,7 @@
     }
 
     function update_robot_list() {
-        if(websocket.readyState !== WebSocket.OPEN)
+        if (websocket.readyState !== WebSocket.OPEN)
             return
         websocket.send("ls")
     }
@@ -60,8 +73,10 @@
     }
 
     function onMessage(evt) {
-        console.log('RESPONSE: ' + evt.data)
-        if (evt.data.includes("{")) {
+        //console.log('RESPONSE: ' + evt.data)
+        if (evt.data.includes("temps")) {
+            temps = JSON.parse(evt.data).temps
+        } else if (evt.data.includes("{")) {
             _robots = JSON.parse(evt.data)
         } else {
             try {

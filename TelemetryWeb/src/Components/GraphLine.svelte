@@ -25,6 +25,7 @@
 
 <p>Max: {maxVal}</p>
 <p>Min: {minVal}</p>
+<p>Current: {points[points.length - 1]}</p>
 
 <div class="chart" bind:clientWidth={width} bind:clientHeight={height}>
     <svg>

@@ -4,7 +4,8 @@
 #include <comms/websocket.hpp>
 
 #include <algorithm>
-
+#include <vision/world_model.hpp>
+#include <vision/heat_measure.hpp>
 
 namespace robotica {
     robot& robot::instance(void) {
@@ -114,6 +115,22 @@ namespace robotica {
             // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
 			websocket::instance().sendData("weight", (scale->getValue() / 3.73) - 0.01);
 			websocket::instance().sendData("compass", get_bearing_in_degrees());
+            std::stringstream worst;
+            const char* separator = "";
+            worst << "{\"Temps\": [";
+            for (auto& detection : world_model::instance().get_raw_object_list()) {
+                // Show temperature. Ignore far away pools for accuracy.
+                if (detection.type == "Pool" && detection.bounding_rect.height > 4)
+                {
+                    auto avg_color = std::any_cast<cv::Vec3b>(detection.data);
+                    float temp = calculate_temperature(avg_color);
+                    temperature tempclass = temperature_class(temp);
+                    worst << separator << "\"" << magic_enum::enum_name(tempclass) << " (" << temp << ")" << "\"";
+                    separator = ",";
+                }
+            }
+            worst << "] }";
+            websocket::instance().sendData(worst.str());
         }
 
         return (result != -1);
