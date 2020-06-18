@@ -16,6 +16,11 @@ namespace web
             foreach (var r in RegisteredConnectors.Where(r => r.Value.WebSocket.State != WebSocketState.Open))
                 RegisteredConnectors.Remove(r.Key);
         }
+        public void PurgeData()
+        {
+            Connections.Clear();
+            RegisteredConnectors.Clear();
+        }
 
         public void Register(BaseConnector c)
         {
@@ -56,5 +61,6 @@ namespace web
             if (Connections.ContainsKey(from.Name))
                 Connections[from.Name].ForEach(r => RegisteredConnectors[r].SendData(dat));
         }
+
     }
 }

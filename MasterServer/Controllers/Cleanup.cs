@@ -8,9 +8,16 @@ namespace web.Controllers
     public class Cleanup
     {
         [HttpGet("prune")]
-        public ActionResult<string> Get([FromServices] ConnectionManager cm)
+        public ActionResult<string> prune([FromServices] ConnectionManager cm)
         {
             cm.PruneOldData();
+            return "done";
+        }
+        
+        [HttpGet("purge")]
+        public ActionResult<string> purge([FromServices] ConnectionManager cm)
+        {
+            cm.PurgeData();
             return "done";
         }
     }
