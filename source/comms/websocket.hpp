@@ -83,6 +83,16 @@ namespace robotica {
             ws.sendText(msg.str());
         }
 
+        void sendData(const std::string& stri)
+        {
+            if(ws.getReadyState() != ix::ReadyState::Open)
+                return;
+
+            std::stringstream msg;
+            msg << "data|" << stri;
+            ws.sendText(msg.str());
+        }
+
         void add_callback(const std::string& key, message_handler&& fn) {
             std::lock_guard lock { mtx };
 

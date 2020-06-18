@@ -149,7 +149,6 @@ namespace robotica {
             left.set_image(img);
         }
 
-
         // Collapsable groups
         ImGui::Columns(2);
         ImGui::SetColumnWidth(0, collapse_width);
