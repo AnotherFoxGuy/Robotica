@@ -13,8 +13,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 0.895398
-  orientation 0.41553868299689584 -0.8740922292973035 -0.2515757890085517 5.081243254359985
-  position 1.412209736402657 0.9732927606321591 0.4883636422421918
+  orientation 0.3046243413910203 -0.9027774588988676 -0.3036393754706241 4.621421049102533
+  position 2.2918762795924215 1.7262639922220386 -0.17628316551122988
   near 0.1
 }
 TexturedBackground {
@@ -51,6 +51,12 @@ DEF GROUND Solid {
   name "ground"
   boundingObject USE GROUND_SHAPE
   locked TRUE
+}
+UWUBot-Tracked {
+  translation 0 0.00999949 -0.17
+  rotation 1 0 0 3.14159
+  lidar_horizontalResolution 61
+  lidar_verticalFieldOfView 0.8240262295081967
 }
 Transform {
   children [
@@ -267,9 +273,4 @@ Transform {
       ]
     }
   ]
-}
-UWUBot-Tracked {
-  translation 0 0.02 -0.109999
-  rotation 1 0 0 3.14159
-  lidar_numberOfLayers 1
 }

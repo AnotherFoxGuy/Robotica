@@ -109,8 +109,8 @@ namespace robotica {
         if (result != -1) {
             for (auto& [component, value, factor] : components) (*component).setPosition(factor * (**value));
 
-            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.0025));
-            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.0025));
+            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.006)); //(max) 6 m/s ~ 21 km/h
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.006)); //(max) 6 m/s ~ 21 km/h
 
             // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
 			websocket::instance().sendData("weight", (scale->getValue() / 3.73) - 0.01);
@@ -190,10 +190,10 @@ namespace robotica {
                 settings.lidar_inverse_discard_ratio - 1
             );
 
-            if (i % keep_every_nth_point == 0) {
+
                 const auto& pt = lidar->getPointCloud()[i];
                 pc.push_back({ glm::vec3{ pt.x * settings.lidar_scale_factor, pt.y * settings.lidar_scale_factor, pt.z * settings.lidar_scale_factor } });
-            }
+
         }
 
         return pc;
