@@ -17,7 +17,7 @@ class strategy_playingcards : public istrategy {
     }
 
     void init(void) override {
-        main_window::instance().speed = 50;
+        main_window::instance().speed = 25;
         main_window::instance().min_neighbours = 10;
     }
 
@@ -41,10 +41,10 @@ class strategy_playingcards : public istrategy {
                 main_window::instance().speed = 5;
                 main_window::instance().left_motor = 1;
                 main_window::instance().right_motor = -1;
-            } else if (ticks > 75) {
+            } else if (ticks > 60) {
                 resetting = true;
             }else if(!lookingForTarget) {
-                main_window::instance().speed = 50;
+                main_window::instance().speed = 25;
                 main_window::instance().left_motor = 1;
                 main_window::instance().right_motor = 1;
 
