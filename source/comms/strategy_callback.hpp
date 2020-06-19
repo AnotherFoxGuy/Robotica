@@ -1,5 +1,7 @@
 #pragma once
 
+
+#include "world/strategy/strategy_dance.hpp"
 #include <world/controller.hpp>
 #include <world/robot.hpp>
 #include <world/strategy/istrategy.hpp>
@@ -24,6 +26,8 @@ inline void start_callback(std::string_view argString)
         controller.set_strategy(std::make_unique<strategy_playingcards>("Spades"));
     if (argString == "clubs")
         controller.set_strategy(std::make_unique<strategy_playingcards>("Clubs"));
+    if (argString == "moondance")
+        controller.set_strategy(std::make_unique<strategy_dance>("kaas.wav"));
 
     std::cout << "Selected robot mode has been started.\n";
 }

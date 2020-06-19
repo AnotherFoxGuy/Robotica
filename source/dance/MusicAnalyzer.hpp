@@ -9,7 +9,16 @@ class MusicAnalyzer
     ImGui::PlotConfig conf;
   public:
     static MusicAnalyzer& instance(void);
-    bool loadfile() { return audioFile.load("E:/Robotica/music/50bpm.wav"); }
+    bool load_file(std::string song_path)
+    {
+         if(audioFile.load(song_path))
+         {
+             SetData();
+             SetConfig();
+             return true;
+         }
+         return false;
+    } //pref ../../song_path.wav
     void view() { ImGui::Plot("plot", conf); }
     void SetConfig()
     {

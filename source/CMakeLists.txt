@@ -14,6 +14,7 @@ set(SOURCE_FILES
      comms/websocket.hpp
      comms/joystick_callback.hpp
      comms/gripper_callback.hpp
+     comms/strategy_callback.hpp
      utility/cache.hpp
      utility/math.hpp
      utility/traits.hpp
@@ -41,6 +42,7 @@ set(SOURCE_FILES
      world/robot.{hpp,cpp}
      world/strategy/istrategy.hpp
      world/strategy/strategy_playingcards.hpp
+     world/strategy/strategy_dance.hpp
      main.cpp
 )
 
