@@ -39,6 +39,8 @@ set(SOURCE_FILES
      window/3d/program.hpp
      world/controller.{hpp,cpp}
      world/robot.{hpp,cpp}
+     world/strategy/istrategy.hpp
+     world/strategy/strategy_playingcards.hpp
      main.cpp
 )
 
