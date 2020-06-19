@@ -26,6 +26,11 @@ class strategy_playingcards : public istrategy {
         main_window::instance().min_neighbours = neighbours;
     }
 
+    void setMotorVelocity(int l, int r) {
+        main_window::instance().left_motor = l;
+        main_window::instance().right_motor = r;
+    }
+
     void loop(void) override {
         auto& objects = world_model::instance().get_raw_object_list();
         if (auto it = std::find_if(objects.begin(), objects.end(), [&](const auto& o) { return o.type == playingcard;}); it != objects.end() && !resetting) {
@@ -35,32 +40,26 @@ class strategy_playingcards : public istrategy {
                 lookingForTarget = false;
             } else if (center < 121 && lookingForTarget) {
                 main_window::instance().speed = 5;
-                main_window::instance().left_motor = -1;
-                main_window::instance().right_motor = 1;
+                setMotorVelocity(-1, 1);
             } else if(center > 124 && lookingForTarget) {
                 main_window::instance().speed = 5;
-                main_window::instance().left_motor = 1;
-                main_window::instance().right_motor = -1;
+                setMotorVelocity(1, -1);
             } else if (ticks > 60) {
                 resetting = true;
             }else if(!lookingForTarget) {
                 main_window::instance().speed = 25;
-                main_window::instance().left_motor = 1;
-                main_window::instance().right_motor = 1;
+                setMotorVelocity(1, 1);
 
                 ++ticks;
             }
         } else if(lookingForTarget) {
-            main_window::instance().left_motor = -1;
-            main_window::instance().right_motor = 1;
+            setMotorVelocity(-1, 1);
         } else if (ticks > 0) {
-            main_window::instance().left_motor = -1;
-            main_window::instance().right_motor = -1;
+            setMotorVelocity(-1, -1);
 
             --ticks;
         } else {
-            main_window::instance().left_motor = 0;
-            main_window::instance().right_motor = 0;
+            setMotorVelocity(0, 0);
         }
     }
 
