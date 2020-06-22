@@ -12,6 +12,7 @@
 #include <webots/Lidar.hpp>
 #include <webots/Motor.hpp>
 #include <webots/Robot.hpp>
+#include <webots/LED.hpp>
 #include <webots/Speaker.hpp>
 #include <webots/Display.hpp>
 #include <webots/TouchSensor.hpp>
@@ -39,6 +40,7 @@ namespace robotica {
         const static inline std::string speaker_name = "speaker";
         const static inline std::string display_name = "display";
         const static inline std::string scale_name = "scale";
+        const static inline std::string led_names[2] = {"led_left", "led_right"};
 
         robot(int timestep);
         ~robot(void);
@@ -47,6 +49,7 @@ namespace robotica {
         // Updates the simulation. Returns false if the simulation has ended.
         bool update(void);
         void update_emotion();
+        void set_led_color(int, int);
         double get_bearing_in_radian();
         double get_bearing_in_degrees();
 
@@ -60,6 +63,7 @@ namespace robotica {
         webots::Speaker* speaker;
         webots::ImageRef* emotes;
         webots::Display* display;
+        webots::LED *led_left, *led_right;
 
         pointcloud get_lidar_pointcloud(void) const;
 
