@@ -38,6 +38,7 @@ namespace robotica {
     }
 
     bool controller::update(void) {
+        frame++;
         bool not_done = robot::instance().update() && !should_exit;
 
         if (not_done) {
@@ -51,4 +52,6 @@ namespace robotica {
 
         return not_done;
     }
+
+ 
 }

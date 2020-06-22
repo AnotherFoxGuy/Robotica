@@ -11,6 +11,8 @@ set(SOURCE_FILES
 
      dance/AudioFile.h
      dance/MusicAnalyzer.{hpp,cpp}
+     dance/strategies/idance_strategy.hpp
+     dance/strategies/dance_moves.{hpp,cpp}
      comms/websocket.hpp
      comms/joystick_callback.hpp
      comms/gripper_callback.hpp
@@ -67,7 +69,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
      CONAN_PKG::sdl2
      CONAN_PKG::glew
      CONAN_PKG::magic_enum
-     CONAN_PKG::cgal
 )
 
 
