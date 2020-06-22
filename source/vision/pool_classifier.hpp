@@ -22,115 +22,83 @@ namespace robotica {
         std::vector<classified_object> classify(const cv::Mat& image) const override {
             auto& settings = main_window::instance();
 
-            cv::Mat colorfullness = colourfullness(image);
+            cv::Mat color_detections = pool_colors(image);
+            cv::threshold(color_detections, color_detections, settings.pool_color_threshold, 255, cv::THRESH_BINARY_INV);
 
-            cv::Mat color_detect_map;
-            cv::threshold(colorfullness, color_detect_map, settings.pool_grayscale_cutoff, 255, cv::THRESH_BINARY);
+
+            cv::Mat s;
+            cv::cvtColor(color_detections, s, cv::COLOR_GRAY2BGR);
+            const static char n[] = "";
+            show<n>(s);
+
+
+            std::vector<classified_object> result;
 
             std::vector<std::vector<cv::Point>> contours;
             std::vector<cv::Vec4i> hierarchy;
 
-            cv::findContours(color_detect_map, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-
-            std::vector<classified_object> result;
+            cv::findContours(color_detections, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
 
             int index = 0;
             for (const auto& contour : contours) {
-                // Only take top-level contours.
-                if (hierarchy[index++][3] != -1) continue;
+                if (hierarchy[index++][3] != -1) continue; // Only take top-level contours.
 
                 cv::Rect bounding     = cv::boundingRect(contour);
                 cv::Point center      = bounding.tl() + cv::Point{ bounding.size() / 2 };
                 double perimeter      = cv::arcLength(contour, true);
-                double area           = floodfill_area(color_detect_map, center);
+                double area           = cv::contourArea(contour);
                 double circularity    = (4 * pi * area) / (perimeter * perimeter);
-                double colourfullness = ((double) colorfullness.at<uchar>(cv::Point{ bounding.x + (bounding.width / 2), bounding.y + (bounding.height / 2) })) / 255;
+
+                // Don't detect shit in the sky
+                if (bounding.tl().y < image.rows / 2) continue;
 
 
-                auto getclr = [&](const cv::Point& pt) { return image.at<cv::Vec3b>(pt); };
-
-                /*unsigned long long variance = settings.pool_variance_base, pixels = 0;
-                cv::Vec3b reference = getclr(center);
-                floodfill_foreach(color_detect_map, center, [&](const auto& pt) {
-                    ++pixels;
-
-                    cv::Vec3b value = getclr(pt);
-                    for (int i = 0; i < reference.channels; ++i) {
-                        variance += std::abs(((int) reference[i]) - value[i]);
-                    }
-                });*/
-
-
-                //if (variance / pixels > settings.pool_max_variance      ) continue;
-                if (area              < settings.pool_min_area          ) continue;
-                if (area              > settings.pool_max_area          ) continue;
-                if (perimeter         < settings.pool_min_perimeter     ) continue;
-                if (colourfullness    < settings.pool_min_colourfullness) continue;
-                if (bounding.width    < settings.pool_min_width         ) continue;
-
-
-                // If the object is small, relax the roundness requirements, since it is too heavily influenced by the resolution of the camera.
-                if (area > settings.pool_area_mode_switch && circularity < settings.pool_min_circularity) continue;
-                // Only enforce oblongness at a distance, since objects get more round the closer they are.
-                if (area < settings.pool_area_mode_switch && bounding.width / bounding.height < settings.pool_min_oblongness) continue;
-
-
-                auto avg_color = floodfill_avgcolor(color_detect_map, image, center);
+                if (bounding.size().width < settings.pool_min_width) continue;
+                if (circularity < settings.pool_min_roundness) continue;
 
                 result.push_back({
                     bounding,
                     1000,
                     get_name(),
-                    avg_color
+                    floodfill_avgcolor(color_detections, image, center)
                 });
             }
+
 
             return result;
         }
     private:
-        static cv::Mat colourfullness(const cv::Mat& src) {
+        static cv::Mat pool_colors(const cv::Mat& image) {
+            cv::Mat hsv;
+            cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+
             auto& settings = main_window::instance();
-            cv::Mat dst(src.rows, src.cols, CV_8UC1);
 
-            // Filter out wood colors.
-            auto inverse_woodyness = [&](const cv::Vec3b& clr) {
-                // Yes, this really is the only way to do this conversion with OpenCV...
-                cv::Mat m(1, 1, CV_8UC3);
-                m.at<cv::Vec3b>(0, 0) = clr;
-                cv::cvtColor(m, m, cv::COLOR_BGR2HSV);
-                cv::Vec3b hsv = m.at<cv::Vec3b>(0, 0);
-
-                const cv::Vec3b wood_min { 40, 10, 50 };
-                const cv::Vec3b wood_max { 70, 45, 80 };
-
-                auto dist = [](uchar min, uchar max, uchar clr) {
-                    if (clr < min) return min - clr;
-                    if (clr > max) return clr - max;
-                    return 0;
-                };
-
-                cv::Vec3b result;
-                for (int i = 0; i < result.channels; ++i) result[i] = dist(wood_min[i], wood_max[i], hsv[i]);
-
-                return (((int) result[0]) + result[1] + result[2]) / 3;
+            const static cv::Vec3b pool_colors[3] = {
+                { 196, 28, 87 },
+                { 10, 56, 86 },
+                { 63, 54, 83 }
             };
 
-            std::transform(
-                std::execution::par_unseq,
-                src.begin<cv::Vec3b>(),
-                src.end<cv::Vec3b>(),
-                dst.begin<uchar>(),
-                [&](const cv::Vec3b& bgr) {
-                    auto diff = [](const auto& a, const auto& b) { return (int) std::abs(a - b); };
-                    int colourfullness = (diff(bgr[0], bgr[1]) + diff(bgr[0], bgr[2]) + diff(bgr[1], bgr[2])) / 2;
-                    colourfullness -= std::clamp(settings.pool_wood_filter_limit - inverse_woodyness(bgr), 0, *settings.pool_wood_filter_limit) * settings.pool_wood_filter_strength;
-                    colourfullness = std::clamp(colourfullness, 0, 255);
-                    return (uchar) colourfullness;
-                }
-            );
 
-            return dst;
+            cv::Mat result(image.rows, image.cols, CV_8UC1);
+
+            for (int x = 0; x < result.rows; ++x) {
+                for (int y = 0; y < result.cols; ++y) {
+                    const cv::Vec3b& clr = hsv.at<cv::Vec3b>(x, y);
+
+                    int min_difference = std::numeric_limits<int>::max();
+                    for (int i = 0; i < 3; ++i) {
+                        auto diff = difference(clr, pool_colors[i]);
+                        if (diff < min_difference) min_difference = diff;
+                    }
+
+                    result.at<uchar>(x, y) = 255 - std::clamp(min_difference, 0, 255);
+                }
+            }
+
+            return result;
         }
     };
 }

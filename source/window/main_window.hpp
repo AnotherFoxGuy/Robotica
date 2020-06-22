@@ -60,19 +60,10 @@ namespace robotica {
         RBT_SETTING(CLASSIFIER, min_neighbours,                64,      1,    255);
         RBT_SETTING(CLASSIFIER, scale,                         1.07,    1.01, 1.2);
         RBT_SETTING(CLASSIFIER, min_confidence,                1,       0,    255);
-        RBT_SETTING(CLASSIFIER, pool_min_area,                 0.1,     0,    10);
-        RBT_SETTING(CLASSIFIER, pool_max_area,                 20000,   0,    20000);
-        RBT_SETTING(CLASSIFIER, pool_min_perimeter,            0,       0,    2000);
-        RBT_SETTING(CLASSIFIER, pool_min_circularity,          0.3,     0,    1);
-        RBT_SETTING(CLASSIFIER, pool_min_colourfullness,       0.150,   0,    1);
-        RBT_SETTING(CLASSIFIER, pool_grayscale_cutoff,         50,      0,    255);
-        RBT_SETTING(CLASSIFIER, pool_area_mode_switch,         1450,    0,    5000);
-        RBT_SETTING(CLASSIFIER, pool_wood_filter_strength,     72,      0,    255);
-        RBT_SETTING(CLASSIFIER, pool_wood_filter_limit,        72,      0,    255);
-        RBT_SETTING(CLASSIFIER, pool_variance_base,            1000,    0,    1000);
-        RBT_SETTING(CLASSIFIER, pool_max_variance,             75.0,    0,    100);
-        RBT_SETTING(CLASSIFIER, pool_min_width,                20.0,    0,    100);
-        RBT_SETTING(CLASSIFIER, pool_min_oblongness,           1.0,     0,    32);
+
+        RBT_SETTING(CLASSIFIER, pool_color_threshold,          69,      0,    255);
+        RBT_SETTING(CLASSIFIER, pool_min_width,                10,      0,    255);
+        RBT_SETTING(CLASSIFIER, pool_min_roundness,            0.0,     0,    1);
 
         // LIDAR Settings
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);

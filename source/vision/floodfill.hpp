@@ -4,6 +4,11 @@
 
 
 namespace robotica {
+    inline int difference(const cv::Vec3b& a, const cv::Vec3b& b) {
+        return std::abs(((int)b[0]) - ((int)a[0])) + std::abs(((int)b[1]) - ((int)a[1])) + std::abs(((int)b[2]) - ((int)a[2]));
+    }
+
+
     // Apply the predicate to each pixel found by floodfilling from the given point.
     // TODO: Optimize this, use QuickFill or similar.
     template <typename Pred> inline void floodfill_foreach(const cv::Mat& m, const cv::Point& where, const Pred& pred) {
