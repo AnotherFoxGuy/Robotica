@@ -73,4 +73,88 @@ void track_dance_move_1::setMotorVelocity(double l, double r)
     main_window_.left_motor = l;
     main_window_.right_motor = r;
 }
+
+
+
+
+arm_dance_move_2& arm_dance_move_2::instance(void)
+{
+    static arm_dance_move_2 i;
+    return i;
+}
+
+void arm_dance_move_2::dance(int frame)
+{
+    switch (frame)
+    {
+    case 0:
+        main_window_.arm_long = 1.0;
+        break;
+    case 5:
+        main_window_.arm_short = 0;
+        break;
+    case 10:
+        main_window_.arm_long = 4.0;
+        break;
+    case 15:
+        main_window_.arm_long = 1.0;
+        break;
+    case 20:
+        main_window_.arm_short = 0.0;
+        break;
+    case 25:
+        main_window_.arm_long = 0.0;
+        break;
+    case 30:
+        rotate_arm_base += 2;
+        main_window_.arm_base = rotate_arm_base;
+        if (rotate_arm_base == 6)
+            rotate_arm_base = 0;
+        break;
+    }
+
+}
+
+track_dance_move_2& track_dance_move_2::instance(void)
+{
+    static track_dance_move_2 i;
+    return i;
+}
+
+void track_dance_move_2::setMotorVelocity(double l, double r)
+{
+    main_window_.left_motor = l;
+    main_window_.right_motor = r;
+}
+
+void track_dance_move_2::dance(int frame)
+{
+    auto n = 0.5;
+
+    switch (frame)
+    {
+    case 0:
+        setMotorVelocity(n, -n);
+        break;
+    case 5:
+        setMotorVelocity(-n, n);
+        break;
+    case 10:
+        setMotorVelocity(n, n);
+        break;
+    case 15:
+        setMotorVelocity(-n, n);
+        break;
+    case 20:
+        setMotorVelocity(n, -n);
+        break;
+    case 25:
+        setMotorVelocity(n, -n);
+        break;
+    case 30:
+        setMotorVelocity(0, 0);
+        break;
+    }
+}
+
 } // namespace robotica

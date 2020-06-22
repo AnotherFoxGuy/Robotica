@@ -35,8 +35,8 @@ class strategy_dance : public istrategy
         if ((controller_.frame - orignal_frame_count) % 5 == 0)
         {
             frame = controller_.frame - orignal_frame_count; 
-            set_strat(arm_dance_move_1::instance());
-            set_strat(track_dance_move_1::instance());
+            set_strat(arm_dance_move_2::instance());
+            set_strat(track_dance_move_2::instance());
             if (frame == 30)
             {
                 orignal_frame_count = controller_.frame;
