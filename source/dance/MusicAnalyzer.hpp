@@ -1,6 +1,7 @@
 #pragma once
 #include "dance/AudioFile.h"
 #include "window/imgui_plot/imgui_plot.hpp"
+#include "comms/websocket.hpp"
 
 class MusicAnalyzer
 {
@@ -23,7 +24,7 @@ class MusicAnalyzer
     void SetConfig()
     {
         //conf.values.xs = x_data; // this line is optional
-        conf.values.ys = &data.front();
+        //conf.values.ys = (float*)robotica::websocket::instance().audio_buffer[0];
         conf.values.count = audioFile.getNumSamplesPerChannel();
         conf.scale.min = -1;
         conf.scale.max = 1;
