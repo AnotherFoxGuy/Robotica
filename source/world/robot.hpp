@@ -67,7 +67,7 @@ namespace robotica {
 
         pointcloud get_lidar_pointcloud(void) const;
 
-        std::string current_emotion = "sing";
+        std::string current_emotion = "uwu";
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;
