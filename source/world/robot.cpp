@@ -147,13 +147,9 @@ namespace robotica {
         if (displayed_emotion != current_emotion) {
             std::cout << "loading emotion" << std::endl;
             auto current = fs::current_path();
-            auto z = display->imageLoad(current.parent_path().parent_path().string() + "\\images\\" + current_emotion + ".jpg"); //"C:\\Users\\Jan\\Documents\\Robotica1\\build\\source\\Release\\" + current_emotion + ".jpg");
+            auto z = display->imageLoad(current.parent_path().parent_path().string() + "\\images\\" + current_emotion + ".jpg"); 
             displayed_emotion = current_emotion;
-            //display->setColor(0xFF00FF);
-            display->setAlpha(1);
-            display->setOpacity(1);
             display->imagePaste(z, 0, 0, false);
-            //display->fillRectangle(0, 0, 400, 400);
         }
     }
 
