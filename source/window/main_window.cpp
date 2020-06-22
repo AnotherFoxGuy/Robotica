@@ -227,7 +227,8 @@ namespace robotica {
             image_to_file(snapshot_folder.string(), "POSITIVE_"s + datetime_string(), left.get_image());
         }
 
-        if (ImGui::Button("Snap Negative", { 200, 30 })) {
+        static int tick = 0;
+        if (ImGui::Button("Snap Negative", { 200, 30 }) || tick++ % 30 == 0) {
             image_to_file(snapshot_folder.string(), "NEGATIVE_"s + datetime_string(), left.get_image());
         }
 

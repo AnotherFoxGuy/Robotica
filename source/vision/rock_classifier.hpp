@@ -14,16 +14,16 @@
 
 
 namespace robotica { 
-    class pool_classifier : public iclassifier {
+    class rock_classifier : public iclassifier {
     public:
-        pool_classifier(void) : iclassifier("Pool") {}
+        rock_classifier(void) : iclassifier("Rock") {}
 
 
         std::vector<classified_object> classify(const cv::Mat& image) const override {
             auto& settings = main_window::instance();
 
-            cv::Mat color_detections = pool_colors(image);
-            cv::threshold(color_detections, color_detections, settings.pool_color_threshold, 255, cv::THRESH_BINARY_INV);
+            auto gray = grayness(image);
+            cv::threshold(gray, gray, settings.rock_grayness_threshold, 255, cv::THRESH_BINARY);
 
 
             std::vector<classified_object> result;
@@ -31,8 +31,12 @@ namespace robotica {
             std::vector<std::vector<cv::Point>> contours;
             std::vector<cv::Vec4i> hierarchy;
 
-            cv::findContours(color_detections, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+            cv::findContours(gray, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
 
+            static const char n[] = "";
+            cv::Mat m;
+            cv::cvtColor(gray, m, cv::COLOR_GRAY2BGR);
+            show<n>(m);
 
             int index = 0;
             for (const auto& contour : contours) {
@@ -45,17 +49,15 @@ namespace robotica {
                 double circularity    = (4 * pi * area) / (perimeter * perimeter);
 
                 // Don't detect shit in the sky
-                if (bounding.tl().y < image.rows / 2) continue;
+                if (bounding.tl().y < image.rows * 0.33) continue;
 
-
-                if (bounding.size().width < settings.pool_min_width) continue;
-                if (circularity < settings.pool_min_roundness) continue;
+                if (area < settings.rock_min_size) continue;
+                if (circularity < settings.rock_min_roundness) continue;
 
                 result.push_back({
                     bounding,
                     1000,
-                    get_name(),
-                    floodfill_avgcolor(color_detections, image, center)
+                    get_name()
                 });
             }
 
@@ -63,32 +65,18 @@ namespace robotica {
             return result;
         }
     private:
-        static cv::Mat pool_colors(const cv::Mat& image) {
-            cv::Mat hsv;
-            cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
-
-            auto& settings = main_window::instance();
-
-            const static cv::Vec3b pool_colors[3] = {
-                { 196, 28, 87 },
-                { 10, 56, 86 },
-                { 63, 54, 83 }
-            };
-
-
+        static cv::Mat grayness(const cv::Mat& image) {
             cv::Mat result(image.rows, image.cols, CV_8UC1);
+
+            auto colourfullness = [](const auto& v) {
+                auto diff = [](uchar a, uchar b) { return std::abs(((int) b) - ((int) a)); };
+                return std::clamp(diff(v[0], v[1]) + diff(v[0], v[2]) + diff(v[1], v[2]), 0, 255);
+            };
 
             for (int x = 0; x < result.rows; ++x) {
                 for (int y = 0; y < result.cols; ++y) {
-                    const cv::Vec3b& clr = hsv.at<cv::Vec3b>(x, y);
-
-                    int min_difference = std::numeric_limits<int>::max();
-                    for (int i = 0; i < 3; ++i) {
-                        auto diff = difference(clr, pool_colors[i]);
-                        if (diff < min_difference) min_difference = diff;
-                    }
-
-                    result.at<uchar>(x, y) = 255 - std::clamp(min_difference, 0, 255);
+                    const cv::Vec3b& clr = image.at<cv::Vec3b>(x, y);
+                    result.at<uchar>(x, y) = 255 - colourfullness(clr);
                 }
             }
 
