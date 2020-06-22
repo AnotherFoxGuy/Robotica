@@ -29,6 +29,7 @@ set(SOURCE_FILES
      vision/converters.hpp
      vision/floodfill.hpp
      vision/heat_measure.hpp
+     vision/qr_classifier.hpp
      vision/parallax.hpp
      window/window.{hpp,cpp}
      window/main_window.{hpp,cpp}

@@ -1,3 +1,5 @@
+#include "vision/qr_classifier.hpp"
+
 #include <comms/gripper_callback.hpp>
 #include <comms/joystick_callback.hpp>
 #include <comms/strategy_callback.hpp>
@@ -22,6 +24,7 @@ namespace robotica {
         //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
         //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
         //world_model::instance().add_classifier(std::make_unique<pool_classifier>());
+        world_model::instance().add_classifier(std::make_unique<qr_classifier>());
 
         websocket::instance().init();
         websocket::instance().initAudio();
