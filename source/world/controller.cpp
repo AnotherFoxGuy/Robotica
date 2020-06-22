@@ -3,6 +3,7 @@
 #include <comms/strategy_callback.hpp>
 #include <comms/websocket.hpp>
 #include <vision/cascade_classifier.hpp>
+#include <vision/rock_classifier.hpp>
 #include <vision/pool_classifier.hpp>
 #include <vision/world_model.hpp>
 #include <window/main_window.hpp>
@@ -15,11 +16,11 @@ namespace robotica {
     }
 
     controller::controller(int timestep) : timestep(timestep) {
-        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "moonrock.xml", "Rock"   ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Hearts"  ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamonds"));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
+        world_model::instance().add_classifier(std::make_unique<rock_classifier>());
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Hearts"  ));
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamonds"));
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
         //world_model::instance().add_classifier(std::make_unique<pool_classifier>());
 
         websocket::instance().init();

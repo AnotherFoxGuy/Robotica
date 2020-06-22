@@ -65,9 +65,9 @@ namespace robotica {
         RBT_SETTING(CLASSIFIER, pool_min_width,                10,      0,    255);
         RBT_SETTING(CLASSIFIER, pool_min_roundness,            0.0,     0,    1);
 
-        RBT_SETTING(CLASSIFIER, rock_min_size,                 200,     0,    1000);
-        RBT_SETTING(CLASSIFIER, rock_min_roundness,            0.5,     0,    1);
-        RBT_SETTING(CLASSIFIER, rock_grayness_threshold,       170,     0,    255);
+        RBT_SETTING(CLASSIFIER, rock_min_size,                 150,     0,    1000);
+        RBT_SETTING(CLASSIFIER, rock_min_roundness,            0.255,     0,    1);
+        RBT_SETTING(CLASSIFIER, rock_grayness_threshold,       190,     0,    255);
 
         // LIDAR Settings
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
