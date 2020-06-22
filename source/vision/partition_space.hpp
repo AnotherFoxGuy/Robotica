@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cassert>
 #include <algorithm>
+#include <execution>
 
 
 namespace robotica {

@@ -506,6 +506,8 @@ DEF Doolhof Transform {
   ]
 }
 UWUBot-Tracked {
-  translation -1.74 0.02 -1.72
+  translation -1.48053 0.02 -0.964869
   rotation 1 0 0 3.14159
+  lidar_horizontalResolution 61
+  lidar_verticalFieldOfView 0.8240262295081967
 }

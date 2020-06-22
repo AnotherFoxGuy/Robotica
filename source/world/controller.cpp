@@ -8,6 +8,7 @@
 #include <vision/world_model.hpp>
 #include <window/main_window.hpp>
 #include <world/controller.hpp>
+#include <world/strategy/strategy_maze.hpp>
 
 namespace robotica {
     controller& controller::instance(void) {
@@ -15,12 +16,16 @@ namespace robotica {
         return i;
     }
 
-    controller::controller(int timestep) : timestep(timestep) {
-        world_model::instance().add_classifier(std::make_unique<rock_classifier>());
-        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Hearts"  ));
-        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamonds"));
-        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
-        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
+    controller::controller(int timestep) : timestep(timestep) {}
+
+
+    void controller::init(void) {
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "moonrock.xml", "Rock"   ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Hearts"  ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamonds"));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
+        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
+
         //world_model::instance().add_classifier(std::make_unique<pool_classifier>());
 
         websocket::instance().init();
@@ -36,8 +41,12 @@ namespace robotica {
         websocket::instance().add_callback("start_strategy", &start_callback);
         websocket::instance().add_callback("stop_strategy", &stop_callback);
 
-        set_strategy(std::make_unique<istrategy>());
+        // WeBots is a piece of absolute shit.
+        while (isnan(robot::instance().get_bearing_in_degrees())) robot::instance().update();
+
+        set_strategy(std::make_unique<strategy_maze>());
     }
+
 
     bool controller::update(void) {
         frame++;

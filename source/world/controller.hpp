@@ -14,6 +14,7 @@ namespace robotica {
 
         controller(int timestep);
 
+        void init(void);
         bool update(void);
 
         int get_timestep(void) const { return timestep; }

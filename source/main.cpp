@@ -14,6 +14,6 @@ int main(int argc, char** argv) {
         MusicAnalyzer::instance().SetConfig();
     }*/
     
-
+    robotica::controller::instance().init();
     while (robotica::controller::instance().update());
 }

@@ -1,11 +1,14 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
-#include <string_view>
 #include <comms/websocket.hpp>
-
-#include <algorithm>
 #include <vision/world_model.hpp>
 #include <vision/heat_measure.hpp>
+
+#include <magic_enum.hpp>
+
+#include <string_view>
+#include <algorithm>
+
 
 namespace robotica {
     robot& robot::instance(void) {
