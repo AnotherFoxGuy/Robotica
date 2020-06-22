@@ -49,7 +49,8 @@ namespace robotica {
 
         display = rbt->getDisplay(display_name);
 
-        emotes = display->imageLoad("emoticons.png");
+        //emotes = display->imageLoad("emoticons.png");
+
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);
@@ -95,7 +96,7 @@ namespace robotica {
     bool robot::update(void) {
         auto& window = main_window::instance();
 
-        std::array components {
+        const std::array components {
             std::tuple { arm_base,      &window.arm_base,      (float)  1 },
             std::tuple { arm_short,     &window.arm_short,     (float)  1 },
             std::tuple { arm_long,      &window.arm_long,      (float)  1 },
@@ -106,34 +107,54 @@ namespace robotica {
         };
 
         int result = rbt->step(timestep);
-        if (result != -1) {
+        if (result != -1)
+        {
             for (auto& [component, value, factor] : components) (*component).setPosition(factor * (**value));
 
-            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.006)); //(max) 6 m/s ~ 21 km/h
+            (*left_motor).setVelocity(-(window.left_motor * window.speed * 0.006));   //(max) 6 m/s ~ 21 km/h
             (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.006)); //(max) 6 m/s ~ 21 km/h
 
             // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
-			websocket::instance().sendData("weight", (scale->getValue() / 3.73) - 0.01);
-			websocket::instance().sendData("compass", get_bearing_in_degrees());
+            websocket::instance().sendData("weight", (scale->getValue() / 3.73) - 0.01);
+            websocket::instance().sendData("compass", get_bearing_in_degrees());
             std::stringstream worst;
             const char* separator = "";
             worst << "{\"Temps\": [";
-            for (auto& detection : world_model::instance().get_raw_object_list()) {
+            for (auto& detection : world_model::instance().get_raw_object_list())
+            {
                 // Show temperature. Ignore far away pools for accuracy.
                 if (detection.type == "Pool" && detection.bounding_rect.height > 4)
                 {
                     auto avg_color = std::any_cast<cv::Vec3b>(detection.data);
                     float temp = calculate_temperature(avg_color);
                     temperature tempclass = temperature_class(temp);
-                    worst << separator << "\"" << magic_enum::enum_name(tempclass) << " (" << temp << ")" << "\"";
+                    worst << separator << "\"" << magic_enum::enum_name(tempclass) << " (" << temp << ")"
+                          << "\"";
                     separator = ",";
                 }
             }
             worst << "] }";
             websocket::instance().sendData(worst.str());
-        }
 
+            // Emotions
+            update_emotion();
+        }
         return (result != -1);
+    }
+
+    void robot::update_emotion()
+    {
+        if (displayed_emotion != current_emotion) {
+            std::cout << "loading emotion" << std::endl;
+            auto current = fs::current_path();
+            auto z = display->imageLoad(current.parent_path().parent_path().string() + "\\images\\" + current_emotion + ".jpg"); //"C:\\Users\\Jan\\Documents\\Robotica1\\build\\source\\Release\\" + current_emotion + ".jpg");
+            displayed_emotion = current_emotion;
+            //display->setColor(0xFF00FF);
+            display->setAlpha(1);
+            display->setOpacity(1);
+            display->imagePaste(z, 0, 0, false);
+            //display->fillRectangle(0, 0, 400, 400);
+        }
     }
 
     cv::Mat robot::get_camera_output(side side) const {

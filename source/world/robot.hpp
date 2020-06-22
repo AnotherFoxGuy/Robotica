@@ -46,6 +46,7 @@ namespace robotica {
 
         // Updates the simulation. Returns false if the simulation has ended.
         bool update(void);
+        void update_emotion();
         double get_bearing_in_radian();
         double get_bearing_in_degrees();
 
@@ -61,6 +62,8 @@ namespace robotica {
         webots::Display* display;
 
         pointcloud get_lidar_pointcloud(void) const;
+
+        std::string current_emotion = "sing";
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;
@@ -73,5 +76,7 @@ namespace robotica {
         int frames;
         float eye_distance, eye_height;
         bool manually_destroyed = false;
+
+        std::string displayed_emotion = "";
     };
 }
