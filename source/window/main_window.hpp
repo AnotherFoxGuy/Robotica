@@ -24,10 +24,10 @@ namespace robotica {
 
     class main_window : public window, public setting_storage<main_window> {
     public:
-        constexpr static inline int EMOTICON_WIDTH     = 14;
-        constexpr static inline int EMOTICON_HEIGHT    = 14;
-        constexpr static inline int EMOTICONS_NUMBER_X = 5;
-        constexpr static inline int EMOTICONS_NUMBER_Y = 11;
+        //constexpr static inline int EMOTICON_WIDTH     = 14;
+        //constexpr static inline int EMOTICON_HEIGHT    = 14;
+        //constexpr static inline int EMOTICONS_NUMBER_X = 5;
+        //constexpr static inline int EMOTICONS_NUMBER_Y = 11;
 
 
         static main_window& instance(void);

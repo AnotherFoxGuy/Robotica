@@ -984,8 +984,8 @@ PROTO UWUBot-Tracked [
       ]
       name "display"
       # 16:9
-      width 24
-      height 14
+      width 800
+      height 450
     }
     ]
     name "base_link"
