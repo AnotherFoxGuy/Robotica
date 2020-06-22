@@ -25,7 +25,6 @@ namespace robotica {
             auto gray = grayness(image);
             cv::threshold(gray, gray, settings.rock_grayness_threshold, 255, cv::THRESH_BINARY);
 
-
             std::vector<classified_object> result;
 
             std::vector<std::vector<cv::Point>> contours;
@@ -68,7 +67,7 @@ namespace robotica {
         static cv::Mat grayness(const cv::Mat& image) {
             cv::Mat result(image.rows, image.cols, CV_8UC1);
 
-            auto colourfullness = [](const auto& v) {
+            auto colorfullness = [](const auto& v) {
                 auto diff = [](uchar a, uchar b) { return std::abs(((int) b) - ((int) a)); };
                 return std::clamp(diff(v[0], v[1]) + diff(v[0], v[2]) + diff(v[1], v[2]), 0, 255);
             };
@@ -76,7 +75,7 @@ namespace robotica {
             for (int x = 0; x < result.rows; ++x) {
                 for (int y = 0; y < result.cols; ++y) {
                     const cv::Vec3b& clr = image.at<cv::Vec3b>(x, y);
-                    result.at<uchar>(x, y) = 255 - colourfullness(clr);
+                    result.at<uchar>(x, y) = 255 - colorfullness(clr);
                 }
             }
 
