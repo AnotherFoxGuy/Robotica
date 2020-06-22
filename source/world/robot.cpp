@@ -49,6 +49,9 @@ namespace robotica {
 
         display = rbt->getDisplay(display_name);
 
+        led_left = rbt->getLED(led_names[0]);
+        led_right = rbt->getLED(led_names[1]);
+
         //emotes = display->imageLoad("emoticons.png");
 
         //provide samplingPeriod in milliseconds
@@ -171,6 +174,10 @@ namespace robotica {
         return image;
     }
 
+    void robot::set_led_color(int left, int right){
+        led_left->set(left);
+        led_right->set(right);
+    }
 
     float robot::get_camera_fov(side side) const {
         auto& camera = (side == side::LEFT) ? left_camera : right_camera;
