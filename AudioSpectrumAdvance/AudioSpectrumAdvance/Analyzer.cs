@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using Un4seen.Bass;
 using Un4seen.BassWasapi;
 using System.Windows.Forms.DataVisualization.Charting;
+using Newtonsoft.Json;
 
 namespace AudioSpectrumAdvance
 {
@@ -137,6 +138,8 @@ namespace AudioSpectrumAdvance
             int x, y;
             var b0 = 0;
 
+            var datt = new List<int>();
+
             //computes the spectrum data, the code is taken from a bass_wasapi sample.
             for (x = 0; x < _lines; x++)
             {
@@ -153,7 +156,16 @@ namespace AudioSpectrumAdvance
                 if (y > 255) y = 255;
                 if (y < 0) y = 0;
                 _spectrumdata.Add((byte) y);
-                Console.Write("{0, 3} ", y);
+                datt.Add(y);
+            }
+
+            try
+            {
+                SendServer.Instance.SendData(JsonConvert.SerializeObject(datt));
+            }
+            catch (Exception exception)
+            {
+               
             }
 
             if (DisplayEnable) _spectrum.Set(_spectrumdata);
