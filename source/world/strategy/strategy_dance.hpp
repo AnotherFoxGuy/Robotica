@@ -43,15 +43,12 @@ class strategy_dance : public istrategy
                 frame = 0;
                 amount_of_seconds_danced++;
             }
-            
         }
     };
     void set_strat(idance_strategy &strat)
     {
         if (amount_of_seconds_danced != 4)
-        {
             strat.dance(frame);
-        }
     }
     private:
     int amount_of_seconds_danced = 0;
