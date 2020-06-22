@@ -61,6 +61,22 @@ namespace robotica {
             ws.start();
         }
 
+        void initAudio(void) {
+            wsAudio.setUrl("ws://localhost:8080");
+            std::cout << "Connecting to ws://localhost:8080...\n";
+
+            wsAudio.setOnMessageCallback([&](const auto& msg) {
+              std::lock_guard lock { mtx };
+
+              if (msg->type == ix::WebSocketMessageType::Message) {
+                 std::cout << msg->str <<  std::endl;
+              }
+
+            });
+
+            wsAudio.start();
+        }
+
 
         void update(void) {
             // Run callbacks on main thread.
@@ -104,6 +120,7 @@ namespace robotica {
     private:
         std::mutex mtx;
         ix::WebSocket ws;
+        ix::WebSocket wsAudio;
 
         std::unordered_map<std::string, std::vector<message_handler>> handlers;
 
