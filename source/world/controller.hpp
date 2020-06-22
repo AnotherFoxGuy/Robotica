@@ -7,6 +7,7 @@
 namespace robotica {
     class controller {
     public:
+        int frame= 0;
         constexpr static int default_timestep = 1000 / 30;  // 30 TPS
 
         static controller& instance(void);

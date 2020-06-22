@@ -18,7 +18,7 @@ class MusicAnalyzer
              return true;
          }
          return false;
-    } //pref ../../song_path.wav
+    }
     void view() { ImGui::Plot("plot", conf); }
     void SetConfig()
     {
@@ -46,5 +46,9 @@ class MusicAnalyzer
                 data.push_back(currentSample);
             }
         }
+    }
+    void PrintSum()
+    {
+        audioFile.printSummary();
     }
 };

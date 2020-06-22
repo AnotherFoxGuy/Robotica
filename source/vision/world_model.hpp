@@ -6,7 +6,6 @@
 #include <utility/typedefs.hpp>
 #include <vision/iclassifier.hpp>
 #include <vision/parallax.hpp>
-#include <vision/mesher.hpp>
 #include <vision/partition_space.hpp>
 #include <vision/weighted_graph.hpp>
 #include <world/robot.hpp>
