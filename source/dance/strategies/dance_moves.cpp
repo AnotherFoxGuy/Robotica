@@ -74,82 +74,77 @@ void track_dance_move_1::setMotorVelocity(double l, double r)
     main_window_.right_motor = r;
 }
 
-
-
-
-arm_dance_move_2& arm_dance_move_2::instance(void)
+arm_dance_move_3& arm_dance_move_3::instance()
 {
-    static arm_dance_move_2 i;
+    static arm_dance_move_3 i;
     return i;
 }
-
-void arm_dance_move_2::dance(int frame)
+void arm_dance_move_3::dance(int frame)
 {
     switch (frame)
     {
     case 0:
-        main_window_.arm_long = 1.0;
+        main_window_.arm_long = 1.5;
+        main_window_.arm_short = -1.5;
         break;
     case 5:
-        main_window_.arm_short = 0;
+        main_window_.arm_long = 4.6;
+        main_window_.gripper_pitch = -1.5;
+        main_window_.gripper_roll = -3.142;
         break;
     case 10:
-        main_window_.arm_long = 4.0;
+        main_window_.arm_base = 6;
+        main_window_.gripper_pitch = 1.5;
         break;
     case 15:
-        main_window_.arm_long = 1.0;
+        main_window_.gripper_pitch = -1.5;
         break;
     case 20:
-        main_window_.arm_short = 0.0;
+        main_window_.gripper_pitch = 0;
+        main_window_.gripper_roll = 3.142;
         break;
     case 25:
-        main_window_.arm_long = 0.0;
+        main_window_.arm_base = 0;
+        main_window_.arm_long = 3;
         break;
     case 30:
-        rotate_arm_base += 2;
-        main_window_.arm_base = rotate_arm_base;
-        if (rotate_arm_base == 6)
-            rotate_arm_base = 0;
+        main_window_.arm_short = 1.5;
+        main_window_.arm_short = -1.5;
+        main_window_.gripper_roll = 0;
         break;
     }
-
 }
-
-track_dance_move_2& track_dance_move_2::instance(void)
+track_dance_move_3& track_dance_move_3::instance()
 {
-    static track_dance_move_2 i;
+    static track_dance_move_3 i;
     return i;
 }
-
-void track_dance_move_2::setMotorVelocity(double l, double r)
+void track_dance_move_3::setMotorVelocity(double l, double r)
 {
     main_window_.left_motor = l;
     main_window_.right_motor = r;
 }
-
-void track_dance_move_2::dance(int frame)
+void track_dance_move_3::dance(int frame)
 {
-    auto n = 0.5;
-
     switch (frame)
     {
     case 0:
-        setMotorVelocity(n, -n);
+        setMotorVelocity(0.5, 0.5);
         break;
     case 5:
-        setMotorVelocity(-n, n);
+        setMotorVelocity(0.5 ,0.5);
         break;
     case 10:
-        setMotorVelocity(n, n);
+        setMotorVelocity(-0.5, -0.5);
         break;
     case 15:
-        setMotorVelocity(-n, n);
+        setMotorVelocity(-0.5, -0.5);
         break;
     case 20:
-        setMotorVelocity(n, -n);
+        setMotorVelocity(-0.9, 0.9);
         break;
     case 25:
-        setMotorVelocity(n, -n);
+        setMotorVelocity(0.9, -0.9);
         break;
     case 30:
         setMotorVelocity(0, 0);
