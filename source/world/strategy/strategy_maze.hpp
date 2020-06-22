@@ -5,6 +5,8 @@
 #include <world/strategy/istrategy.hpp>
 #include <world/strategy/strategy_pickup.hpp>
 #include <utility/typedefs.hpp>
+#include <vision/pool_classifier.hpp>
+#include <vision/rock_classifier.hpp>
 
 #include <cstddef>
 #include <string>
@@ -26,6 +28,9 @@ namespace robotica {
     class strategy_maze : public istrategy {
     public:
         void init(void) override {
+            world_model::instance().add_classifier(std::make_unique<pool_classifier>());
+            world_model::instance().add_classifier(std::make_unique<rock_classifier>());
+
             substrategy = std::make_unique<strategy_pickup>();
             substrategy->init();
         }

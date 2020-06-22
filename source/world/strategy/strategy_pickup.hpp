@@ -49,6 +49,16 @@ namespace robotica {
                 settings.speed = 10;
                 settings.left_motor = 1;
                 settings.right_motor = -1;
+
+
+                if (!has_object) {
+                    const auto& objs = world_model::instance().get_raw_object_list();
+                    if (auto it = std::find_if(objs.begin(), objs.end(), [](const classified_object& o) { return o.type == "Rock"; }); it != objs.end()) {
+                        auto obj = *it;
+
+                        if (obj.bounding_rect.x + (obj.bounding_rect.size().width / 2) < rbt.get_camera_size(side::LEFT).x / 2) s = MOVING_FWD;
+                    }
+                }
             } else if (s == MOVING_FWD) {
                 settings.speed = 25;
                 settings.left_motor = 1;
@@ -67,6 +77,8 @@ namespace robotica {
                 settings.right_motor = -1;
             } else if (s == GRABBING) {
                 // Gripper code goes here.
+
+                has_object = true;
                 s = MOVING_BACK;
             }
         }
