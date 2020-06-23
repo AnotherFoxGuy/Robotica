@@ -7,6 +7,8 @@
 #include <utility/typedefs.hpp>
 #include <vision/pool_classifier.hpp>
 #include <vision/rock_classifier.hpp>
+#include <world/strategy/mazemap.hpp>
+#include <world/strategy/stategy_goto.hpp>
 
 #include <cstddef>
 #include <string>
@@ -32,20 +34,25 @@ namespace robotica {
             world_model::instance().add_classifier(std::make_unique<rock_classifier>());
 
             substrategy = std::make_unique<strategy_pickup>();
-            substrategy->init();
+            //substrategy->init();
+
+            main_window::instance().speed = 0;
         }
 
         void exit(void) override {
-            substrategy->exit();
+            //substrategy->exit();
         }
 
         void loop(void) override {
-            substrategy->loop();
+            //substrategy->loop();
         }
 
     private:
-        unique<istrategy> substrategy;
+        enum state { COLLECTING, DELIVERING } s;
 
+        unique<icompletable_strategy> substrategy;
+
+        mazemap map = generate_map();
         bool has_rock = false;
     };
 }
