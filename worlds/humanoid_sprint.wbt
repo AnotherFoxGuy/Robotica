@@ -1,0 +1,120 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+  info [
+    "The humanoid sprint benchmark aims at programing a NAO robot in Python to run a 10 meter race. "
+    "The goal is to run the 10 meter as fast as possible. "
+    "All the sensors and actuators of the robot can be used to achieve the best performance. "
+    "Records are stored on the challenge web site. "
+  ]
+  title "Humanoid Sprint"
+  window "humanoid_sprint"
+  basicTimeStep 20
+  FPS 20
+  contactProperties [
+    ContactProperties {
+      material1 "NAO foot material"
+      coulombFriction [
+        7
+      ]
+      bounce 0.3
+      bounceVelocity 0.003
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.8070904680389566 0.5611119737616559 0.18373439879880066 5.590545794404792
+  position -7.271686605929203 2.947239149023966 4.8582048362920265
+  follow "NAO"
+}
+TexturedBackground {
+  texture "noon_cloudy_countryside"
+}
+TexturedBackgroundLight {
+  texture "noon_cloudy_countryside"
+  luminosity 0.4
+  castShadows FALSE
+}
+SpotLight {
+  attenuation 0 0 1
+  beamWidth 0.2
+  cutOffAngle 0.7
+  direction 0 -1 0
+  intensity 10
+  location -5 4 0.5
+  castShadows TRUE
+}
+SpotLight {
+  attenuation 0 0 1
+  beamWidth 0.2
+  cutOffAngle 0.7
+  direction 0 -1 0
+  intensity 10
+  location 0 4 0.5
+  castShadows TRUE
+}
+SpotLight {
+  attenuation 0 0 1
+  beamWidth 0.2
+  cutOffAngle 0.7
+  direction 0 -1 0
+  intensity 10
+  location 5 4 0.5
+  castShadows TRUE
+}
+DEF TRACK Floor {
+  translation 0 0 0.39
+  size 11 3
+  tileSize 11 3
+  appearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "textures/nao_10m_track_base_color.jpg"
+      ]
+    }
+    roughness 1
+    roughnessMap ImageTexture {
+      url [
+        "textures/nao_10m_track_roughness.jpg"
+      ]
+    }
+    metalness 0
+    normalMap ImageTexture {
+      url [
+        "textures/nao_10m_track_normal.jpg"
+      ]
+    }
+  }
+}
+DEF GRASS Solid {
+  translation 0 -0.005 0
+  children [
+    Shape {
+      appearance Grass {
+        colorOverride 0.905486 0.988983 0.47155
+        textureTransform TextureTransform {
+          scale 20 20
+        }
+      }
+      geometry Cylinder {
+        bottom FALSE
+        height 0.001
+        radius 10
+        side FALSE
+      }
+    }
+  ]
+  name "grass"
+  model "floor"
+  locked TRUE
+}
+RaceStopwatch {
+  translation 4.73 0 -1.19623
+  rotation 0 -1 0 -1.57
+  window "humanoid_sprint"
+}
+UWUBot-Tracked {
+  translation -5.19 0.030012 0.16
+  rotation -0.7071067811862364 9.381857096790023e-07 0.7071067811862364 3.14159
+  lidar_horizontalResolution 61
+  lidar_verticalFieldOfView 0.8240262295081967
+}

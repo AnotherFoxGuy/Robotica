@@ -8,11 +8,11 @@ int main(int argc, char** argv) {
 
     //EASY_PROFILER_ENABLE;
     
-    if(MusicAnalyzer::instance().loadfile())
+ /*   if(MusicAnalyzer::instance().load_file())
     {
         MusicAnalyzer::instance().SetData();
         MusicAnalyzer::instance().SetConfig();
-    }
+    }*/
     
 
     while (robotica::controller::instance().update());

@@ -52,4 +52,11 @@ namespace robotica {
         origin_pos = rotate_point(origin_pos, { 0, 0 }, rot) + pos;
         return origin_pos;
     }
+
+
+
+    inline float distance_squared(const glm::vec3& a, const glm::vec3& b) {
+        auto delta = b - a;
+        return glm::dot(delta, delta);
+    }
 }

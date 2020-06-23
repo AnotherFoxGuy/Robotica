@@ -6,6 +6,8 @@
 #include <utility/typedefs.hpp>
 #include <vision/iclassifier.hpp>
 #include <vision/parallax.hpp>
+#include <vision/partition_space.hpp>
+#include <vision/weighted_graph.hpp>
 #include <world/robot.hpp>
 #include <window/3d/primitive.hpp>
 
@@ -44,7 +46,6 @@ namespace robotica {
 
         const std::vector<classified_object>& get_raw_object_list(void) const;
         const std::vector<world_object>& get_object_list(void) const;
-        const mesh& get_world_mesh(void) const;
 
 
         const cv::Mat& get_left_camera (void) const { return left;  }
@@ -52,10 +53,11 @@ namespace robotica {
         const cv::Mat& get_depth_map   (void) const { return depth; }
 
         const pointcloud& get_lidar_pointcloud(void) const { return lidar_pointcloud; }
+        const partition_space<vertex>& get_partition_space(void) const { return part_space; }
+        const weighted_graph& get_pathfinding_graph(void) const { return pathfinding_graph; }
     private:
         std::vector<classified_object> update_raw_objects(void) const;
         std::vector<world_object> update_objects(const std::vector<world_object>& prev) const;
-        mesh update_mesh(void) const;
         cv::Mat update_depth_map(void);
 
 
@@ -66,6 +68,15 @@ namespace robotica {
 
         pointcloud update_lidar_pointcloud(void) {
             return robot::instance().get_lidar_pointcloud();
+        }
+
+        partition_space<vertex> update_partition_space(partition_space<vertex>&& old) {
+            old.set_data(lidar_pointcloud);
+            return std::move(old);
+        }
+
+        weighted_graph update_pathfinding_graph(void) {
+            return create_graph(part_space, &(*lidar_pointcloud)[0]);
         }
 
 
@@ -82,15 +93,17 @@ namespace robotica {
         #endif
 
         template <auto Fn, typename... Args> using bound_cache = cache<typename make_member_function_info<decltype(Fn)>::return_type, bound_t<Fn, Args...>>;
+        #define RBT_WM_CACHE_ITEM(fn, name) bound_cache<&world_model::fn> name { {}, std::bind_front(&world_model::fn, this) }
 
 
-        bound_cache<&world_model::update_raw_objects             > raw_objects      { {}, std::bind_front(&world_model::update_raw_objects,              this) };
-        bound_cache<&world_model::update_objects                 > objects          { {}, std::bind_front(&world_model::update_objects,                  this) };
-        bound_cache<&world_model::update_mesh                    > world_mesh       { {}, std::bind_front(&world_model::update_mesh,                     this) };
-        bound_cache<&world_model::update_camera_data<side::LEFT> > left             { {}, std::bind_front(&world_model::update_camera_data<side::LEFT>,  this) };
-        bound_cache<&world_model::update_camera_data<side::RIGHT>> right            { {}, std::bind_front(&world_model::update_camera_data<side::RIGHT>, this) };
-        bound_cache<&world_model::update_depth_map               > depth            { {}, std::bind_front(&world_model::update_depth_map,                this) };
-        bound_cache<&world_model::update_lidar_pointcloud        > lidar_pointcloud { {}, std::bind_front(&world_model::update_lidar_pointcloud,         this) };
+        RBT_WM_CACHE_ITEM(update_raw_objects,               raw_objects);
+        RBT_WM_CACHE_ITEM(update_objects,                   objects);
+        RBT_WM_CACHE_ITEM(update_camera_data<side::LEFT>,   left);
+        RBT_WM_CACHE_ITEM(update_camera_data<side::RIGHT>,  right);
+        RBT_WM_CACHE_ITEM(update_depth_map,                 depth);
+        RBT_WM_CACHE_ITEM(update_lidar_pointcloud,          lidar_pointcloud);
+        RBT_WM_CACHE_ITEM(update_partition_space,           part_space);
+        RBT_WM_CACHE_ITEM(update_pathfinding_graph,         pathfinding_graph);
 
 
         // cv::CascadeClassifier is unfortunately not const-correct.

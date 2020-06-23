@@ -1,13 +1,18 @@
 #include <world/robot.hpp>
 #include <world/controller.hpp>
+#include <string_view>
+#include <comms/websocket.hpp>
 
+#include <algorithm>
+#include <string>
+#include <vision/world_model.hpp>
+#include <vision/heat_measure.hpp>
 
 namespace robotica {
     robot& robot::instance(void) {
         static robot i { controller::instance().get_timestep() };
         return i;
     }
-
 
     robot::robot(int timestep) :
         rbt(new webots::Robot()),
@@ -45,7 +50,11 @@ namespace robotica {
 
         display = rbt->getDisplay(display_name);
 
-        emotes = display->imageLoad("emoticons.png");
+        led_left = rbt->getLED(led_names[0]);
+        led_right = rbt->getLED(led_names[1]);
+
+        //emotes = display->imageLoad("emoticons.png");
+
         //provide samplingPeriod in milliseconds
         compass->enable(100);
         lidar->enable(100);
@@ -70,13 +79,20 @@ namespace robotica {
         if (!manually_destroyed) delete rbt;
     }
 
-
     double robot::get_bearing_in_degrees() {
         const double *north = compass->getValues();
-        double rad = atan2(north[0], north[1]);
+        double rad = atan2(north[0], north[2]);
         double bearing = (rad - 1.5708) / M_PI * 180.0;
         if (bearing < 0.0)
             bearing = bearing + 360.0;
+        return bearing;
+    }
+
+    double robot::get_bearing_in_radian() {
+        const double *north = compass->getValues();
+        double bearing = atan2(north[0], north[2]);
+        if (bearing < 0.0)
+            bearing = bearing + 6.28319;
         return bearing;
     }
 
@@ -84,29 +100,83 @@ namespace robotica {
     bool robot::update(void) {
         auto& window = main_window::instance();
 
-        std::array components {
-            std::tuple { arm_base,      &window.arm_base,      (float) 1           },
-            std::tuple { arm_short,     &window.arm_short,     (float) 1           },
-            std::tuple { arm_long,      &window.arm_long,      (float) 1           },
-            std::tuple { gripper_left,  &window.gripper,       (float) 1           },
-            std::tuple { gripper_right, &window.gripper,       (float) -1          },
-            std::tuple { gripper_roll,  &window.gripper_roll,  (float) 1           },
-            std::tuple { gripper_pitch, &window.gripper_pitch, (float) 1           }
+        const std::array components {
+            std::tuple { arm_base,      &window.arm_base,      (float)  1 },
+            std::tuple { arm_short,     &window.arm_short,     (float)  1 },
+            std::tuple { arm_long,      &window.arm_long,      (float)  1 },
+            std::tuple { gripper_left,  &window.gripper,       (float)  1 },
+            std::tuple { gripper_right, &window.gripper,       (float) -1 },
+            std::tuple { gripper_roll,  &window.gripper_roll,  (float)  1 },
+            std::tuple { gripper_pitch, &window.gripper_pitch, (float)  1 }
         };
 
-        int result;        
-        if (result = rbt->step(timestep); result != -1) {
-            for (auto& [component, setting, factor] : components) (*component).setPosition(factor * (**setting));
+        int result = rbt->step(timestep);
+        if (result != -1)
+        {
+            for (auto& [component, value, factor] : components) (*component).setPosition(factor * (**value));
 
-            (*left_motor ).setVelocity(-(window.left_motor  * window.speed * 0.01));
-            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.01));
+            (*left_motor).setVelocity(-(window.left_motor * window.speed * 0.006));   //(max) 6 m/s ~ 21 km/h
+            (*right_motor).setVelocity(-(window.right_motor * window.speed * 0.006)); //(max) 6 m/s ~ 21 km/h
 
-            //std::cout << "Measured weight: " << scale->getValue() << '\n';
+            // 0.01 = 0.0373 / 3.73 => default force on the scale / gravity of the "moon" (its mars gravity)
+            websocket::instance().sendData("weight", (scale->getValue() / 3.73) - 0.01);
+            websocket::instance().sendData("compass", get_bearing_in_degrees());
+            std::stringstream worst;
+            const char* separator = "";
+            worst << "{\"Temps\": [";
+            for (auto& detection : world_model::instance().get_raw_object_list())
+            {
+                // Show temperature. Ignore far away pools for accuracy.
+                if (detection.type == "Pool" && detection.bounding_rect.height > 4)
+                {
+                    auto avg_color = std::any_cast<cv::Vec3b>(detection.data);
+                    float temp = calculate_temperature(avg_color);
+                    temperature tempclass = temperature_class(temp);
+                    worst << separator << "\"" << magic_enum::enum_name(tempclass) << " (" << temp << ")"
+                          << "\"";
+                    separator = ",";
+                }
+            }
+            worst << "] }";
+            websocket::instance().sendData(worst.str());
+
+            // Emotions
+            if (animation)
+                update_animation();
+            else
+                update_emotion();
         }
-
         return (result != -1);
     }
 
+    void robot::update_emotion()
+    {
+        if (displayed_emotion != current_emotion) {
+            std::cout << "loading emotion" << std::endl;
+            auto current = fs::current_path();
+            auto z = display->imageLoad(current.parent_path().parent_path().string() + "\\images\\" + current_emotion + ".jpg");
+            displayed_emotion = current_emotion;
+            display->imagePaste(z, 0, 0, false);
+        }
+    }
+
+    void robot::update_animation()
+    {
+        displayed_emotion = "animation";
+
+        if (animation_time == 0) {
+            std::cout << "New frame" << std::endl;
+            auto image = display->imageLoad(fs::current_path().parent_path().parent_path().string() + "\\images\\frame-" + std::to_string(animation_frame) + ".jpg");
+            display->imagePaste(image, 0, 0, false);
+            if (animation_frame < animation_frames)
+                ++animation_frame;
+            else
+                animation_frame = 1;
+
+            animation_time = 4;
+        }
+        --animation_time;
+    }
 
     cv::Mat robot::get_camera_output(side side) const {
         auto& camera = (side == side::LEFT) ? left_camera : right_camera;
@@ -122,6 +192,10 @@ namespace robotica {
         return image;
     }
 
+    void robot::set_led_color(int left, int right){
+        led_left->set(left);
+        led_right->set(right);
+    }
 
     float robot::get_camera_fov(side side) const {
         auto& camera = (side == side::LEFT) ? left_camera : right_camera;
@@ -153,9 +227,19 @@ namespace robotica {
         pointcloud pc;
         pc.reserve(points);
 
+        // We discard some points here, so the data is easier to work with for the pathfinding algorithm.
+        // Normally we'd just change the sensor, but WeBots doesn't allow us to set the number of points per scanline below some arbitrary limit.
         for (std::size_t i = 0; i < points; ++i) {
-            const auto& pt = lidar->getPointCloud()[i];
-            pc.push_back({ glm::vec3{ pt.x * settings.lidar_scale_factor, pt.y * settings.lidar_scale_factor, pt.z * settings.lidar_scale_factor } });
+            int keep_every_nth_point = settings.lidar_inverse_discard_ratio - std::clamp<float>(
+                (float(i) / float(points)) * (settings.lidar_inverse_discard_ratio - 1) * settings.lidar_nearby_suppression, 
+                0, 
+                settings.lidar_inverse_discard_ratio - 1
+            );
+
+
+                const auto& pt = lidar->getPointCloud()[i];
+                pc.push_back({ glm::vec3{ pt.x * settings.lidar_scale_factor, pt.y * settings.lidar_scale_factor, pt.z * settings.lidar_scale_factor } });
+
         }
 
         return pc;

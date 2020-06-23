@@ -11,9 +11,12 @@ set(SOURCE_FILES
 
      dance/AudioFile.h
      dance/MusicAnalyzer.{hpp,cpp}
+     dance/strategies/idance_strategy.hpp
+     dance/strategies/dance_moves.{hpp,cpp}
      comms/websocket.hpp
      comms/joystick_callback.hpp
      comms/gripper_callback.hpp
+     comms/strategy_callback.hpp
      utility/cache.hpp
      utility/math.hpp
      utility/traits.hpp
@@ -39,6 +42,9 @@ set(SOURCE_FILES
      window/3d/program.hpp
      world/controller.{hpp,cpp}
      world/robot.{hpp,cpp}
+     world/strategy/istrategy.hpp
+     world/strategy/strategy_playingcards.hpp
+     world/strategy/strategy_dance.hpp
      main.cpp
 )
 

@@ -13,8 +13,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 0.895398
-  orientation 0.0006447294524766732 -0.9998311628243325 -0.018363827740327205 3.3427824137821296
-  position 0.4409414938028615 0.22933060997519544 -0.609999309994477
+  orientation -0.14355066240582337 -0.951750770043868 -0.27122625065386585 2.2171457029220383
+  position -0.49591397680837257 0.4206531648557867 -0.30797334594040016
   near 0.1
 }
 TexturedBackground {
@@ -27,27 +27,6 @@ Fog {
   color 0.83 0.83 0.75
   fogType "EXPONENTIAL"
   visibilityRange 800
-}
-Rock17cm {
-  translation 2.8026 -0.0937371 0.551869
-  rotation 0 -1 0 2.79177
-  name "rock 17 cm(1)"
-}
-Rock17cm {
-  translation 1.22813 -0.147933 -0.170912
-  rotation 0 -1 0 3.26485
-  name "rock 17 cm(2)"
-}
-Rock10cm {
-  translation 1.82525 -0.0515644 0.468926
-}
-Rock10cm {
-  translation 0.300248 -0.112514 -0.875617
-  name "rock 10 cm(1)"
-}
-Rock10cm {
-  translation 0.387314 -0.116121 -0.177911
-  name "rock 10 cm(2)"
 }
 DEF GROUND Solid {
   translation -641 38.85 -801
@@ -290,7 +269,8 @@ Transform {
   ]
 }
 UWUBot-Tracked {
-  translation 0 0.18 1.59216e-07
+  translation 0 0.01 -2.65359e-08
   rotation 1 0 0 3.14159
-  lidar_numberOfLayers 1
+  lidar_horizontalResolution 61
+  lidar_verticalFieldOfView 0.8240262295081967
 }

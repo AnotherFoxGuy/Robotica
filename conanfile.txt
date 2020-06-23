@@ -13,6 +13,7 @@ imgui/1.76
 sdl2/2.0.12@bincrafters/stable
 glew/2.1.0@bincrafters/stable
 easy_profiler/2.1.0@AnotherFoxGuy/stable
+eigen/3.3.7
 
 [options]
 glog:shared=True
