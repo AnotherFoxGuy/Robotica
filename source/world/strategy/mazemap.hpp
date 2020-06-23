@@ -52,6 +52,7 @@ namespace robotica {
             std::tuple { 8,  10, maze_vertex::NORTH, 2100 }
         };
 
+
         mazemap result { 0, 10 };
         for (int i = 0; i <= 12; ++i) result.vertices.push_back(maze_vertex{ i });
 

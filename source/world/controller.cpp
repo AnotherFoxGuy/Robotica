@@ -21,10 +21,10 @@ namespace robotica {
 
     void controller::init(void) {
         //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "moonrock.xml", "Rock"   ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Hearts"  ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamonds"));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
-        world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Hearts.xml",   "Hearts"  ));
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Diamonds.xml", "Diamonds"));
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Spades.xml",   "Spades"  ));
+        //world_model::instance().add_classifier(std::make_unique<cascade_classifier>( "Clubs.xml",    "Clubs"   ));
 
         //world_model::instance().add_classifier(std::make_unique<pool_classifier>());
 

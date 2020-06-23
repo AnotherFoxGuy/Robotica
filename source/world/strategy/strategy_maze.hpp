@@ -15,44 +15,86 @@
 #include <vector>
 
 namespace robotica {
-    struct room {
-        std::vector<shared<room>> connections;
-        int rock_count;
-        bool scanned;
-    };
-
-    struct maze {
-        std::vector<shared<room>> rooms;
-        shared<room> current;
-    };
-
-
+    // TODO: Replace all this init/exit bs with RAII.
     class strategy_maze : public istrategy {
     public:
-        void init(void) override {
+        strategy_maze(void) {
             world_model::instance().add_classifier(std::make_unique<pool_classifier>());
             world_model::instance().add_classifier(std::make_unique<rock_classifier>());
+        }
 
-            substrategy = std::make_unique<strategy_goto>(&map, 0, 10);
-            substrategy->init();
 
+        void init(void) override {
+            todo = { 10, 9, 12, 4 };
             main_window::instance().speed = 0;
         }
 
         void exit(void) override {
-            substrategy->exit();
+            if (mover) mover->exit();
+            if (observer) observer->exit();
         }
 
         void loop(void) override {
-            substrategy->loop();
+            if (done) return;
+
+            if (s == MOVING) {
+                if (mover == nullptr) {
+                    mover = std::make_unique<strategy_goto>(&map, current, todo.back());
+                    mover->init();
+                }
+
+                mover->loop();
+                if (mover->done()) {
+                    std::cout << "Destination reached. Looking for objects...\n";
+
+                    mover->exit();
+
+                    s = POOLS;
+
+                    mover = nullptr;
+
+                    current = todo.back();
+                    todo.pop_back();
+                }
+            } else if (s == POOLS) {
+                if (observer == nullptr) {
+                    observer = std::make_unique<strategy_pickup>("Pool");
+                    observer->init();
+                }
+
+                observer->loop();
+                if (observer->done()) {
+                    observer->exit();
+
+                    s = ROCKS;
+                    observer = nullptr;
+                }
+            } else if (s == ROCKS) {
+                if (observer == nullptr) {
+                    observer = std::make_unique<strategy_pickup>("Rock");
+                    observer->init();
+                }
+
+                observer->loop();
+                if (observer->done()) {
+                    observer->exit();
+
+                    s = MOVING;
+                    observer = nullptr;
+                }
+            }
         }
 
     private:
-        enum state { COLLECTING, DELIVERING } s;
+        enum state { MOVING, POOLS, ROCKS } s;
 
-        unique<icompletable_strategy> substrategy;
+        unique<strategy_goto> mover;
+        unique<strategy_pickup> observer;
+
+        std::vector<int> todo;
+        int current = 0;
 
         mazemap map = generate_map();
-        bool has_rock = false;
+        bool done = false;
     };
 }

@@ -11,101 +11,92 @@
 namespace robotica {
     class strategy_pickup : public icompletable_strategy {
     public:
-        bool has_object = false;
+        strategy_pickup(std::string_view name) : name(name) {
+            heading = robot::instance().get_bearing_in_degrees();
+            last_rot = heading;
 
-        void init(void) override {
-            last_heading = robot::instance().get_bearing_in_degrees();
-            rotated = 0;
-        }
-
-
-        void exit(void) override {
-            auto& settings = main_window::instance();
-            settings.left_motor = 0;
-            settings.right_motor = 0;
+            std::cout << "Looking for " << name << std::endl;
         }
 
 
         void loop(void) override {
-            if (done()) return;
+            auto distance = [](double rot, double axis) {
+                auto difference = [](double a, double b) { return std::abs(a - b); };
 
-            auto& rbt = robot::instance();
+                return std::min(
+                    difference(rot, axis),
+                    std::min(difference(rot - 360, axis), difference(rot + 360, axis))
+                );
+            };
+
+
             auto& settings = main_window::instance();
-
-
-            if (rotated >= 360) {
-                is_done = true;
-
-                settings.left_motor = 0;
-                settings.right_motor = 0;
-
-                return;
-            }
-
             if (s == ROTATING) {
-                double heading = rbt.get_bearing_in_degrees();
-                apply_rotation(heading);
-
                 settings.speed = 10;
                 settings.left_motor = 1;
                 settings.right_motor = -1;
 
+                if (!realign) {
+                    auto objs = world_model::instance().get_raw_object_list();
 
-                if (!has_object) {
-                    const auto& objs = world_model::instance().get_raw_object_list();
-                    if (auto it = std::find_if(objs.begin(), objs.end(), [](const classified_object& o) { return o.type == "Rock"; }); it != objs.end()) {
-                        auto obj = *it;
+                    for (const auto& o : objs) {
+                        if (o.bounding_rect.x + (o.bounding_rect.size().width / 2) < robot::instance().get_camera_size(side::LEFT).x) {
+                            std::cout << "Found " << name << std::endl;
 
-                        if (obj.bounding_rect.x + (obj.bounding_rect.size().width / 2) < rbt.get_camera_size(side::LEFT).x / 2) s = MOVING_FWD;
+                            s = FWD;
+                            return;
+                        }
                     }
                 }
-            } else if (s == MOVING_FWD) {
-                settings.speed = 25;
+
+                dist_rot += difference(last_rot, robot::instance().get_bearing_in_degrees());
+                last_rot = robot::instance().get_bearing_in_degrees();
+                if (dist_rot >= 355) realign = true;
+
+                if (realign && difference(heading, robot::instance().get_bearing_in_degrees()) < 1) {
+                    std::cout << "Finished looking for " << name << std::endl;
+
+                    s = DONE;
+
+                    settings.speed = 0;
+                    settings.left_motor = 0;
+                    settings.right_motor = 0;
+                }
+            } else if (s == FWD) {
+                settings.speed = 10;
                 settings.left_motor = 1;
                 settings.right_motor = 1;
 
-                ++travelled;
+                dist_move += settings.speed * settings.left_motor;
 
-                const auto& objs = world_model::instance().get_object_list();
-                if (std::find_if(objs.begin(), objs.end(), [](const world_model::world_object& o) { return o.identity == "Rock"; }) == objs.end()) s = GRABBING;
-            } else if (s == MOVING_BACK) {
-                if (travelled == 0) s = ROTATING;
-                else --travelled;
-
-                settings.speed = 25;
+                auto objs = world_model::instance().get_raw_object_list();
+                if (objs.empty()) {
+                    s = BACK;
+                }
+            } else if (s == BACK) {
+                settings.speed = 10;
                 settings.left_motor = -1;
                 settings.right_motor = -1;
-            } else if (s == GRABBING) {
-                // Gripper code goes here.
 
-                has_object = true;
-                s = MOVING_BACK;
+                dist_move -= settings.speed * settings.left_motor;
+
+                if (dist_move <= 0) {
+                    realign = true;
+                    s = ROTATING;
+                }
             }
         }
 
 
-        bool done(void) override {
-            return is_done;
+        bool done(void) {
+            return s == DONE;
         }
     private:
-        enum state { ROTATING, MOVING_FWD, MOVING_BACK, GRABBING } s = ROTATING;
+        enum state { ROTATING, FWD, BACK, DONE } s = ROTATING;
 
+        std::string name;
+        double heading, dist_move = 0, dist_rot = 0, last_rot;
+        bool realign = false;
 
-        bool is_done = false;
-        double rotated, last_heading;
-        int travelled = 0;
-
-
-        static bool is_same(const glm::vec2& a, const glm::vec2& b) {
-            return false;
-        }
-
-
-        void apply_rotation(double heading) {
-            double tmp = (heading > last_heading) ? heading - 360 : heading;
-            rotated += std::abs(heading - last_heading);
-
-            last_heading = heading;
-        }
     };
 }
