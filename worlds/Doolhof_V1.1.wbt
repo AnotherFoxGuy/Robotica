@@ -16,6 +16,7 @@ Viewpoint {
   orientation -0.08691689113948843 0.9250029642260326 0.3698850770275809 2.713530235865621
   position 1.5623679124462475 4.219321504954573 -4.13694368515338
   near 0.1
+  follow "base_link"
 }
 TexturedBackground {
   texture "mars"
@@ -393,9 +394,9 @@ DEF Doolhof Transform {
       }
     }
     SolidBox {
-      translation -0.73 0.1 -1.5
+      translation -0.73 0.1 -1.56
       name "box(3)"
-      size 0.2 0.2 1
+      size 0.2 0.2 0.9
       appearance PBRAppearance {
         baseColorMap ImageTexture {
           url [
@@ -506,6 +507,9 @@ DEF Doolhof Transform {
   ]
 }
 UWUBot-Tracked {
+  hidden rotation_3 0.5818142761053637 0.5751042721532393 -0.5751062721541856 2.0877149992322215
+  hidden translation_7 0.004592999966383697 -0.02761700000437351 0.05
+  hidden rotation_7 -0.5865099805315278 -0.5727169802920422 0.572713980292145 2.0807129993028752
   translation -1.48053 0.02 -0.964869
   rotation 1 0 0 3.14159
   lidar_horizontalResolution 61
