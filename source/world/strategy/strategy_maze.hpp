@@ -33,18 +33,18 @@ namespace robotica {
             world_model::instance().add_classifier(std::make_unique<pool_classifier>());
             world_model::instance().add_classifier(std::make_unique<rock_classifier>());
 
-            substrategy = std::make_unique<strategy_pickup>();
-            //substrategy->init();
+            substrategy = std::make_unique<strategy_goto>(&map, 0, 10);
+            substrategy->init();
 
             main_window::instance().speed = 0;
         }
 
         void exit(void) override {
-            //substrategy->exit();
+            substrategy->exit();
         }
 
         void loop(void) override {
-            //substrategy->loop();
+            substrategy->loop();
         }
 
     private:

@@ -111,7 +111,6 @@ namespace robotica {
     bool robot::update(void) {
         auto& window = main_window::instance();
 
-        std::cout << get_distance(side::LEFT) << ", " << get_distance(side::RIGHT) << '\n';
         const std::array components {
             std::tuple { arm_base,      &window.arm_base,      (float)  1 },
             std::tuple { arm_short,     &window.arm_short,     (float)  1 },

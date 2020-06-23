@@ -7,6 +7,7 @@
 #include <world/strategy/mazemap.hpp>
 #include <world/strategy/strategy_lookat.hpp>
 #include <world/strategy/strategy_hug_wall.hpp>
+#include <world/strategy/strategy_goto_next.hpp>
 
 #include <glm/glm.hpp>
 
@@ -20,83 +21,47 @@
 namespace robotica {
     class strategy_goto : public icompletable_strategy {
     public:
-        strategy_goto(const mazemap* map, int current, int dest) : map(map) {
-            todo = get_path(map->vertices[current], map->vertices[dest], *map);
-        }
+        strategy_goto(const mazemap* map, int from, int to) : map(map), path(get_path(map->vertices[from], map->vertices[to], *map)) {}
 
 
         void exit(void) override {
             auto& settings = main_window::instance();
+
+            settings.speed = 0;
             settings.left_motor = 0;
             settings.right_motor = 0;
         }
 
 
         void loop(void) override {
-            if (todo.empty()) return;
-            auto& settings = main_window::instance();
+            if (done()) return;
 
-            if (s == ROTATING) {
-                if (rotate == nullptr) {
-                    rotate = std::make_unique<strategy_lookat>(todo[0].ab);
-                    rotate->init();
-                }
+            const maze_vertex::edge& current = path.front();
+            if (mover == nullptr) {
+                std::cout << "Now moving to node " << current.dest << "\n";
 
-                rotate->loop();
-                if (rotate->done()) {
-                    s = ALIGNING;
+                auto next = path.size() >= 2 ? path[1].ab : current.ab;
+                mover = std::make_unique<strategy_goto_next>(current.distance, current.ab, next);
+                mover->init();
+            }
 
-                    rotate->exit();
-                    rotate = nullptr;
-                }
-            } else if (s == MOVING) {
-                if (distance < todo[0].distance) {
-                    settings.speed = 25;
-                    settings.left_motor = 1;
-                    settings.right_motor = 1;
+            mover->loop();
+            if (mover->done()) {
+                mover->exit();
+                mover = nullptr;
 
-                    distance += settings.speed * settings.left_motor;
-                } else {
-                    settings.speed = 0;
-                    settings.left_motor = 0;
-                    settings.right_motor = 0;
-
-                    todo.pop_front();
-                    distance = 0;
-
-                    s = ROTATING;
-                }
-            } else if (s == ALIGNING) {
-                if (todo.size() < 2 || todo[0].ab == todo[1].ab) {
-                    s = MOVING;
-                    return;
-                }
-
-                if (rotate == nullptr) {
-                    rotate = std::make_unique<strategy_hug_wall>(side_for_dirchange(todo[0].ab, todo[1].ab), todo[0].ab);
-                    rotate->init();
-                }
-
-                rotate->loop();
-                if (rotate->done()) {
-                    rotate = nullptr;
-                    s = MOVING;
-                }
+                path.pop_front();
             }
         }
 
 
         bool done(void) override {
-            return todo.empty();
+            return path.empty();
         }
     private:
-        enum state { MOVING, ALIGNING, ROTATING } s = ROTATING;
-
         const mazemap* map;
-        std::deque<maze_vertex::edge> todo;
-        unique<icompletable_strategy> rotate;
-        float distance = 0;
-
+        std::deque<maze_vertex::edge> path;
+        unique<strategy_goto_next> mover;
 
         static std::deque<maze_vertex::edge> get_path(const maze_vertex& a, const maze_vertex& b, const mazemap& map) {
             std::queue<int> todo;
@@ -126,11 +91,27 @@ namespace robotica {
         }
 
 
-        static strategy_hug_wall::wall_side side_for_dirchange(maze_vertex::direction from, maze_vertex::direction to) {
-            if (from == maze_vertex::EAST)  return (to == maze_vertex::NORTH) ? strategy_hug_wall::RIGHT : strategy_hug_wall::LEFT;
-            if (from == maze_vertex::WEST)  return (to == maze_vertex::SOUTH) ? strategy_hug_wall::RIGHT : strategy_hug_wall::LEFT;
-            if (from == maze_vertex::NORTH) return (to == maze_vertex::EAST)  ? strategy_hug_wall::RIGHT : strategy_hug_wall::LEFT;
-            if (from == maze_vertex::SOUTH) return (to == maze_vertex::WEST)  ? strategy_hug_wall::RIGHT : strategy_hug_wall::LEFT;
+        static maze_vertex::direction get_facing(void) {
+            auto& rbt = robot::instance();
+
+            std::array facings {
+                std::pair { maze_vertex::NORTH, 0.0   },
+                std::pair { maze_vertex::SOUTH, 180.0 },
+                std::pair { maze_vertex::EAST,  90.0  },
+                std::pair { maze_vertex::WEST,  270.0 }
+            };
+
+            auto distance = [](double rot, double axis) {
+                auto difference = [](double a, double b) { return std::abs(a - b); };
+
+                return std::min(
+                    difference(rot, axis),
+                    std::min(difference(rot - 360, axis), difference(rot + 360, axis))
+                );
+            };
+
+            auto e = std::min_element(facings.begin(), facings.end(), [&](const auto& a, const auto& b) { return distance(rbt.get_bearing_in_degrees(), a.second) < distance(rbt.get_bearing_in_degrees(), b.second); });
+            return e->first;
         }
     };
 }
