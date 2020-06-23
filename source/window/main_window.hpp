@@ -79,8 +79,8 @@ namespace robotica {
         RBT_SETTING(LIDAR,      max_path_edges,                10,      1,    32);
 
         // Robot controls
-        RBT_SETTING(ROBOT,    left_motor,         0.25,  -1,    1);
-        RBT_SETTING(ROBOT,    right_motor,        0.25,  -1,    1);
+        RBT_SETTING(ROBOT,    left_motor,         0.0,  -1,    1);
+        RBT_SETTING(ROBOT,    right_motor,        0.0,  -1,    1);
         RBT_SETTING(ROBOT,    speed,              100,    1,    100);
 
         RBT_SETTING(ARM,      arm_base,           0.0,       0,        2 * pi);

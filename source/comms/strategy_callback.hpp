@@ -6,6 +6,7 @@
 #include <world/robot.hpp>
 #include <world/strategy/istrategy.hpp>
 #include <world/strategy/strategy_playingcards.hpp>
+#include <world/strategy/strategy_maze.hpp>
 
 #include <iostream>
 #include <string>
@@ -28,6 +29,8 @@ inline void start_callback(std::string_view argString)
         controller.set_strategy(std::make_unique<strategy_playingcards>("Clubs"));
     if (argString == "moondance")
         controller.set_strategy(std::make_unique<strategy_dance>("kaas.wav"));
+    if (argString == "moonmaze")
+        controller.set_strategy(std::make_unique<strategy_maze>());
 
     std::cout << "Selected robot mode has been started.\n";
 }

@@ -8,7 +8,6 @@
 #include <vision/world_model.hpp>
 #include <window/main_window.hpp>
 #include <world/controller.hpp>
-#include <world/strategy/strategy_maze.hpp>
 
 namespace robotica {
     controller& controller::instance(void) {
@@ -44,7 +43,7 @@ namespace robotica {
         // WeBots is a piece of absolute shit.
         while (isnan(robot::instance().get_bearing_in_degrees())) robot::instance().update();
 
-        set_strategy(std::make_unique<strategy_maze>());
+        set_strategy(std::make_unique<istrategy>());
     }
 
 
