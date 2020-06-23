@@ -43,7 +43,7 @@ class MusicAnalyzer
         {
             for (int i = 0; i < channel; i++)
             {
-                double currentSample = audioFile.samples[0][j];
+                double currentSample = audioFile.samples[channel][j];
                 data.push_back(currentSample);
             }
         }

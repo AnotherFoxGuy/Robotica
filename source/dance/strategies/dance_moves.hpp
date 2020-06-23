@@ -1,71 +1,29 @@
 #pragma once
 #include "idance_strategy.hpp"
 #include "window/main_window.hpp"
-
+#include "dance/strategies/dance_moves.hpp"
+#include "comms/websocket.hpp"
 namespace robotica
 {
-class arm_dance_move_1 : public idance_strategy
+class dance_moves
 {
-  public:
-    static arm_dance_move_1& instance(void);
-    void dance(int frame) override;
-
+public:
+    static dance_moves& instance(void);
+    void arm_movement_1(int frame);
+    void track_movement_1(int frame);
+    void track_movement_2(int frame);
+    void arm_movement_2(int frame);
+    void arm_movement_3(int frame);
+    void track_movement_3(int frame);
+    void move_long(int frame ,int mod);
+    void roll_gripper(int frame, int mod);
+    void rotate_body(int frame, int mod);
+    void move_forward(int frame, int mod);
+    void rotate_arm(int frame);
+    
+    void set_motor_velocity(double l, double r,int mod = 0);
   private:
     float rotate_arm_base = 0;
     main_window& main_window_ = main_window::instance();
 };
-class track_dance_move_1 : public idance_strategy
-{
-  public:
-    static track_dance_move_1& instance(void);
-    void setMotorVelocity(double l, double r);
-    void dance(int frame) override;
-
-  private:
-    main_window& main_window_ = main_window::instance();
-};
-class arm_dance_move_2 : public idance_strategy
-{
-  public:
-    static arm_dance_move_2& instance(void);
-    void dance(int frame) override;
-
-  private:
-    float rotate_arm_base = 0;
-    main_window& main_window_ = main_window::instance();
-};
-class track_dance_move_2 : public idance_strategy
-{
-  public:
-    static track_dance_move_2& instance(void);
-    void setMotorVelocity(double l, double r);
-    void dance(int frame) override;
-
-  private:
-    float rotate_arm_base = 0;
-    main_window& main_window_ = main_window::instance();
-};
-class arm_dance_move_3 : public idance_strategy
-{
-  public:
-    static arm_dance_move_3& instance(void);
-    void dance(int frame) override;
-
-  private:
-    float rotate_arm_base = 0;
-    main_window& main_window_ = main_window::instance();
-};
-class track_dance_move_3 : public idance_strategy
-{
-  public:
-    static track_dance_move_3& instance(void);
-    void setMotorVelocity(double l, double r);
-    void dance(int frame) override;
-
-  private:
-    float rotate_arm_base = 0;
-    main_window& main_window_ = main_window::instance();
-};
-
-
 } // namespace robotica

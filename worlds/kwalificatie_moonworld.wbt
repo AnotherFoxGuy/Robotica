@@ -13,8 +13,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 0.895398
-  orientation 0.8585668093072308 0.47158836475414667 0.20116522608172394 5.349194686442362
-  position -1.312290139947301 0.9762471084315201 -1.3786871207520501
+  orientation -0.3140495929804356 0.8819196986749545 0.3515544029562145 1.8002088660363489
+  position 4.407885160082854 3.119162231463314 -2.47504722267533
   near 0.1
   follow "base_link"
 }
@@ -67,11 +67,12 @@ DEF GROUND Solid {
   locked TRUE
 }
 UWUBot-Tracked {
-  hidden rotation_3 0.5818142761844484 0.5751042721132358 -0.5751062721141821 2.0877149991140556
   hidden translation_7 0.00459299993224173 -0.027617000008815423 0.05
   hidden rotation_7 -0.5865099810073223 -0.5727169800484143 0.5727139800485181 2.0807129985948447
-  translation -0.38 -5.97416e-06 -2.33
+  translation 1.3 -0.0200063 -2.13
   rotation 0.7071067811862364 9.381857096790023e-07 0.7071067811862364 3.14159
+  lidar_horizontalResolution 61
+  lidar_verticalFieldOfView 0.8240262295081967
 }
 Poortje {
   translation -1.37 -0.1 -2.08
@@ -274,4 +275,40 @@ Solid {
       name "Obstacle"
     }
   ]
+}
+DEF Dansvloer Solid {
+  translation 1.22 -0.07 -2.09
+  children [
+    Transform {
+      translation 0 0.001 0
+      children [
+        Shape {
+          appearance Appearance {
+            material Material {
+              diffuseColor 0.807843 0.917647 0.972549
+              shininess 0
+            }
+          }
+          geometry Cylinder {
+            height 0.001
+            radius 0.95
+          }
+        }
+      ]
+    }
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.133333 0.580392 0.823529
+        }
+      }
+      geometry Cylinder {
+        height 0.001
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject Cylinder {
+    height 0.01
+  }
 }
