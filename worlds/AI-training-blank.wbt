@@ -3,7 +3,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.1274237643764936 0.9897354606468597 0.06470627643646522 0.8430421121161102
-  position 3.327294856661332 0.9798171584785963 3.043999969266901
+  position 2.3954941634726654 0.7802101287125159 2.0494758685457435
 }
 TexturedBackground {
 }
@@ -19,10 +19,6 @@ Floor {
       ]
     }
   }
-}
-E-puck {
-  translation 0 -0.01 0
-  controller "<extern>"
 }
 Solid {
   translation -0.01 0.078125 1
@@ -96,4 +92,10 @@ Solid {
     }
   ]
   name "West_Wall"
+}
+UWUBot-Tracked {
+  translation 0 0.02 -5.30718e-08
+  rotation 1 0 0 3.14159
+  lidar_horizontalResolution 61
+  lidar_verticalFieldOfView 0.8240262295081967
 }

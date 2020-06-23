@@ -29,8 +29,6 @@ namespace robotica {
         gripper_right(rbt->getMotor(motor_names[6])),
         gripper_roll(rbt->getMotor(motor_names[7])),
         gripper_pitch(rbt->getMotor(motor_names[8])),
-        dist_left(rbt->getDistanceSensor(distance_sensor_names[0])),
-        dist_right(rbt->getDistanceSensor(distance_sensor_names[1])),
         compass(rbt->getCompass(compass_name)),
         lidar(rbt->getLidar(lidar_name)),
         scale(rbt->getTouchSensor(scale_name)),
@@ -56,6 +54,9 @@ namespace robotica {
 
         led_left = rbt->getLED(led_names[0]);
         led_right = rbt->getLED(led_names[1]);
+
+        dist_left = rbt->getDistanceSensor(distance_sensor_names[0]);
+        dist_right = rbt->getDistanceSensor(distance_sensor_names[1]);
 
         //emotes = display->imageLoad("emoticons.png");
 
@@ -110,6 +111,7 @@ namespace robotica {
     bool robot::update(void) {
         auto& window = main_window::instance();
 
+        std::cout << get_distance(side::LEFT) << ", " << get_distance(side::RIGHT) << '\n';
         const std::array components {
             std::tuple { arm_base,      &window.arm_base,      (float)  1 },
             std::tuple { arm_short,     &window.arm_short,     (float)  1 },
