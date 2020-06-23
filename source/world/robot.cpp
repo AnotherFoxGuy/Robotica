@@ -4,6 +4,7 @@
 #include <comms/websocket.hpp>
 
 #include <algorithm>
+#include <string>
 #include <vision/world_model.hpp>
 #include <vision/heat_measure.hpp>
 
@@ -140,7 +141,10 @@ namespace robotica {
             websocket::instance().sendData(worst.str());
 
             // Emotions
-            update_emotion();
+            if (animation)
+                update_animation();
+            else
+                update_emotion();
         }
         return (result != -1);
     }
@@ -152,12 +156,26 @@ namespace robotica {
             auto current = fs::current_path();
             auto z = display->imageLoad(current.parent_path().parent_path().string() + "\\images\\" + current_emotion + ".jpg");
             displayed_emotion = current_emotion;
-            //display->setColor(0xFF00FF);
-            display->setAlpha(1);
-            display->setOpacity(1);
             display->imagePaste(z, 0, 0, false);
-            //display->fillRectangle(0, 0, 400, 400);
         }
+    }
+
+    void robot::update_animation()
+    {
+        displayed_emotion = "animation";
+
+        if (animation_time == 0) {
+            std::cout << "New frame" << std::endl;
+            auto image = display->imageLoad(fs::current_path().parent_path().parent_path().string() + "\\images\\frame-" + std::to_string(animation_frame) + ".jpg");
+            display->imagePaste(image, 0, 0, false);
+            if (animation_frame < animation_frames)
+                ++animation_frame;
+            else
+                animation_frame = 1;
+
+            animation_time = 4;
+        }
+        --animation_time;
     }
 
     cv::Mat robot::get_camera_output(side side) const {
