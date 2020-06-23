@@ -13,10 +13,10 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 0.895398
-  orientation -0.00566882914998058 0.9866811963644674 0.16256715878938127 3.0580798621715255
-  position -0.605922605593493 1.1663156484603645 -6.237312197145181
+  orientation -0.09588508642592528 0.9541866671787566 0.2834322747666353 2.507472433405474
+  position 1.6180718699091825 1.2390513235245968 -3.4024767219496947
   near 0.1
-  follow "base_link"
+  followType "Mounted Shot"
 }
 TexturedBackground {
   texture "mars"
@@ -65,13 +65,6 @@ DEF GROUND Solid {
   name "ground"
   boundingObject USE GROUND_SHAPE
   locked TRUE
-}
-UWUBot-Tracked {
-  hidden rotation_3 0.5818142761844484 0.5751042721132358 -0.5751062721141821 2.0877149991140556
-  translation -0.38 -5.97416e-06 -2.33
-  rotation -0.8660253028378089 1.0387703632445143e-06 0.500000174843572 -3.1415853071795863
-  lidar_horizontalResolution 61
-  lidar_verticalFieldOfView 0.8240262295081967
 }
 Floor {
   translation 0 -0.1 0
@@ -144,5 +137,11 @@ DEF PlantTheFlag Solid {
   rotationStep 0.01
 }
 uwu_flag {
-  translation 0.250004 -4.69102e-07 -1.92
+  translation 0.480004 -9.00666e-07 -2.17
+}
+UWUBot-Tracked {
+  translation -1.98066e-07 -0.08 -2.31
+  rotation -0.8660253028380855 6.633972319816142e-07 0.5000001748437317 3.14159
+  lidar_horizontalResolution 61
+  lidar_verticalFieldOfView 0.8240262295081967
 }
