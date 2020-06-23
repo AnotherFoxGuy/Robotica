@@ -15,6 +15,7 @@
 #include <webots/LED.hpp>
 #include <webots/Speaker.hpp>
 #include <webots/Display.hpp>
+#include <webots/DistanceSensor.hpp>
 #include <webots/TouchSensor.hpp>
 
 #include <iostream>
@@ -41,6 +42,7 @@ namespace robotica {
         const static inline std::string display_name = "display";
         const static inline std::string scale_name = "scale";
         const static inline std::string led_names[2] = {"led_left", "led_right"};
+        const static inline std::string distance_sensor_names[2] = {"distance_left", "distance_right"};
 
         robot(int timestep);
         ~robot(void);
@@ -59,12 +61,13 @@ namespace robotica {
         glm::ivec2 get_camera_size        (side side) const;
         float      get_camera_focal_length(side side) const;
         float      get_camera_baseline    (void)      const;
+        double     get_distance           (side side) const;
 
         webots::Speaker* speaker;
         webots::ImageRef* emotes;
         webots::Display* display;
         webots::LED *led_left, *led_right;
-
+        webots::DistanceSensor *dist_left, *dist_right;
         pointcloud get_lidar_pointcloud(void) const;
 
         std::string current_emotion = "uwu";

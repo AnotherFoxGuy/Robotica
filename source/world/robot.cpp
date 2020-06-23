@@ -29,6 +29,8 @@ namespace robotica {
         gripper_right(rbt->getMotor(motor_names[6])),
         gripper_roll(rbt->getMotor(motor_names[7])),
         gripper_pitch(rbt->getMotor(motor_names[8])),
+        dist_left(rbt->getDistanceSensor(distance_sensor_names[0])),
+        dist_right(rbt->getDistanceSensor(distance_sensor_names[1])),
         compass(rbt->getCompass(compass_name)),
         lidar(rbt->getLidar(lidar_name)),
         scale(rbt->getTouchSensor(scale_name)),
@@ -61,6 +63,8 @@ namespace robotica {
         compass->enable(100);
         lidar->enable(100);
         scale->enable(100);
+        dist_left->enable(100);
+        dist_right->enable(100);
 
         compass->enable(timestep);
 
@@ -79,6 +83,10 @@ namespace robotica {
 
     robot::~robot(void) {
         if (!manually_destroyed) delete rbt;
+    }
+
+    double robot::get_distance(side side) const {
+        return (side == side::LEFT) ? dist_left->getValue() : dist_right->getValue();
     }
 
     double robot::get_bearing_in_degrees() {
@@ -147,6 +155,7 @@ namespace robotica {
         }
         return (result != -1);
     }
+
 
     void robot::update_emotion()
     {
