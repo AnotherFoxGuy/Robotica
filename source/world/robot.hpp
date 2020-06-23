@@ -70,6 +70,7 @@ namespace robotica {
 
         std::string current_emotion = "uwu";
         bool animation = false;
+      
     private:
         webots::Robot* rbt;
         webots::Camera *left_camera, *right_camera;

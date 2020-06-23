@@ -65,6 +65,10 @@ namespace robotica {
         RBT_SETTING(CLASSIFIER, pool_min_width,                10,      0,    255);
         RBT_SETTING(CLASSIFIER, pool_min_roundness,            0.0,     0,    1);
 
+        RBT_SETTING(CLASSIFIER, rock_min_size,                 150,     0,    1000);
+        RBT_SETTING(CLASSIFIER, rock_min_roundness,            0.255,     0,    1);
+        RBT_SETTING(CLASSIFIER, rock_grayness_threshold,       190,     0,    255);
+
         // LIDAR Settings
         RBT_SETTING(LIDAR,      lidar_scale_factor,            20.0,    1,    100);
         RBT_SETTING(LIDAR,      lidar_point_size,              5.0,     1,    10);
@@ -75,8 +79,8 @@ namespace robotica {
         RBT_SETTING(LIDAR,      max_path_edges,                10,      1,    32);
 
         // Robot controls
-        RBT_SETTING(ROBOT,    left_motor,         0.0,   -1,    1);
-        RBT_SETTING(ROBOT,    right_motor,        0.0,   -1,    1);
+        RBT_SETTING(ROBOT,    left_motor,         0.25,  -1,    1);
+        RBT_SETTING(ROBOT,    right_motor,        0.25,  -1,    1);
         RBT_SETTING(ROBOT,    speed,              100,    1,    100);
 
         RBT_SETTING(ARM,      arm_base,           0.0,       0,        2 * pi);
